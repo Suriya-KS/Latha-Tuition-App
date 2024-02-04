@@ -12,6 +12,9 @@ dependencies:
     flutter:
         sdk: flutter
     cupertino_icons: ^1.0.2
+    liquid_swipe: ^3.1.0
+    smooth_page_indicator: ^1.1.0
+    flutter_svg: ^2.0.9
 
 dev_dependencies:
     flutter_test:
@@ -20,3 +23,28 @@ dev_dependencies:
 
 flutter:
     uses-material-design: true
+
+    assets:
+        - assets/images/
+
+    fonts:
+        - family: Poppins
+          fonts:
+              - asset: assets/fonts/Poppins/Poppins-Thin.ttf
+                weight: 100
+              - asset: assets/fonts/Poppins/Poppins-ExtraLight.ttf
+                weight: 100
+              - asset: assets/fonts/Poppins/Poppins-Light.ttf
+                weight: 100
+              - asset: assets/fonts/Poppins/Poppins-Regular.ttf
+                weight: 100
+              - asset: assets/fonts/Poppins/Poppins-Medium.ttf
+                weight: 100
+              - asset: assets/fonts/Poppins/Poppins-SemiBold.ttf
+                weight: 100
+              - asset: assets/fonts/Poppins/Poppins-Bold.ttf
+                weight: 100
+              - asset: assets/fonts/Poppins/Poppins-ExtraBold.ttf
+                weight: 100
+              - asset: assets/fonts/Poppins/Poppins-Black.ttf
+                weight: 100
