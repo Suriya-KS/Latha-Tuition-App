@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-import 'package:latha_tuition_app/widgets/onboarding/onboarding_title_text.dart';
+import 'package:latha_tuition_app/utilities/constants.dart';
+import 'package:latha_tuition_app/widgets/texts/title_text.dart';
 
 class OnboardingPage extends StatelessWidget {
   const OnboardingPage({
@@ -24,7 +25,7 @@ class OnboardingPage extends StatelessWidget {
 
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(30),
+      padding: const EdgeInsets.all(screenPadding),
       color: color,
       child: Column(
         children: [
@@ -37,7 +38,7 @@ class OnboardingPage extends StatelessWidget {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              OnboardingTitleText(title: title),
+              TitleText(title: title),
               const SizedBox(height: 10),
               ...contents,
             ],

@@ -5,7 +5,7 @@ import 'package:latha_tuition_app/utilities/constants.dart';
 import 'package:latha_tuition_app/utilities/modal_bottom_sheet.dart';
 import 'package:latha_tuition_app/widgets/buttons/primary_button.dart';
 import 'package:latha_tuition_app/widgets/onboarding/onboarding_page.dart';
-import 'package:latha_tuition_app/widgets/onboarding/onboarding_registration_sheet.dart';
+import 'package:latha_tuition_app/widgets/bottom_sheets/registration_sheet.dart';
 
 class OnboardingPageList extends StatelessWidget {
   const OnboardingPageList({
@@ -65,7 +65,7 @@ class OnboardingPageList extends StatelessWidget {
                 iconData: Icons.arrow_right_alt,
                 onPressed: () => modalBottomSheet(
                   context,
-                  const OnboardingRegistrationSheet(),
+                  const RegistrationSheet(screen: Screen.onboarding),
                 ),
               ),
             ),
