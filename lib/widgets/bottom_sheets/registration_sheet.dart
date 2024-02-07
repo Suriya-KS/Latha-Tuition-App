@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 
 import 'package:latha_tuition_app/utilities/constants.dart';
-import 'package:latha_tuition_app/screens/login.dart';
+import 'package:latha_tuition_app/utilities/helper_functions.dart';
 import 'package:latha_tuition_app/screens/sign_up.dart';
+import 'package:latha_tuition_app/screens/student_registration.dart';
 import 'package:latha_tuition_app/widgets/texts/title_text.dart';
 import 'package:latha_tuition_app/widgets/buttons/primary_button.dart';
 import 'package:latha_tuition_app/widgets/buttons/info_action_button.dart';
@@ -14,15 +15,6 @@ class RegistrationSheet extends StatelessWidget {
   });
 
   final Screen? screen;
-
-  void navigateToLoginScreen(BuildContext context) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (BuildContext context) => const LoginScreen(),
-      ),
-    );
-  }
 
   void navigateToSignUpScreen(BuildContext context) {
     if (screen == Screen.onboarding) {
@@ -44,13 +36,36 @@ class RegistrationSheet extends StatelessWidget {
     }
   }
 
+  void navigateToStudentRegistartionScreen(BuildContext context) {
+    if (screen == Screen.onboarding) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (BuildContext context) => const StudentRegistrationScreen(),
+        ),
+      );
+    } else {
+      Navigator.pop(context);
+
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (BuildContext context) => const StudentRegistrationScreen(),
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         const TitleText(title: 'Start Your Jounery!'),
         const SizedBox(height: 50),
-        const PrimaryButton(title: 'Apply for Admission'),
+        PrimaryButton(
+          title: 'Apply for Admission',
+          onPressed: () => navigateToStudentRegistartionScreen(context),
+        ),
         if (screen == Screen.onboarding)
           InfoActionButton(
             infoText: 'Already part of our academy?',

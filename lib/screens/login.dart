@@ -12,16 +12,12 @@ class LoginScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final screenHeight = MediaQuery.of(context).size.height;
-    final totalScreenPadding = MediaQuery.of(context).padding.top +
-        MediaQuery.of(context).padding.bottom +
-        screenPadding * 2;
+    final screenSize = MediaQuery.of(context);
 
     return Scaffold(
       body: SafeArea(
         child: ScrollableImageContent(
-          screenHeight: screenHeight,
-          totalScreenPadding: totalScreenPadding,
+          screenSize: screenSize,
           imagePath: handWaveImage,
           title: 'Resume Your Learning',
           descriiption:

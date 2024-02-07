@@ -7,8 +7,7 @@ import 'package:latha_tuition_app/widgets/texts/title_text.dart';
 class ScrollableImageContent extends StatelessWidget {
   const ScrollableImageContent({
     super.key,
-    required this.screenHeight,
-    required this.totalScreenPadding,
+    required this.screenSize,
     required this.imagePath,
     required this.title,
     required this.descriiption,
@@ -16,14 +15,17 @@ class ScrollableImageContent extends StatelessWidget {
   });
 
   final Widget child;
-  final double screenHeight;
-  final double totalScreenPadding;
+  final MediaQueryData screenSize;
   final String imagePath;
   final String title;
   final String descriiption;
 
   @override
   Widget build(BuildContext context) {
+    final screenHeight = screenSize.size.height;
+    final totalScreenPadding =
+        screenSize.padding.top + screenSize.padding.bottom + screenPadding * 2;
+
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.all(screenPadding),
