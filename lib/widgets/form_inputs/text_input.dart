@@ -6,6 +6,11 @@ class TextInput extends StatelessWidget {
     required this.prefixIcon,
     required this.inputType,
     this.prefixText,
+    this.suffixIcon,
+    this.suffixIconOnPressed,
+    this.obscureText = false,
+    this.controller,
+    this.validator,
     super.key,
   });
 
@@ -13,17 +18,32 @@ class TextInput extends StatelessWidget {
   final IconData prefixIcon;
   final TextInputType inputType;
   final String? prefixText;
+  final IconData? suffixIcon;
+  final void Function()? suffixIconOnPressed;
+  final bool obscureText;
+  final TextEditingController? controller;
+  final String? Function(String?)? validator;
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
       keyboardType: inputType,
       decoration: InputDecoration(
-        prefixIcon: Icon(prefixIcon),
-        prefixText: prefixText ?? '',
-        prefixIconColor: Theme.of(context).colorScheme.primary,
         label: Text(labelText),
+        prefixText: prefixText ?? '',
+        prefixIcon: Icon(prefixIcon),
+        suffixIcon: suffixIcon != null
+            ? IconButton(
+                icon: Icon(suffixIcon),
+                onPressed: suffixIconOnPressed ?? () {},
+              )
+            : null,
+        prefixIconColor: Theme.of(context).colorScheme.primary,
       ),
+      obscureText: obscureText,
+      autovalidateMode: AutovalidateMode.onUserInteraction,
+      controller: controller,
+      validator: validator,
     );
   }
 }

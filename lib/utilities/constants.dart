@@ -14,6 +14,9 @@ const handshakeImage = "assets/images/handshake.svg";
 const newEntryImage = "assets/images/new_entry.svg";
 const placeholderImage = "assets/images/placeholder.svg";
 
+const alphabets = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+const specialCharacters = ' !"#\$%&\'()*+,-./:;<=>?@[\\]^_`{|}~';
+
 const screenPadding = 30.0;
 
 enum Screen {

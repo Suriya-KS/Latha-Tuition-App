@@ -1,37 +1,64 @@
 import 'package:flutter/material.dart';
 
+import 'package:latha_tuition_app/utilities/form_validation_functions.dart';
 import 'package:latha_tuition_app/widgets/buttons/primary_button.dart';
+import 'package:latha_tuition_app/widgets/form_inputs/text_input.dart';
 
-class LoginForm extends StatelessWidget {
+class LoginForm extends StatefulWidget {
   const LoginForm({super.key});
+
+  @override
+  State<LoginForm> createState() => _LoginFormState();
+}
+
+class _LoginFormState extends State<LoginForm> {
+  final formKey = GlobalKey<FormState>();
+
+  bool obscureText = true;
+
+  final phoneController = TextEditingController();
+  final passwordController = TextEditingController();
+
+  void togglePasswordVisiblity() {
+    setState(() {
+      obscureText = !obscureText;
+    });
+  }
+
+  @override
+  void dispose() {
+    phoneController.dispose();
+    passwordController.dispose();
+
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Form(
+      key: formKey,
       child: Column(
         children: [
-          TextFormField(
-            keyboardType: TextInputType.phone,
-            decoration: InputDecoration(
-              prefixIcon: const Icon(Icons.phone_outlined),
-              prefixIconColor: Theme.of(context).colorScheme.primary,
-              prefixText: '+91 ',
-              label: const Text('Phone Number'),
-            ),
+          TextInput(
+            labelText: 'Phone Number',
+            prefixText: '+91 ',
+            prefixIcon: Icons.phone_outlined,
+            inputType: TextInputType.phone,
+            controller: phoneController,
+            validator: validatePhoneNumber,
           ),
           const SizedBox(height: 10),
-          TextFormField(
-            keyboardType: TextInputType.visiblePassword,
-            obscureText: true,
-            decoration: InputDecoration(
-              prefixIcon: const Icon(Icons.lock_outline),
-              prefixIconColor: Theme.of(context).colorScheme.primary,
-              label: const Text('Password'),
-              suffixIcon: IconButton(
-                onPressed: () {},
-                icon: const Icon(Icons.remove_red_eye_outlined),
-              ),
-            ),
+          TextInput(
+            labelText: 'Password',
+            prefixIcon: Icons.lock_outline,
+            suffixIcon: obscureText
+                ? Icons.visibility_outlined
+                : Icons.visibility_off_outlined,
+            suffixIconOnPressed: togglePasswordVisiblity,
+            obscureText: obscureText,
+            inputType: TextInputType.visiblePassword,
+            controller: passwordController,
+            validator: validatePassword,
           ),
           const SizedBox(height: 10),
           Align(

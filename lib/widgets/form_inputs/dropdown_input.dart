@@ -6,6 +6,7 @@ class DropdownInput extends StatelessWidget {
     required this.prefixIcon,
     required this.items,
     required this.onChanged,
+    required this.validator,
     super.key,
   });
 
@@ -13,6 +14,7 @@ class DropdownInput extends StatelessWidget {
   final IconData prefixIcon;
   final List<String> items;
   final void Function(String?) onChanged;
+  final String? Function(String?) validator;
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +24,6 @@ class DropdownInput extends StatelessWidget {
         prefixIcon: Icon(prefixIcon),
         prefixIconColor: Theme.of(context).colorScheme.primary,
       ),
-      onChanged: onChanged,
       items: items.map((value) {
         return DropdownMenuItem(
           value: value,
@@ -33,6 +34,9 @@ class DropdownInput extends StatelessWidget {
           ),
         );
       }).toList(),
+      onChanged: onChanged,
+      autovalidateMode: AutovalidateMode.onUserInteraction,
+      validator: validator,
     );
   }
 }

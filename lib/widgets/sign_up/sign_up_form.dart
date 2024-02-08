@@ -1,68 +1,108 @@
 import 'package:flutter/material.dart';
 
+import 'package:latha_tuition_app/utilities/form_validation_functions.dart';
 import 'package:latha_tuition_app/widgets/buttons/primary_button.dart';
+import 'package:latha_tuition_app/widgets/form_inputs/text_input.dart';
 
-class SignUpForm extends StatelessWidget {
+class SignUpForm extends StatefulWidget {
   const SignUpForm({super.key});
+
+  @override
+  State<SignUpForm> createState() => _SignUpFormState();
+}
+
+class _SignUpFormState extends State<SignUpForm> {
+  final formKey = GlobalKey<FormState>();
+
+  bool passwordObscureText = true;
+  bool confirmPasswordObscureText = true;
+
+  final nameController = TextEditingController();
+  final emailController = TextEditingController();
+  final phoneController = TextEditingController();
+  final passwordController = TextEditingController();
+  final confirmPasswordController = TextEditingController();
+
+  void togglePasswordVisiblity() {
+    setState(() {
+      passwordObscureText = !passwordObscureText;
+    });
+  }
+
+  void toggleConfirmPasswordVisiblity() {
+    setState(() {
+      confirmPasswordObscureText = !confirmPasswordObscureText;
+    });
+  }
+
+  @override
+  void dispose() {
+    nameController.dispose();
+    emailController.dispose();
+    phoneController.dispose();
+    passwordController.dispose();
+    confirmPasswordController.dispose();
+
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Form(
+      key: formKey,
       child: Column(
         children: [
-          TextFormField(
-            keyboardType: TextInputType.name,
-            decoration: InputDecoration(
-              prefixIcon: const Icon(Icons.person_outline),
-              prefixIconColor: Theme.of(context).colorScheme.primary,
-              label: const Text('Full Name'),
-            ),
+          TextInput(
+            labelText: 'Full Name',
+            prefixIcon: Icons.person_outline,
+            inputType: TextInputType.name,
+            controller: nameController,
+            validator: validateName,
           ),
           const SizedBox(height: 10),
-          TextFormField(
-            keyboardType: TextInputType.emailAddress,
-            decoration: InputDecoration(
-              prefixIcon: const Icon(Icons.mail_outline),
-              prefixIconColor: Theme.of(context).colorScheme.primary,
-              label: const Text('Email Address'),
-            ),
+          TextInput(
+            labelText: 'Email Address',
+            prefixIcon: Icons.mail_outline,
+            inputType: TextInputType.emailAddress,
+            controller: emailController,
+            validator: validateEmail,
           ),
           const SizedBox(height: 10),
-          TextFormField(
-            keyboardType: TextInputType.phone,
-            decoration: InputDecoration(
-              prefixIcon: const Icon(Icons.phone_outlined),
-              prefixIconColor: Theme.of(context).colorScheme.primary,
-              prefixText: '+91 ',
-              label: const Text('Phone Number'),
-            ),
+          TextInput(
+            labelText: 'Phone Number',
+            prefixText: '+91 ',
+            prefixIcon: Icons.phone_outlined,
+            inputType: TextInputType.phone,
+            controller: phoneController,
+            validator: validatePhoneNumber,
           ),
           const SizedBox(height: 10),
-          TextFormField(
-            keyboardType: TextInputType.visiblePassword,
-            obscureText: true,
-            decoration: InputDecoration(
-              prefixIcon: const Icon(Icons.lock_outline),
-              prefixIconColor: Theme.of(context).colorScheme.primary,
-              label: const Text('Password'),
-              suffixIcon: IconButton(
-                onPressed: () {},
-                icon: const Icon(Icons.remove_red_eye_outlined),
-              ),
-            ),
+          TextInput(
+            labelText: 'Password',
+            prefixIcon: Icons.lock_outline,
+            suffixIcon: passwordObscureText
+                ? Icons.visibility_outlined
+                : Icons.visibility_off_outlined,
+            suffixIconOnPressed: togglePasswordVisiblity,
+            obscureText: passwordObscureText,
+            inputType: TextInputType.visiblePassword,
+            controller: passwordController,
+            validator: validatePassword,
           ),
           const SizedBox(height: 10),
-          TextFormField(
-            keyboardType: TextInputType.visiblePassword,
-            obscureText: true,
-            decoration: InputDecoration(
-              prefixIcon: const Icon(Icons.lock_outline),
-              prefixIconColor: Theme.of(context).colorScheme.primary,
-              label: const Text('Confirm Password'),
-              suffixIcon: IconButton(
-                onPressed: () {},
-                icon: const Icon(Icons.remove_red_eye_outlined),
-              ),
+          TextInput(
+            labelText: 'Confirm Password',
+            prefixIcon: Icons.lock_outline,
+            suffixIcon: confirmPasswordObscureText
+                ? Icons.visibility_outlined
+                : Icons.visibility_off_outlined,
+            suffixIconOnPressed: toggleConfirmPasswordVisiblity,
+            obscureText: confirmPasswordObscureText,
+            inputType: TextInputType.visiblePassword,
+            controller: confirmPasswordController,
+            validator: (value) => validateConfirmPassword(
+              value,
+              passwordController.text,
             ),
           ),
           const SizedBox(height: 50),
