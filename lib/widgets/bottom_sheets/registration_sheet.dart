@@ -36,7 +36,7 @@ class RegistrationSheet extends StatelessWidget {
     }
   }
 
-  void navigateToStudentRegistartionScreen(BuildContext context) {
+  void navigateToStudentRegistrationScreen(BuildContext context) {
     if (screen == Screen.onboarding) {
       Navigator.push(
         context,
@@ -60,17 +60,17 @@ class RegistrationSheet extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        const TitleText(title: 'Start Your Jounery!'),
+        const TitleText(title: 'Start Your Journey!'),
         const SizedBox(height: 50),
         PrimaryButton(
           title: 'Apply for Admission',
-          onPressed: () => navigateToStudentRegistartionScreen(context),
+          onPressed: () => navigateToStudentRegistrationScreen(context),
         ),
         if (screen == Screen.onboarding)
           InfoActionButton(
             infoText: 'Already part of our academy?',
             buttonText: 'Login here',
-            onPressed: () => navigateToLoginScreen(context),
+            onPressed: () => navigateToLoginScreen(context, screen),
           ),
         const SizedBox(height: 30),
         Row(

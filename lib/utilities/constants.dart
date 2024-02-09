@@ -23,4 +23,5 @@ enum Screen {
   onboarding,
   login,
   signUp,
+  studentRegistration,
 }

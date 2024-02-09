@@ -19,7 +19,7 @@ class _LoginFormState extends State<LoginForm> {
   final phoneController = TextEditingController();
   final passwordController = TextEditingController();
 
-  void togglePasswordVisiblity() {
+  void togglePasswordVisibility() {
     setState(() {
       obscureText = !obscureText;
     });
@@ -54,7 +54,7 @@ class _LoginFormState extends State<LoginForm> {
             suffixIcon: obscureText
                 ? Icons.visibility_outlined
                 : Icons.visibility_off_outlined,
-            suffixIconOnPressed: togglePasswordVisiblity,
+            suffixIconOnPressed: togglePasswordVisibility,
             obscureText: obscureText,
             inputType: TextInputType.visiblePassword,
             controller: passwordController,

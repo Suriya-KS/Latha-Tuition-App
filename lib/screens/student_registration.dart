@@ -16,18 +16,21 @@ class StudentRegistrationScreen extends StatelessWidget {
     return Scaffold(
       body: SafeArea(
         child: ScrollableImageContent(
-          screenSize: screenSize,
-          imagePath: newEntryImage,
           title: 'Enroll for Excellence',
-          descriiption:
+          description:
               'Take control of your educational journey and pave the way to a brighter future',
+          imagePath: newEntryImage,
+          screenSize: screenSize,
           child: Column(
             children: [
               const StudentRegistrationForm(),
               InfoActionButton(
                 infoText: 'Already a student?',
                 buttonText: 'Login here',
-                onPressed: () => navigateToLoginScreen(context),
+                onPressed: () => navigateToLoginScreen(
+                  context,
+                  Screen.studentRegistration,
+                ),
               ),
             ],
           ),

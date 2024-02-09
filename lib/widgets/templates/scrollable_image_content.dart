@@ -10,7 +10,7 @@ class ScrollableImageContent extends StatelessWidget {
     required this.screenSize,
     required this.imagePath,
     required this.title,
-    required this.descriiption,
+    required this.description,
     required this.child,
   });
 
@@ -18,7 +18,7 @@ class ScrollableImageContent extends StatelessWidget {
   final MediaQueryData screenSize;
   final String imagePath;
   final String title;
-  final String descriiption;
+  final String description;
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +48,7 @@ class ScrollableImageContent extends StatelessWidget {
                 children: [
                   TitleText(title: title),
                   const SizedBox(height: 10),
-                  Text(descriiption),
+                  Text(description),
                 ],
               ),
               const SizedBox(height: 30),

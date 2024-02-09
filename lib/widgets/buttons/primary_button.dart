@@ -29,7 +29,7 @@ class PrimaryButton extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             Text(
-              title != null ? title! : '',
+              title ?? '',
               style: const TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,

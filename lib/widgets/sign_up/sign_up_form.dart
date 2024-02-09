@@ -23,13 +23,13 @@ class _SignUpFormState extends State<SignUpForm> {
   final passwordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
 
-  void togglePasswordVisiblity() {
+  void togglePasswordVisibility() {
     setState(() {
       passwordObscureText = !passwordObscureText;
     });
   }
 
-  void toggleConfirmPasswordVisiblity() {
+  void toggleConfirmPasswordVisibility() {
     setState(() {
       confirmPasswordObscureText = !confirmPasswordObscureText;
     });
@@ -83,7 +83,7 @@ class _SignUpFormState extends State<SignUpForm> {
             suffixIcon: passwordObscureText
                 ? Icons.visibility_outlined
                 : Icons.visibility_off_outlined,
-            suffixIconOnPressed: togglePasswordVisiblity,
+            suffixIconOnPressed: togglePasswordVisibility,
             obscureText: passwordObscureText,
             inputType: TextInputType.visiblePassword,
             controller: passwordController,
@@ -96,7 +96,7 @@ class _SignUpFormState extends State<SignUpForm> {
             suffixIcon: confirmPasswordObscureText
                 ? Icons.visibility_outlined
                 : Icons.visibility_off_outlined,
-            suffixIconOnPressed: toggleConfirmPasswordVisiblity,
+            suffixIconOnPressed: toggleConfirmPasswordVisibility,
             obscureText: confirmPasswordObscureText,
             inputType: TextInputType.visiblePassword,
             controller: confirmPasswordController,

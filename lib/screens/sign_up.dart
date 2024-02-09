@@ -16,18 +16,18 @@ class SignUpScreen extends StatelessWidget {
     return Scaffold(
       body: SafeArea(
         child: ScrollableImageContent(
-          screenSize: screenSize,
-          imagePath: handshakeImage,
           title: 'Teaching with Impact',
-          descriiption:
+          description:
               "Transform lives and shape minds by teaching with impact, leaving a lasting educational imprint",
+          imagePath: handshakeImage,
+          screenSize: screenSize,
           child: Column(
             children: [
               const SignUpForm(),
               InfoActionButton(
                 infoText: 'Already joined?',
                 buttonText: 'Login here',
-                onPressed: () => navigateToLoginScreen(context),
+                onPressed: () => navigateToLoginScreen(context, Screen.signUp),
               ),
             ],
           ),

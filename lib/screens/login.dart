@@ -17,11 +17,11 @@ class LoginScreen extends StatelessWidget {
     return Scaffold(
       body: SafeArea(
         child: ScrollableImageContent(
-          screenSize: screenSize,
-          imagePath: handWaveImage,
           title: 'Resume Your Learning',
-          descriiption:
+          description:
               "Welcome back! It's time to resume your academic journey",
+          imagePath: handWaveImage,
+          screenSize: screenSize,
           child: Column(
             children: [
               const LoginForm(),
