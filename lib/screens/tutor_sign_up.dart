@@ -4,10 +4,10 @@ import 'package:latha_tuition_app/utilities/constants.dart';
 import 'package:latha_tuition_app/utilities/helper_functions.dart';
 import 'package:latha_tuition_app/widgets/templates/scrollable_image_content.dart';
 import 'package:latha_tuition_app/widgets/buttons/info_action_button.dart';
-import 'package:latha_tuition_app/widgets/sign_up/sign_up_form.dart';
+import 'package:latha_tuition_app/widgets/tutor_sign_up/tutor_sign_up_form.dart';
 
-class SignUpScreen extends StatelessWidget {
-  const SignUpScreen({super.key});
+class TutorSignUpScreen extends StatelessWidget {
+  const TutorSignUpScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +23,7 @@ class SignUpScreen extends StatelessWidget {
           screenSize: screenSize,
           child: Column(
             children: [
-              const SignUpForm(),
+              const TutorSignUpForm(),
               InfoActionButton(
                 infoText: 'Already joined?',
                 buttonText: 'Login here',

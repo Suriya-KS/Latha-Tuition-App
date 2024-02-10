@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:latha_tuition_app/utilities/constants.dart';
 import 'package:latha_tuition_app/utilities/helper_functions.dart';
-import 'package:latha_tuition_app/screens/sign_up.dart';
+import 'package:latha_tuition_app/screens/tutor_sign_up.dart';
 import 'package:latha_tuition_app/screens/student_registration.dart';
 import 'package:latha_tuition_app/widgets/texts/title_text.dart';
 import 'package:latha_tuition_app/widgets/buttons/primary_button.dart';
@@ -16,12 +16,12 @@ class RegistrationSheet extends StatelessWidget {
 
   final Screen? screen;
 
-  void navigateToSignUpScreen(BuildContext context) {
+  void navigateToTutorSignUpScreen(BuildContext context) {
     if (screen == Screen.onboarding) {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (BuildContext context) => const SignUpScreen(),
+          builder: (BuildContext context) => const TutorSignUpScreen(),
         ),
       );
     } else {
@@ -30,7 +30,7 @@ class RegistrationSheet extends StatelessWidget {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (BuildContext context) => const SignUpScreen(),
+          builder: (BuildContext context) => const TutorSignUpScreen(),
         ),
       );
     }
@@ -79,7 +79,7 @@ class RegistrationSheet extends StatelessWidget {
             const Text('Inspired to teach?'),
             const SizedBox(width: 10),
             OutlinedButton(
-              onPressed: () => navigateToSignUpScreen(context),
+              onPressed: () => navigateToTutorSignUpScreen(context),
               child: const Text(
                 'Become a Tutor',
                 style: TextStyle(fontWeight: FontWeight.w700),

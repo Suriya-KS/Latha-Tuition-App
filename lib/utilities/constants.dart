@@ -11,6 +11,7 @@ const reportImage = "assets/images/report.svg";
 const welcomeImage = "assets/images/welcome.svg";
 const handWaveImage = "assets/images/hand_wave.svg";
 const handshakeImage = "assets/images/handshake.svg";
+const celebrateImage = "assets/images/celebrate.svg";
 const newEntryImage = "assets/images/new_entry.svg";
 const forgotPasswordImage = "assets/images/forgot_password.svg";
 const confirmImage = "assets/images/confirm.svg";

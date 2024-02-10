@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:latha_tuition_app/screens/student_sign_up.dart';
 import 'package:latha_tuition_app/utilities/form_validation_functions.dart';
 
 import 'package:latha_tuition_app/widgets/buttons/primary_button.dart';
@@ -47,6 +48,21 @@ class _StudentRegistrationFormState extends State<StudentRegistrationForm> {
     }
 
     return academicYears;
+  }
+
+  void navigateToStudentSignUpScreen() {
+    Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(
+          builder: (BuildContext context) => const StudentSignUpScreen(),
+        ),
+        (route) => false);
+  }
+
+  void submitFormHandler() {
+    if (formKey.currentState!.validate()) {
+      navigateToStudentSignUpScreen();
+    }
   }
 
   @override
@@ -229,7 +245,10 @@ class _StudentRegistrationFormState extends State<StudentRegistrationForm> {
             validator: validateEmail,
           ),
           const SizedBox(height: 50),
-          const PrimaryButton(title: 'Enroll'),
+          PrimaryButton(
+            title: 'Enroll',
+            onPressed: submitFormHandler,
+          ),
         ],
       ),
     );

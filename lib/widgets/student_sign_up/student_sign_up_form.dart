@@ -4,21 +4,19 @@ import 'package:latha_tuition_app/utilities/form_validation_functions.dart';
 import 'package:latha_tuition_app/widgets/buttons/primary_button.dart';
 import 'package:latha_tuition_app/widgets/form_inputs/text_input.dart';
 
-class SignUpForm extends StatefulWidget {
-  const SignUpForm({super.key});
+class StudentSignUpForm extends StatefulWidget {
+  const StudentSignUpForm({super.key});
 
   @override
-  State<SignUpForm> createState() => _SignUpFormState();
+  State<StudentSignUpForm> createState() => _StudentSignUpFormState();
 }
 
-class _SignUpFormState extends State<SignUpForm> {
+class _StudentSignUpFormState extends State<StudentSignUpForm> {
   final formKey = GlobalKey<FormState>();
 
   bool passwordObscureText = true;
   bool confirmPasswordObscureText = true;
 
-  final nameController = TextEditingController();
-  final emailController = TextEditingController();
   final phoneController = TextEditingController();
   final passwordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
@@ -37,8 +35,6 @@ class _SignUpFormState extends State<SignUpForm> {
 
   @override
   void dispose() {
-    nameController.dispose();
-    emailController.dispose();
     phoneController.dispose();
     passwordController.dispose();
     confirmPasswordController.dispose();
@@ -52,22 +48,6 @@ class _SignUpFormState extends State<SignUpForm> {
       key: formKey,
       child: Column(
         children: [
-          TextInput(
-            labelText: 'Full Name',
-            prefixIcon: Icons.person_outline,
-            inputType: TextInputType.name,
-            controller: nameController,
-            validator: validateName,
-          ),
-          const SizedBox(height: 10),
-          TextInput(
-            labelText: 'Email Address',
-            prefixIcon: Icons.mail_outline,
-            inputType: TextInputType.emailAddress,
-            controller: emailController,
-            validator: validateEmail,
-          ),
-          const SizedBox(height: 10),
           TextInput(
             labelText: 'Phone Number',
             prefixText: '+91 ',
