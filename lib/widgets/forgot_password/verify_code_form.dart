@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import 'package:latha_tuition_app/utilities/constants.dart';
+import 'package:latha_tuition_app/screens/reset_password.dart';
 import 'package:latha_tuition_app/widgets/buttons/primary_button.dart';
 import 'package:latha_tuition_app/widgets/form_inputs/verification_code_input.dart';
 
@@ -21,6 +22,8 @@ class VerifyCodeForm extends StatefulWidget {
 }
 
 class _VerifyCodeFormState extends State<VerifyCodeForm> {
+  final formKey = GlobalKey<FormState>();
+
   late Timer timer;
 
   bool canResend = false;
@@ -59,6 +62,18 @@ class _VerifyCodeFormState extends State<VerifyCodeForm> {
     });
   }
 
+  void navigateToResetPasswordScreen() {
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute(
+        builder: (BuildContext context) => const ResetPassword(),
+      ),
+    );
+  }
+
+  void submitFormHandler() {
+    navigateToResetPasswordScreen();
+  }
+
   @override
   void initState() {
     super.initState();
@@ -95,6 +110,7 @@ class _VerifyCodeFormState extends State<VerifyCodeForm> {
         ),
         const SizedBox(height: 30),
         Form(
+          key: formKey,
           child: Column(
             children: [
               Row(
@@ -137,7 +153,10 @@ class _VerifyCodeFormState extends State<VerifyCodeForm> {
                 ],
               ),
               const SizedBox(height: 50),
-              const PrimaryButton(title: 'Verify'),
+              PrimaryButton(
+                title: 'Verify',
+                onPressed: submitFormHandler,
+              ),
             ],
           ),
         ),

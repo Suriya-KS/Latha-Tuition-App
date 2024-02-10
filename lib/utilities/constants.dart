@@ -13,6 +13,7 @@ const handWaveImage = "assets/images/hand_wave.svg";
 const handshakeImage = "assets/images/handshake.svg";
 const newEntryImage = "assets/images/new_entry.svg";
 const forgotPasswordImage = "assets/images/forgot_password.svg";
+const confirmImage = "assets/images/confirm.svg";
 const placeholderImage = "assets/images/placeholder.svg";
 
 const alphabets = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
