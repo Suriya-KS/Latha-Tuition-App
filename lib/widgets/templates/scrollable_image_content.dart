@@ -36,19 +36,23 @@ class ScrollableImageContent extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Align(
-                alignment: Alignment.centerLeft,
-                child: SvgPicture.asset(
-                  imagePath,
-                  height: screenHeight * 0.25,
-                ),
-              ),
-              const SizedBox(height: 50),
               Column(
                 children: [
-                  TitleText(title: title),
-                  const SizedBox(height: 10),
-                  Text(description),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: SvgPicture.asset(
+                      imagePath,
+                      height: screenHeight * 0.25,
+                    ),
+                  ),
+                  const SizedBox(height: 50),
+                  Column(
+                    children: [
+                      TitleText(title: title),
+                      const SizedBox(height: 10),
+                      Text(description),
+                    ],
+                  ),
                 ],
               ),
               const SizedBox(height: 30),

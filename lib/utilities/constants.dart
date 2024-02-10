@@ -12,10 +12,13 @@ const welcomeImage = "assets/images/welcome.svg";
 const handWaveImage = "assets/images/hand_wave.svg";
 const handshakeImage = "assets/images/handshake.svg";
 const newEntryImage = "assets/images/new_entry.svg";
+const forgotPasswordImage = "assets/images/forgot_password.svg";
 const placeholderImage = "assets/images/placeholder.svg";
 
 const alphabets = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
 const specialCharacters = ' !"#\$%&\'()*+,-./:;<=>?@[\\]^_`{|}~';
+
+const passwordVerificationCodeResendTime = Duration(seconds: 60);
 
 const screenPadding = 30.0;
 
@@ -24,4 +27,14 @@ enum Screen {
   login,
   signUp,
   studentRegistration,
+}
+
+enum PasswordRecoveryMethod {
+  email,
+  sms,
+}
+
+enum ForgotPasswordForm {
+  sendVerificationCode,
+  verifyCode,
 }

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
 import 'package:latha_tuition_app/utilities/form_validation_functions.dart';
+import 'package:latha_tuition_app/utilities/modal_bottom_sheet.dart';
 import 'package:latha_tuition_app/widgets/buttons/primary_button.dart';
+import 'package:latha_tuition_app/widgets/bottom_sheets/password_recovery_option_sheet.dart';
 import 'package:latha_tuition_app/widgets/form_inputs/text_input.dart';
 
 class LoginForm extends StatefulWidget {
@@ -64,7 +66,10 @@ class _LoginFormState extends State<LoginForm> {
           Align(
             alignment: Alignment.centerRight,
             child: TextButton(
-              onPressed: () {},
+              onPressed: () => modalBottomSheet(
+                context,
+                const PasswordRecoveryOptionSheet(),
+              ),
               child: const Text('Forgot Password?'),
             ),
           ),
