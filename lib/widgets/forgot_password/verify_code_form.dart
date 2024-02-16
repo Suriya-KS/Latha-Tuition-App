@@ -1,27 +1,22 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:latha_tuition_app/utilities/constants.dart';
+import 'package:latha_tuition_app/providers/forgot_password_provider.dart';
 import 'package:latha_tuition_app/screens/reset_password.dart';
 import 'package:latha_tuition_app/widgets/buttons/primary_button.dart';
 import 'package:latha_tuition_app/widgets/form_inputs/verification_code_input.dart';
 
-class VerifyCodeForm extends StatefulWidget {
-  const VerifyCodeForm({
-    required this.inputText,
-    required this.recoveryMethod,
-    super.key,
-  });
-
-  final String inputText;
-  final PasswordRecoveryMethod recoveryMethod;
+class VerifyCodeForm extends ConsumerStatefulWidget {
+  const VerifyCodeForm({super.key});
 
   @override
-  State<VerifyCodeForm> createState() => _VerifyCodeFormState();
+  ConsumerState<VerifyCodeForm> createState() => _VerifyCodeFormState();
 }
 
-class _VerifyCodeFormState extends State<VerifyCodeForm> {
+class _VerifyCodeFormState extends ConsumerState<VerifyCodeForm> {
   final formKey = GlobalKey<FormState>();
 
   late Timer timer;
@@ -94,10 +89,14 @@ class _VerifyCodeFormState extends State<VerifyCodeForm> {
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context);
 
-    String formattedText = widget.inputText;
+    final forgotPasswordData = ref.watch(forgotPasswordProvider);
+    final recoveryMethod = forgotPasswordData[ForgotPassword.recoveryMethod];
+    final inputText = forgotPasswordData[ForgotPassword.inputText];
 
-    if (widget.recoveryMethod == PasswordRecoveryMethod.sms) {
-      formattedText = '+91 ${widget.inputText}';
+    String formattedText = inputText;
+
+    if (recoveryMethod == PasswordRecoveryMethod.sms) {
+      formattedText = '+91 $inputText';
     }
 
     return Column(

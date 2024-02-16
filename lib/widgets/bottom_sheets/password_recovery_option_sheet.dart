@@ -1,31 +1,36 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:latha_tuition_app/utilities/constants.dart';
+import 'package:latha_tuition_app/providers/forgot_password_provider.dart';
 import 'package:latha_tuition_app/screens/forgot_password.dart';
 import 'package:latha_tuition_app/widgets/buttons/icon_with_text_button.dart';
 import 'package:latha_tuition_app/widgets/texts/title_text.dart';
 
-class PasswordRecoveryOptionSheet extends StatelessWidget {
+class PasswordRecoveryOptionSheet extends ConsumerWidget {
   const PasswordRecoveryOptionSheet({super.key});
 
   void navigateToForgotPasswordScreen(
     BuildContext context,
+    WidgetRef ref,
     PasswordRecoveryMethod recoveryMethod,
   ) {
+    final forgotPasswordMethods = ref.read(forgotPasswordProvider.notifier);
+
+    forgotPasswordMethods.resetState();
+    forgotPasswordMethods.setRecoveryMethod(recoveryMethod);
+
     Navigator.pop(context);
 
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (BuildContext context) => ForgotPasswordScreen(
-          recoveryMethod: recoveryMethod,
-        ),
+        builder: (BuildContext context) => const ForgotPasswordScreen(),
       ),
     );
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Column(
       children: [
         const TitleText(title: 'Select Recovery Method'),
@@ -38,6 +43,7 @@ class PasswordRecoveryOptionSheet extends StatelessWidget {
               icon: Icons.mail_outline,
               onPressed: () => navigateToForgotPasswordScreen(
                 context,
+                ref,
                 PasswordRecoveryMethod.email,
               ),
             ),
@@ -48,6 +54,7 @@ class PasswordRecoveryOptionSheet extends StatelessWidget {
               icon: Icons.phone_iphone_outlined,
               onPressed: () => navigateToForgotPasswordScreen(
                 context,
+                ref,
                 PasswordRecoveryMethod.sms,
               ),
             ),

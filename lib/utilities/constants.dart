@@ -30,13 +30,3 @@ enum Screen {
   signUp,
   studentRegistration,
 }
-
-enum PasswordRecoveryMethod {
-  email,
-  sms,
-}
-
-enum ForgotPasswordForm {
-  sendVerificationCode,
-  verifyCode,
-}
