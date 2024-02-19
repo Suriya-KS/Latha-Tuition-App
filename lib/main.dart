@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:latha_tuition_app/utilities/app_theme.dart';
-import 'package:latha_tuition_app/screens/onboarding.dart';
+import 'package:latha_tuition_app/screens/tutor_dashboard.dart';
 
 void main() {
   runApp(const MyApp());
@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
         title: "Latha's Tuition App",
         theme: AppTheme.theme,
         themeMode: AppTheme.themeMode,
-        home: const Onboarding(),
+        home: const TutorDashboardScreen(),
       ),
     );
   }

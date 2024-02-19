@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:latha_tuition_app/utilities/form_validation_functions.dart';
 import 'package:latha_tuition_app/utilities/modal_bottom_sheet.dart';
+import 'package:latha_tuition_app/screens/tutor_dashboard.dart';
 import 'package:latha_tuition_app/widgets/buttons/primary_button.dart';
 import 'package:latha_tuition_app/widgets/bottom_sheets/password_recovery_option_sheet.dart';
 import 'package:latha_tuition_app/widgets/form_inputs/text_input.dart';
@@ -25,6 +26,21 @@ class _LoginFormState extends State<LoginForm> {
     setState(() {
       obscureText = !obscureText;
     });
+  }
+
+  void navigateToDashboard() {
+    Navigator.of(context).pushAndRemoveUntil(
+      MaterialPageRoute(
+        builder: (BuildContext context) => const TutorDashboardScreen(),
+      ),
+      (route) => false,
+    );
+  }
+
+  void submitFormHandler() {
+    if (formKey.currentState!.validate()) {
+      navigateToDashboard();
+    }
   }
 
   @override
@@ -74,7 +90,10 @@ class _LoginFormState extends State<LoginForm> {
             ),
           ),
           const SizedBox(height: 30),
-          const PrimaryButton(title: 'Login'),
+          PrimaryButton(
+            title: 'Login',
+            onPressed: submitFormHandler,
+          ),
         ],
       ),
     );

@@ -15,6 +15,7 @@ const celebrateImage = "assets/images/celebrate.svg";
 const newEntryImage = "assets/images/new_entry.svg";
 const forgotPasswordImage = "assets/images/forgot_password.svg";
 const confirmImage = "assets/images/confirm.svg";
+const notFoundImage = "assets/images/not_found.svg";
 const placeholderImage = "assets/images/placeholder.svg";
 
 const alphabets = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
