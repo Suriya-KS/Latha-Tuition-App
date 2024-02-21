@@ -144,9 +144,96 @@ String? validateDropdownValue(String? value) {
   return null;
 }
 
-String? validateRequiredInput(String? value, String fieldName) {
+String? validateRequiredInput(
+  String? value,
+  String connector,
+  String fieldName,
+) {
   if (value == null || value.isEmpty) {
-    return 'Please enter your $fieldName';
+    return 'Please enter $connector $fieldName';
   }
+  return null;
+}
+
+String? validateTimeRange(String? startTime, String? endTime) {
+  final endTimeError = validateRequiredInput(endTime, 'an', 'end time');
+
+  if (endTimeError != null) return endTimeError;
+
+  List<String> startParts = startTime!.split(' ');
+  List<String> startTimeParts = startParts[0].split(':');
+  int startHours = int.parse(startTimeParts[0]);
+  int startMinutes = int.parse(startTimeParts[1]);
+  String startPeriod = startParts[1];
+
+  List<String> endParts = endTime!.split(' ');
+  List<String> endTimeParts = endParts[0].split(':');
+  int endHours = int.parse(endTimeParts[0]);
+  int endMinutes = int.parse(endTimeParts[1]);
+  String endPeriod = endParts[1];
+
+  if (endPeriod.toLowerCase() == 'am' && startPeriod.toLowerCase() == 'pm') {
+    return 'End time should be after start time';
+  } else if (endPeriod.toLowerCase() == startPeriod.toLowerCase()) {
+    if (endHours < startHours ||
+        (endHours == startHours && endMinutes <= startMinutes)) {
+      return 'End time should be after start time';
+    }
+  }
+
+  return null;
+}
+
+String? validateTotalMarks(String totalMarksString) {
+  double? totalMarks = double.tryParse(totalMarksString);
+
+  if (totalMarksString.isEmpty) {
+    return 'Please enter the total marks';
+  }
+
+  if (totalMarks == null) {
+    return 'Total marks must be a numeric value';
+  }
+
+  if (totalMarks <= 0) {
+    return 'Total marks must be a positive number';
+  }
+
+  if (totalMarksString.contains('.') &&
+      totalMarksString.split('.')[1].length > 2) {
+    return 'Total marks can only have up to two decimal places';
+  }
+
+  return null;
+}
+
+String? validateMarks(String marksString, String totalMarksString) {
+  double? totalMarks = double.tryParse(totalMarksString);
+  double? marks = double.tryParse(marksString);
+
+  if (marksString.isEmpty) {
+    return 'Please enter the marks';
+  }
+
+  if (totalMarks == null) {
+    return 'Total marks must be a numeric value';
+  }
+
+  if (marks == null) {
+    return 'Marks must be numeric values';
+  }
+
+  if (marks < 0) {
+    return 'Marks must be a positive number';
+  }
+
+  if (marks > totalMarks) {
+    return "Mark can't be greater than total marks";
+  }
+
+  if (marksString.contains('.') && marksString.split('.')[1].length > 2) {
+    return 'Marks can only have up to two decimal places';
+  }
+
   return null;
 }

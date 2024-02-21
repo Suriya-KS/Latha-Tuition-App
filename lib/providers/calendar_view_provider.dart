@@ -32,11 +32,20 @@ class CalendarViewNotifier extends StateNotifier<Map<CalendarView, dynamic>> {
     };
   }
 
-  void changeActiveToggle(CalendarViewToggles toggle) {
-    state = {
-      ...state,
-      CalendarView.activeToggle: toggle,
-    };
+  void changeActiveToggle(int index) {
+    if (index == 0) {
+      state = {
+        ...state,
+        CalendarView.activeToggle: CalendarViewToggles.attendance,
+      };
+    }
+
+    if (index == 1) {
+      state = {
+        ...state,
+        CalendarView.activeToggle: CalendarViewToggles.tests,
+      };
+    }
   }
 }
 

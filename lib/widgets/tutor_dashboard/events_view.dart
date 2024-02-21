@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
-import 'package:latha_tuition_app/utilities/constants.dart';
+import 'package:latha_tuition_app/utilities/modal_bottom_sheet.dart';
 import 'package:latha_tuition_app/widgets/utilities/calendar.dart';
+import 'package:latha_tuition_app/widgets/buttons/floating_circular_action_button.dart';
+import 'package:latha_tuition_app/widgets/bottom_sheets/track_record_sheet.dart';
 import 'package:latha_tuition_app/widgets/tutor_dashboard/events_summary.dart';
 
 class EventsView extends StatelessWidget {
@@ -18,15 +20,11 @@ class EventsView extends StatelessWidget {
             EventsSummary(),
           ],
         ),
-        Positioned(
-          bottom: screenPadding,
-          right: screenPadding,
-          child: FloatingActionButton(
-            foregroundColor: Colors.white,
-            backgroundColor: Theme.of(context).colorScheme.primary,
-            shape: const CircleBorder(),
-            onPressed: () {},
-            child: const Icon(Icons.add),
+        FloatingCircularActionButton(
+          icon: Icons.add,
+          onPressed: () => modalBottomSheet(
+            context,
+            const TrackRecordSheet(),
           ),
         ),
       ],

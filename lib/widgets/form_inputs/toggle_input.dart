@@ -2,19 +2,21 @@ import 'package:flutter/material.dart';
 
 class ToggleInput extends StatefulWidget {
   const ToggleInput({
-    required this.labelTextLeft,
-    required this.labelTextRight,
     required this.iconLeft,
     required this.iconRight,
     required this.onToggle,
+    this.labelTextLeft,
+    this.labelTextRight,
+    this.backgroundColors,
     this.isSelected,
     super.key,
   });
 
-  final String labelTextLeft;
-  final String labelTextRight;
+  final String? labelTextLeft;
+  final String? labelTextRight;
   final IconData iconLeft;
   final IconData iconRight;
+  final List<Color>? backgroundColors;
   final List<bool>? isSelected;
   final void Function(int) onToggle;
 
@@ -47,25 +49,32 @@ class _ToggleInputState extends State<ToggleInput> {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Expanded(
-          flex: 1,
-          child: Opacity(
-            opacity: isSelected[0] ? 1 : 0.5,
-            child: GestureDetector(
-              onTap: () => toggleHandler(0),
-              child: Text(
-                widget.labelTextLeft,
-                textAlign: TextAlign.end,
-                style: TextStyle(
-                  fontWeight:
-                      isSelected[0] ? FontWeight.bold : FontWeight.normal,
+        if (widget.labelTextLeft != null)
+          Expanded(
+            flex: 1,
+            child: Opacity(
+              opacity: isSelected[0] ? 1 : 0.5,
+              child: GestureDetector(
+                onTap: () => toggleHandler(0),
+                child: Text(
+                  widget.labelTextLeft!,
+                  textAlign: TextAlign.end,
+                  style: TextStyle(
+                    fontWeight:
+                        isSelected[0] ? FontWeight.bold : FontWeight.normal,
+                  ),
                 ),
               ),
             ),
           ),
-        ),
-        const SizedBox(width: 20),
+        if (widget.labelTextLeft != null) const SizedBox(width: 20),
         ToggleButtons(
+          fillColor: widget.backgroundColors != null
+              ? isSelected[0]
+                  ? widget.backgroundColors![0]
+                  : widget.backgroundColors![1]
+              : null,
+          selectedColor: widget.backgroundColors != null ? Colors.white : null,
           isSelected: isSelected,
           borderRadius: BorderRadius.circular(8),
           onPressed: toggleHandler,
@@ -74,24 +83,25 @@ class _ToggleInputState extends State<ToggleInput> {
             Icon(widget.iconRight),
           ],
         ),
-        const SizedBox(width: 20),
-        Expanded(
-          flex: 1,
-          child: Opacity(
-            opacity: isSelected[1] ? 1 : 0.5,
-            child: GestureDetector(
-              onTap: () => toggleHandler(1),
-              child: Text(
-                widget.labelTextRight,
-                textAlign: TextAlign.start,
-                style: TextStyle(
-                  fontWeight:
-                      isSelected[1] ? FontWeight.bold : FontWeight.normal,
+        if (widget.labelTextRight != null) const SizedBox(width: 20),
+        if (widget.labelTextRight != null)
+          Expanded(
+            flex: 1,
+            child: Opacity(
+              opacity: isSelected[1] ? 1 : 0.5,
+              child: GestureDetector(
+                onTap: () => toggleHandler(1),
+                child: Text(
+                  widget.labelTextRight!,
+                  textAlign: TextAlign.start,
+                  style: TextStyle(
+                    fontWeight:
+                        isSelected[1] ? FontWeight.bold : FontWeight.normal,
+                  ),
                 ),
               ),
             ),
           ),
-        ),
       ],
     );
   }

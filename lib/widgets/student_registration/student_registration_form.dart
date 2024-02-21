@@ -130,7 +130,8 @@ class _StudentRegistrationFormState extends State<StudentRegistrationForm> {
             prefixIcon: Icons.school_outlined,
             inputType: TextInputType.text,
             controller: schoolNameController,
-            validator: (value) => validateRequiredInput(value, 'school name'),
+            validator: (value) =>
+                validateRequiredInput(value, 'your', 'school name'),
           ),
           const SizedBox(height: 10),
           DropdownInput(
@@ -167,7 +168,7 @@ class _StudentRegistrationFormState extends State<StudentRegistrationForm> {
             inputType: TextInputType.text,
             controller: addressLine1Controller,
             validator: (value) =>
-                validateRequiredInput(value, 'address line 1'),
+                validateRequiredInput(value, 'your', 'address line 1'),
           ),
           const SizedBox(height: 10),
           TextInput(
@@ -176,7 +177,7 @@ class _StudentRegistrationFormState extends State<StudentRegistrationForm> {
             inputType: TextInputType.text,
             controller: addressLine2Controller,
             validator: (value) =>
-                validateRequiredInput(value, 'address line 2'),
+                validateRequiredInput(value, 'your', 'address line 2'),
           ),
           const SizedBox(height: 10),
           TextInput(
@@ -192,7 +193,7 @@ class _StudentRegistrationFormState extends State<StudentRegistrationForm> {
             prefixIcon: Icons.location_city_outlined,
             inputType: TextInputType.text,
             controller: cityController,
-            validator: (value) => validateRequiredInput(value, 'city'),
+            validator: (value) => validateRequiredInput(value, 'your', 'city'),
           ),
           const SizedBox(height: 10),
           TextInput(
@@ -200,7 +201,7 @@ class _StudentRegistrationFormState extends State<StudentRegistrationForm> {
             prefixIcon: Icons.map_outlined,
             inputType: TextInputType.text,
             controller: stateController,
-            validator: (value) => validateRequiredInput(value, 'state'),
+            validator: (value) => validateRequiredInput(value, 'your', 'state'),
           ),
           const SizedBox(height: 10),
           TextInput(
@@ -208,7 +209,8 @@ class _StudentRegistrationFormState extends State<StudentRegistrationForm> {
             prefixIcon: Icons.public_outlined,
             inputType: TextInputType.text,
             controller: countryController,
-            validator: (value) => validateRequiredInput(value, 'country'),
+            validator: (value) =>
+                validateRequiredInput(value, 'your', 'country'),
           ),
           const SizedBox(height: 50),
           const SubtitleText(subtitle: "Parent's Details"),

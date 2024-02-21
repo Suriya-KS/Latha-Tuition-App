@@ -30,4 +30,8 @@ enum Screen {
   login,
   signUp,
   studentRegistration,
+  calendarView,
+  trackRecordSheet,
+  attendance,
+  testMarks,
 }

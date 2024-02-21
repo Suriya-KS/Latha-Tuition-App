@@ -2,7 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:latha_tuition_app/utilities/constants.dart';
+import 'package:latha_tuition_app/utilities/dummy_data.dart';
+import 'package:latha_tuition_app/utilities/helper_functions.dart';
 import 'package:latha_tuition_app/providers/calendar_view_provider.dart';
+import 'package:latha_tuition_app/providers/track_sheet_provider.dart';
+import 'package:latha_tuition_app/providers/attendance_provider.dart';
+import 'package:latha_tuition_app/screens/attendance.dart';
+import 'package:latha_tuition_app/screens/test_marks.dart';
 import 'package:latha_tuition_app/widgets/cards/text_avatar_card.dart';
 
 class EventsList extends ConsumerWidget {
@@ -13,19 +19,48 @@ class EventsList extends ConsumerWidget {
 
   final List<Map<String, dynamic>> items;
 
-  String formatTimeRange(TimeOfDay startTime, TimeOfDay endTime) {
-    String startHours = (startTime.hour % 12 == 0 ? 12 : startTime.hour % 12)
-        .toString()
-        .padLeft(2, '0');
-    String startMinutes = startTime.minute.toString().padLeft(2, '0');
-    String endHours = (endTime.hour % 12 == 0 ? 12 : endTime.hour % 12)
-        .toString()
-        .padLeft(2, '0');
-    String endMinutes = endTime.minute.toString().padLeft(2, '0');
-    String startPeriod = startTime.period == DayPeriod.am ? 'am' : 'pm';
-    String endPeriod = endTime.period == DayPeriod.am ? 'am' : 'pm';
+  void attendanceCardTapHandler(
+    String batchName,
+    TimeOfDay startTime,
+    TimeOfDay endTime,
+    BuildContext context,
+    WidgetRef ref,
+  ) {
+    final trackSheetMethods = ref.read(trackSheetProvider.notifier);
+    final attendanceMethods = ref.read(attendanceProvider.notifier);
 
-    return '$startHours:$startMinutes $startPeriod - $endHours:$endMinutes $endPeriod';
+    trackSheetMethods.setBatchName(batchName);
+    trackSheetMethods.setTime(startTime, endTime);
+    attendanceMethods.startAttendanceTracker(dummyStudentNames.length);
+
+    navigateToTrackScreen(
+      context,
+      Screen.calendarView,
+      const AttendanceScreen(),
+    );
+  }
+
+  void testMarksCardTapHandler(
+    String testName,
+    String batchName,
+    TimeOfDay startTime,
+    TimeOfDay endTime,
+    BuildContext context,
+    WidgetRef ref,
+  ) {
+    final trackSheetMethods = ref.read(trackSheetProvider.notifier);
+    final attendanceMethods = ref.read(attendanceProvider.notifier);
+
+    trackSheetMethods.setTestName(testName);
+    trackSheetMethods.setBatchName(batchName);
+    trackSheetMethods.setTime(startTime, endTime);
+    attendanceMethods.startAttendanceTracker(dummyStudentNames.length);
+
+    navigateToTrackScreen(
+      context,
+      Screen.calendarView,
+      const TestMarksScreen(),
+    );
   }
 
   @override
@@ -38,6 +73,13 @@ class EventsList extends ConsumerWidget {
       itemBuilder: (context, index) => TextAvatarCard(
         title: items[index]['batchName']!,
         avatarText: items[index]['standard']!,
+        onTap: () => attendanceCardTapHandler(
+          items[index]['batchName']!,
+          items[index]['startTime'],
+          items[index]['endTime'],
+          context,
+          ref,
+        ),
         children: [
           Text(
             formatTimeRange(
@@ -55,6 +97,14 @@ class EventsList extends ConsumerWidget {
         itemBuilder: (context, index) => TextAvatarCard(
           title: items[index]['testName'],
           avatarText: items[index]['standard']!,
+          onTap: () => testMarksCardTapHandler(
+            items[index]['testName'],
+            items[index]['batchName']!,
+            items[index]['startTime'],
+            items[index]['endTime'],
+            context,
+            ref,
+          ),
           children: [
             Text(items[index]['batchName']!),
             Text(

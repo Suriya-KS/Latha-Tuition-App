@@ -7,6 +7,7 @@ class DropdownInput extends StatelessWidget {
     required this.items,
     required this.onChanged,
     required this.validator,
+    this.initialValue,
     super.key,
   });
 
@@ -15,10 +16,12 @@ class DropdownInput extends StatelessWidget {
   final List<String> items;
   final void Function(String?) onChanged;
   final String? Function(String?) validator;
+  final String? initialValue;
 
   @override
   Widget build(BuildContext context) {
     return DropdownButtonFormField(
+      value: initialValue,
       decoration: InputDecoration(
         labelText: labelText,
         prefixIcon: Icon(prefixIcon),

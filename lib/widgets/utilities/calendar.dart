@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:table_calendar/table_calendar.dart';
 
 import 'package:latha_tuition_app/utilities/constants.dart';
 import 'package:latha_tuition_app/providers/calendar_view_provider.dart';
+import 'package:table_calendar/table_calendar.dart';
 
 class Calendar extends ConsumerStatefulWidget {
   const Calendar({super.key});
@@ -16,9 +16,6 @@ class _CalendarState extends ConsumerState<Calendar> {
   late DateTime focusedDay;
   late DateTime selectedDay;
 
-  late DateTime firstDay;
-  late DateTime lastDay;
-
   void daySelectHandler(DateTime selected, DateTime focused) {
     setState(() {
       selectedDay = selected;
@@ -29,19 +26,15 @@ class _CalendarState extends ConsumerState<Calendar> {
   }
 
   @override
-  void initState() {
-    super.initState();
+  Widget build(BuildContext context) {
+    final calendarViewData = ref.watch(calendarViewProvider);
 
-    final calendarViewData = ref.read(calendarViewProvider);
+    final firstDay = calendarViewData[CalendarView.firstDate];
+    final lastDay = calendarViewData[CalendarView.lastDate];
 
     focusedDay = calendarViewData[CalendarView.selectedDate];
     selectedDay = calendarViewData[CalendarView.selectedDate];
-    firstDay = calendarViewData[CalendarView.firstDate];
-    lastDay = calendarViewData[CalendarView.lastDate];
-  }
 
-  @override
-  Widget build(BuildContext context) {
     final focusedDayTextStyle = Theme.of(context).textTheme.bodyLarge!.copyWith(
           fontWeight: FontWeight.bold,
           color: Colors.white,

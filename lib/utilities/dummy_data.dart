@@ -31,3 +31,28 @@ final List<Map<String, dynamic>> dummyTestMarksData = [
     'endTime': const TimeOfDay(hour: 19, minute: 0),
   },
 ];
+
+final List<String> dummyBatchNames = [
+  'Batch 1',
+  'Batch 2',
+  'Batch 3',
+  'Batch 4',
+];
+
+final List<String> dummyStudentNames = [
+  'Student Name 1',
+  'Student Name 2',
+  'Student Name 3',
+  'Student Name 4',
+  'Student Name 5',
+  'Student Name 6',
+  'Student Name 7',
+  'Student Name 8',
+  'Student Name 9',
+  'Student Name 10',
+  'Student Name 11',
+  'Student Name 12',
+  'Student Name 13',
+  'Student Name 14',
+  'Student Name 15',
+];

@@ -39,6 +39,7 @@ class TextInput extends StatelessWidget {
               )
             : null,
         prefixIconColor: Theme.of(context).colorScheme.primary,
+        errorMaxLines: 3,
       ),
       obscureText: obscureText,
       autovalidateMode: AutovalidateMode.onUserInteraction,

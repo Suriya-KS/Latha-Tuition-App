@@ -21,16 +21,8 @@ class _EventsSummaryState extends ConsumerState<EventsSummary> {
 
   final GlobalKey columnKey = GlobalKey();
 
-  void toggleHandler(index) {
-    final calendarViewMethods = ref.read(calendarViewProvider.notifier);
-
-    if (index == 0) {
-      calendarViewMethods.changeActiveToggle(CalendarViewToggles.attendance);
-    }
-
-    if (index == 1) {
-      calendarViewMethods.changeActiveToggle(CalendarViewToggles.tests);
-    }
+  void toggleHandler(int index) {
+    ref.read(calendarViewProvider.notifier).changeActiveToggle(index);
 
     setState(() {
       if (index == 0) items = dummyAttendanceData;
