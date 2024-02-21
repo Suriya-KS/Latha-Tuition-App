@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:liquid_swipe/liquid_swipe.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
-import 'package:latha_tuition_app/utilities/constants.dart';
 import 'package:latha_tuition_app/widgets/onboarding/onboarding_page_list.dart';
 
 class Onboarding extends StatefulWidget {
@@ -13,15 +12,23 @@ class Onboarding extends StatefulWidget {
 }
 
 class _OnboardingState extends State<Onboarding> {
-  final liquidController = LiquidController();
+  final lastPageIndex = 2;
 
   int currentPageIndex = 0;
-  final lastPageIndex = 2;
+
+  late LiquidController liquidController;
 
   void pageChangeHandler(activePageIndex) {
     setState(() {
       currentPageIndex = activePageIndex;
     });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    liquidController = LiquidController();
   }
 
   @override
@@ -48,7 +55,10 @@ class _OnboardingState extends State<Onboarding> {
                     child: Text(
                       'Skip',
                       style: TextStyle(
-                        color: secondaryBackgroundColor.withOpacity(0.4),
+                        color: Theme.of(context)
+                            .colorScheme
+                            .onBackground
+                            .withOpacity(0.4),
                       ),
                     ),
                   ),
@@ -62,8 +72,11 @@ class _OnboardingState extends State<Onboarding> {
                 activeIndex: currentPageIndex,
                 count: lastPageIndex + 1,
                 effect: ScrollingDotsEffect(
-                  activeDotColor: secondaryBackgroundColor,
-                  dotColor: secondaryBackgroundColor.withOpacity(0.2),
+                  activeDotColor: Theme.of(context).colorScheme.onBackground,
+                  dotColor: Theme.of(context)
+                      .colorScheme
+                      .onBackground
+                      .withOpacity(0.2),
                   activeDotScale: 1.6,
                   dotWidth: 10,
                   dotHeight: 10,

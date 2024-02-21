@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'package:latha_tuition_app/utilities/constants.dart';
-
 class PrimaryButton extends StatelessWidget {
   const PrimaryButton({
     this.title,
@@ -17,14 +15,17 @@ class PrimaryButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
-      onPressed: onPressed ?? () {},
       style: ElevatedButton.styleFrom(
-        backgroundColor: secondaryBackgroundColor,
+        backgroundColor: Theme.of(context).colorScheme.onBackground,
         foregroundColor: Colors.white,
         elevation: 0,
       ),
+      onPressed: onPressed ?? () {},
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+        padding: const EdgeInsets.symmetric(
+          vertical: 16,
+          horizontal: 24,
+        ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[

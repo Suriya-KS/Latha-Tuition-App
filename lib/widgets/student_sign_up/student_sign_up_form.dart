@@ -17,9 +17,9 @@ class _StudentSignUpFormState extends State<StudentSignUpForm> {
   bool passwordObscureText = true;
   bool confirmPasswordObscureText = true;
 
-  final phoneController = TextEditingController();
-  final passwordController = TextEditingController();
-  final confirmPasswordController = TextEditingController();
+  late TextEditingController phoneController;
+  late TextEditingController passwordController;
+  late TextEditingController confirmPasswordController;
 
   void togglePasswordVisibility() {
     setState(() {
@@ -31,6 +31,15 @@ class _StudentSignUpFormState extends State<StudentSignUpForm> {
     setState(() {
       confirmPasswordObscureText = !confirmPasswordObscureText;
     });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    phoneController = TextEditingController();
+    passwordController = TextEditingController();
+    confirmPasswordController = TextEditingController();
   }
 
   @override

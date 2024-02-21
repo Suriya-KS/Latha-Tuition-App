@@ -19,8 +19,8 @@ class TitleInputCard extends StatelessWidget {
       child: Card(
         child: Padding(
           padding: const EdgeInsets.symmetric(
-            horizontal: 24,
             vertical: 12,
+            horizontal: 24,
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,

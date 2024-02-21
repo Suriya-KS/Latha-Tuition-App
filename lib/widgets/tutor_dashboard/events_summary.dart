@@ -16,10 +16,10 @@ class EventsSummary extends ConsumerStatefulWidget {
 }
 
 class _EventsSummaryState extends ConsumerState<EventsSummary> {
+  final GlobalKey columnKey = GlobalKey();
+
   late List<Map<String, dynamic>> items;
   late List<bool> isSelected;
-
-  final GlobalKey columnKey = GlobalKey();
 
   void toggleHandler(int index) {
     ref.read(calendarViewProvider.notifier).changeActiveToggle(index);

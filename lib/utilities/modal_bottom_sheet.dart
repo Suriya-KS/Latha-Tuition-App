@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'package:latha_tuition_app/utilities/constants.dart';
-
 void modalBottomSheet(BuildContext context, Widget content) {
   final screenWidth = MediaQuery.of(context).size.width;
 
@@ -23,7 +21,8 @@ void modalBottomSheet(BuildContext context, Widget content) {
             width: screenWidth * 0.12,
             height: 6,
             decoration: BoxDecoration(
-              color: secondaryBackgroundColor.withOpacity(0.3),
+              color:
+                  Theme.of(context).colorScheme.onBackground.withOpacity(0.3),
               borderRadius: const BorderRadius.all(
                 Radius.circular(8),
               ),

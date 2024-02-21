@@ -11,8 +11,9 @@ class TutorDashboardScreen extends StatefulWidget {
 }
 
 class _TutorDashboardScreenState extends State<TutorDashboardScreen> {
-  int currentPageIndex = 0;
   static const pages = [Placeholder(), EventsView(), Placeholder()];
+
+  int currentPageIndex = 0;
 
   void changeView(int index) {
     setState(() {

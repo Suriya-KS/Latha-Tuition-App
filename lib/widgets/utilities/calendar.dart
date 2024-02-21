@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:latha_tuition_app/utilities/constants.dart';
 import 'package:latha_tuition_app/providers/calendar_view_provider.dart';
 import 'package:table_calendar/table_calendar.dart';
 
@@ -32,13 +31,13 @@ class _CalendarState extends ConsumerState<Calendar> {
     final firstDay = calendarViewData[CalendarView.firstDate];
     final lastDay = calendarViewData[CalendarView.lastDate];
 
-    focusedDay = calendarViewData[CalendarView.selectedDate];
-    selectedDay = calendarViewData[CalendarView.selectedDate];
-
     final focusedDayTextStyle = Theme.of(context).textTheme.bodyLarge!.copyWith(
           fontWeight: FontWeight.bold,
           color: Colors.white,
         );
+
+    focusedDay = calendarViewData[CalendarView.selectedDate];
+    selectedDay = calendarViewData[CalendarView.selectedDate];
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -60,7 +59,7 @@ class _CalendarState extends ConsumerState<Calendar> {
           weekendTextStyle: Theme.of(context)
               .textTheme
               .bodyMedium!
-              .copyWith(color: secondaryColor),
+              .copyWith(color: Theme.of(context).colorScheme.error),
         ),
         headerStyle: HeaderStyle(
           titleCentered: true,
@@ -76,7 +75,7 @@ class _CalendarState extends ConsumerState<Calendar> {
               ),
           weekendStyle: Theme.of(context).textTheme.bodyMedium!.copyWith(
                 fontWeight: FontWeight.w700,
-                color: secondaryColor,
+                color: Theme.of(context).colorScheme.error,
               ),
         ),
         onDaySelected: daySelectHandler,

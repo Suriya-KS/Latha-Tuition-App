@@ -71,10 +71,10 @@ class EventsList extends ConsumerWidget {
     Widget content = ListView.builder(
       itemCount: items.length,
       itemBuilder: (context, index) => TextAvatarCard(
-        title: items[index]['batchName']!,
-        avatarText: items[index]['standard']!,
+        title: items[index]['batchName'],
+        avatarText: items[index]['standard'],
         onTap: () => attendanceCardTapHandler(
-          items[index]['batchName']!,
+          items[index]['batchName'],
           items[index]['startTime'],
           items[index]['endTime'],
           context,
@@ -96,17 +96,17 @@ class EventsList extends ConsumerWidget {
         itemCount: items.length,
         itemBuilder: (context, index) => TextAvatarCard(
           title: items[index]['testName'],
-          avatarText: items[index]['standard']!,
+          avatarText: items[index]['standard'],
           onTap: () => testMarksCardTapHandler(
             items[index]['testName'],
-            items[index]['batchName']!,
+            items[index]['batchName'],
             items[index]['startTime'],
             items[index]['endTime'],
             context,
             ref,
           ),
           children: [
-            Text(items[index]['batchName']!),
+            Text(items[index]['batchName']),
             Text(
               formatTimeRange(
                 items[index]['startTime'],

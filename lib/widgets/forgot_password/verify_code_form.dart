@@ -18,18 +18,17 @@ class VerifyCodeForm extends ConsumerStatefulWidget {
 
 class _VerifyCodeFormState extends ConsumerState<VerifyCodeForm> {
   final formKey = GlobalKey<FormState>();
-
-  late Timer timer;
+  final verificationCode1FocusNode = FocusNode();
 
   bool canResend = false;
   int secondsRemaining = passwordVerificationCodeResendTime.inSeconds;
 
-  final verificationCode1Controller = TextEditingController();
-  final verificationCode2Controller = TextEditingController();
-  final verificationCode3Controller = TextEditingController();
-  final verificationCode4Controller = TextEditingController();
+  late TextEditingController verificationCode1Controller;
+  late TextEditingController verificationCode2Controller;
+  late TextEditingController verificationCode3Controller;
+  late TextEditingController verificationCode4Controller;
 
-  final verificationCode1FocusNode = FocusNode();
+  late Timer timer;
 
   void resendTimerHandler() {
     verificationCode1Controller.clear();
@@ -72,6 +71,12 @@ class _VerifyCodeFormState extends ConsumerState<VerifyCodeForm> {
   @override
   void initState() {
     super.initState();
+
+    verificationCode1Controller = TextEditingController();
+    verificationCode2Controller = TextEditingController();
+    verificationCode3Controller = TextEditingController();
+    verificationCode4Controller = TextEditingController();
+
     resendTimerHandler();
   }
 

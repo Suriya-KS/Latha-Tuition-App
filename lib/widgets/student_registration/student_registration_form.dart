@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:latha_tuition_app/screens/student_sign_up.dart';
-import 'package:latha_tuition_app/utilities/form_validation_functions.dart';
 
+import 'package:latha_tuition_app/utilities/form_validation_functions.dart';
+import 'package:latha_tuition_app/screens/student_sign_up.dart';
 import 'package:latha_tuition_app/widgets/buttons/primary_button.dart';
-import 'package:latha_tuition_app/widgets/form_inputs/dropdown_input.dart';
-import 'package:latha_tuition_app/widgets/form_inputs/text_input.dart';
 import 'package:latha_tuition_app/widgets/texts/subtitle_text.dart';
+import 'package:latha_tuition_app/widgets/form_inputs/text_input.dart';
+import 'package:latha_tuition_app/widgets/form_inputs/dropdown_input.dart';
 
 class StudentRegistrationForm extends StatefulWidget {
   const StudentRegistrationForm({super.key});
@@ -18,19 +18,19 @@ class StudentRegistrationForm extends StatefulWidget {
 class _StudentRegistrationFormState extends State<StudentRegistrationForm> {
   final formKey = GlobalKey<FormState>();
 
-  final nameController = TextEditingController();
-  final phoneController = TextEditingController();
-  final emailController = TextEditingController();
-  final schoolNameController = TextEditingController();
-  final addressLine1Controller = TextEditingController();
-  final addressLine2Controller = TextEditingController();
-  final pincodeController = TextEditingController();
-  final cityController = TextEditingController();
-  final stateController = TextEditingController();
-  final countryController = TextEditingController();
-  final parentNameController = TextEditingController();
-  final parentPhoneController = TextEditingController();
-  final parentEmailController = TextEditingController();
+  late TextEditingController nameController;
+  late TextEditingController phoneController;
+  late TextEditingController emailController;
+  late TextEditingController schoolNameController;
+  late TextEditingController addressLine1Controller;
+  late TextEditingController addressLine2Controller;
+  late TextEditingController pincodeController;
+  late TextEditingController cityController;
+  late TextEditingController stateController;
+  late TextEditingController countryController;
+  late TextEditingController parentNameController;
+  late TextEditingController parentPhoneController;
+  late TextEditingController parentEmailController;
 
   List<String> getAcademicYears({
     required int previousYears,
@@ -63,6 +63,25 @@ class _StudentRegistrationFormState extends State<StudentRegistrationForm> {
     if (formKey.currentState!.validate()) {
       navigateToStudentSignUpScreen();
     }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    nameController = TextEditingController();
+    phoneController = TextEditingController();
+    emailController = TextEditingController();
+    schoolNameController = TextEditingController();
+    addressLine1Controller = TextEditingController();
+    addressLine2Controller = TextEditingController();
+    pincodeController = TextEditingController();
+    cityController = TextEditingController();
+    stateController = TextEditingController();
+    countryController = TextEditingController();
+    parentNameController = TextEditingController();
+    parentPhoneController = TextEditingController();
+    parentEmailController = TextEditingController();
   }
 
   @override

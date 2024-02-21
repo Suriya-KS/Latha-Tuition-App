@@ -20,7 +20,6 @@ class TestMarksScreen extends ConsumerStatefulWidget {
 
 class _TestMarksScreenState extends ConsumerState<TestMarksScreen> {
   late int length;
-
   late List<TextEditingController> marksControllers;
 
   void submitHandler(BuildContext context) {
@@ -32,7 +31,6 @@ class _TestMarksScreenState extends ConsumerState<TestMarksScreen> {
     super.initState();
 
     length = dummyStudentNames.length;
-
     marksControllers = List.generate(
       length,
       (index) => TextEditingController(),

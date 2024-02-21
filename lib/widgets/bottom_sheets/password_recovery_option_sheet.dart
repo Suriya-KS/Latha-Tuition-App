@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'package:latha_tuition_app/utilities/constants.dart';
 import 'package:latha_tuition_app/providers/forgot_password_provider.dart';
 import 'package:latha_tuition_app/screens/forgot_password.dart';
 import 'package:latha_tuition_app/widgets/buttons/icon_with_text_button.dart';
@@ -58,7 +59,7 @@ class PasswordRecoveryOptionSheet extends ConsumerWidget {
                 PasswordRecoveryMethod.sms,
               ),
             ),
-            const SizedBox(height: 30),
+            const SizedBox(height: screenPadding),
           ],
         ),
       ],

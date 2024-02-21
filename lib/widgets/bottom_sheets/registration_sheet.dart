@@ -4,9 +4,9 @@ import 'package:latha_tuition_app/utilities/constants.dart';
 import 'package:latha_tuition_app/utilities/helper_functions.dart';
 import 'package:latha_tuition_app/screens/tutor_sign_up.dart';
 import 'package:latha_tuition_app/screens/student_registration.dart';
-import 'package:latha_tuition_app/widgets/texts/title_text.dart';
 import 'package:latha_tuition_app/widgets/buttons/primary_button.dart';
 import 'package:latha_tuition_app/widgets/buttons/info_action_button.dart';
+import 'package:latha_tuition_app/widgets/texts/title_text.dart';
 
 class RegistrationSheet extends StatelessWidget {
   const RegistrationSheet({
@@ -87,7 +87,7 @@ class RegistrationSheet extends StatelessWidget {
             ),
           ],
         ),
-        const SizedBox(height: 20),
+        const SizedBox(height: screenPadding),
       ],
     );
   }

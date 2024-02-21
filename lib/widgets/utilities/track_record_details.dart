@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:latha_tuition_app/providers/track_sheet_provider.dart';
 
 import 'package:latha_tuition_app/utilities/constants.dart';
 import 'package:latha_tuition_app/utilities/helper_functions.dart';
 import 'package:latha_tuition_app/utilities/modal_bottom_sheet.dart';
-import 'package:latha_tuition_app/widgets/bottom_sheets/track_record_sheet.dart';
+import 'package:latha_tuition_app/providers/track_sheet_provider.dart';
 import 'package:latha_tuition_app/widgets/texts/subtitle_text.dart';
 import 'package:latha_tuition_app/widgets/texts/text_with_icon.dart';
+import 'package:latha_tuition_app/widgets/bottom_sheets/track_record_sheet.dart';
 
 class TrackRecordDetails extends ConsumerWidget {
   const TrackRecordDetails({
@@ -75,7 +75,7 @@ class TrackRecordDetails extends ConsumerWidget {
                   child: SubtitleText(subtitle: title),
                 ),
                 const SizedBox(height: 10),
-                if (screen == Screen.testMarks)
+                if (screen == Screen.testMarks && description != null)
                   FractionallySizedBox(
                     widthFactor: 0.85,
                     child: TextWithIcon(

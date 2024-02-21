@@ -17,8 +17,8 @@ class _ResetPasswordFormState extends State<ResetPasswordForm> {
   bool passwordObscureText = true;
   bool confirmPasswordObscureText = true;
 
-  final passwordController = TextEditingController();
-  final confirmPasswordController = TextEditingController();
+  late TextEditingController passwordController;
+  late TextEditingController confirmPasswordController;
 
   void togglePasswordVisibility() {
     setState(() {
@@ -36,6 +36,14 @@ class _ResetPasswordFormState extends State<ResetPasswordForm> {
     if (formKey.currentState!.validate()) {
       Navigator.pop(context);
     }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    passwordController = TextEditingController();
+    confirmPasswordController = TextEditingController();
   }
 
   @override

@@ -17,7 +17,8 @@ class SendVerificationCodeForm extends ConsumerStatefulWidget {
 class _SendVerificationCodeFormState
     extends ConsumerState<SendVerificationCodeForm> {
   final formKey = GlobalKey<FormState>();
-  final controller = TextEditingController();
+
+  late TextEditingController controller;
 
   void submitFormHandler() {
     if (formKey.currentState!.validate()) {
@@ -25,6 +26,13 @@ class _SendVerificationCodeFormState
           .read(forgotPasswordProvider.notifier)
           .switchToVerifyCodeForm(controller.text);
     }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    controller = TextEditingController();
   }
 
   @override

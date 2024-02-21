@@ -32,17 +32,17 @@ class TrackRecordSheet extends ConsumerStatefulWidget {
 }
 
 class _TrackRecordSheetState extends ConsumerState<TrackRecordSheet> {
+  final formKey = GlobalKey<FormState>();
+
   late String title;
   late Widget destinationScreen;
   late List<bool> isSelected;
 
-  final formKey = GlobalKey<FormState>();
-
-  final testNameController = TextEditingController();
-  final totalMarksController = TextEditingController();
-  final dateController = TextEditingController();
-  final startTimeController = TextEditingController();
-  final endTimeController = TextEditingController();
+  late TextEditingController testNameController;
+  late TextEditingController totalMarksController;
+  late TextEditingController dateController;
+  late TextEditingController startTimeController;
+  late TextEditingController endTimeController;
 
   TimeOfDay stringToTimeOfDay(String timeString) {
     List<String> splitString = timeString.split(':');
@@ -106,6 +106,12 @@ class _TrackRecordSheetState extends ConsumerState<TrackRecordSheet> {
   @override
   void initState() {
     super.initState();
+
+    testNameController = TextEditingController();
+    totalMarksController = TextEditingController();
+    dateController = TextEditingController();
+    startTimeController = TextEditingController();
+    endTimeController = TextEditingController();
 
     final trackSheetData = ref.read(trackSheetProvider);
 
@@ -279,7 +285,7 @@ class _TrackRecordSheetState extends ConsumerState<TrackRecordSheet> {
             ],
           ),
         ),
-        const SizedBox(height: 20),
+        const SizedBox(height: screenPadding),
       ],
     );
   }

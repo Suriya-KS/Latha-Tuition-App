@@ -19,8 +19,8 @@ class _LoginFormState extends State<LoginForm> {
 
   bool obscureText = true;
 
-  final phoneController = TextEditingController();
-  final passwordController = TextEditingController();
+  late TextEditingController phoneController;
+  late TextEditingController passwordController;
 
   void togglePasswordVisibility() {
     setState(() {
@@ -41,6 +41,14 @@ class _LoginFormState extends State<LoginForm> {
     if (formKey.currentState!.validate()) {
       navigateToDashboard();
     }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    phoneController = TextEditingController();
+    passwordController = TextEditingController();
   }
 
   @override

@@ -28,7 +28,10 @@ class IconWithTextButton extends StatelessWidget {
       ),
       onPressed: onPressed,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
+        padding: const EdgeInsets.symmetric(
+          vertical: 8,
+          horizontal: 4,
+        ),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [

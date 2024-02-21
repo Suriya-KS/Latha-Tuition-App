@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import 'package:latha_tuition_app/utilities/constants.dart';
-
 class VerificationCodeInput extends StatelessWidget {
   const VerificationCodeInput({
     required this.screenSize,
-    this.focusNode,
     required this.controller,
+    this.focusNode,
     super.key,
   });
 
@@ -31,7 +29,7 @@ class VerificationCodeInput extends StatelessWidget {
         style: Theme.of(context).textTheme.titleLarge,
         decoration: InputDecoration(
           filled: true,
-          fillColor: primaryBackgroundColor,
+          fillColor: Theme.of(context).colorScheme.onInverseSurface,
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
             borderSide: const BorderSide(
@@ -49,8 +47,8 @@ class VerificationCodeInput extends StatelessWidget {
           LengthLimitingTextInputFormatter(1),
           FilteringTextInputFormatter.digitsOnly,
         ],
-        onChanged: (value) => focusNextInput(context, value),
         focusNode: focusNode,
+        onChanged: (value) => focusNextInput(context, value),
         controller: controller,
       ),
     );

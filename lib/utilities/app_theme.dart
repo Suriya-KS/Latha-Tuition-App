@@ -9,7 +9,7 @@ class AppTheme {
 
   static ThemeData theme = ThemeData(
     colorScheme: ColorScheme.fromSeed(
-      seedColor: primaryColor,
+      seedColor: seedColor,
       brightness: Brightness.light,
     ),
     fontFamily: 'Poppins',
