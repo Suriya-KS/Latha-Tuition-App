@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:latha_tuition_app/widgets/bottom_navigation_bar/curved_bottom_navigation_bar.dart';
 import 'package:latha_tuition_app/widgets/tutor_dashboard/events_view.dart';
+import 'package:latha_tuition_app/widgets/tutor_dashboard/student_administration_view.dart';
 
 class TutorDashboardScreen extends StatefulWidget {
   const TutorDashboardScreen({super.key});
@@ -11,7 +12,11 @@ class TutorDashboardScreen extends StatefulWidget {
 }
 
 class _TutorDashboardScreenState extends State<TutorDashboardScreen> {
-  static const pages = [Placeholder(), EventsView(), Placeholder()];
+  static const pages = [
+    Placeholder(),
+    EventsView(),
+    StudentAdministrationView(),
+  ];
 
   int currentPageIndex = 0;
 

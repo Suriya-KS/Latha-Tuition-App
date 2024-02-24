@@ -80,3 +80,15 @@ String formatMarks(double marks) {
 
   return marks.toStringAsFixed(2);
 }
+
+String capitalizeText(String text) {
+  List<String> words = text.split(' ');
+
+  for (int i = 0; i < words.length; i++) {
+    if (words[i].isNotEmpty) {
+      words[i] = words[i][0].toUpperCase() + words[i].substring(1);
+    }
+  }
+
+  return words.join(' ');
+}

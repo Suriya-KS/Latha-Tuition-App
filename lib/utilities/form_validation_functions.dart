@@ -155,6 +155,23 @@ String? validateRequiredInput(
   return null;
 }
 
+String? validateUpdateText(
+  String? newValue,
+  String? oldValue,
+  String connector,
+  String fieldName,
+) {
+  final textError = validateRequiredInput(newValue, connector, fieldName);
+
+  if (textError != null) return textError;
+
+  if (newValue == oldValue) {
+    return 'Please provide a different $fieldName';
+  }
+
+  return null;
+}
+
 String? validateTimeRange(String? startTime, String? endTime) {
   final endTimeError = validateRequiredInput(endTime, 'an', 'end time');
 

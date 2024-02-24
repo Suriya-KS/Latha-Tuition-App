@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'package:latha_tuition_app/utilities/dummy_data.dart';
 import 'package:latha_tuition_app/utilities/form_validation_functions.dart';
 import 'package:latha_tuition_app/screens/student_sign_up.dart';
 import 'package:latha_tuition_app/widgets/buttons/primary_button.dart';
@@ -167,7 +168,7 @@ class _StudentRegistrationFormState extends State<StudentRegistrationForm> {
           DropdownInput(
             labelText: 'Education Board',
             prefixIcon: Icons.library_books_outlined,
-            items: const ['State Board', 'CBSE', 'ICSE', 'IG'],
+            items: dummyEducationBoards,
             onChanged: (value) {},
             validator: validateDropdownValue,
           ),
@@ -175,7 +176,7 @@ class _StudentRegistrationFormState extends State<StudentRegistrationForm> {
           DropdownInput(
             labelText: 'Standard',
             prefixIcon: Icons.class_outlined,
-            items: const ['VII', 'VIII', 'IX', 'X', 'XI', 'XII'],
+            items: dummyStandards,
             onChanged: (value) {},
             validator: validateDropdownValue,
           ),

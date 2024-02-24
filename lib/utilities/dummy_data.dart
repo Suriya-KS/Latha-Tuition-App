@@ -39,6 +39,28 @@ final List<String> dummyBatchNames = [
   'Batch 4',
 ];
 
+final List<String> dummyEducationBoards = [
+  'State Board',
+  'CBSE',
+  'ICSE',
+  'IG',
+];
+
+final List<String> dummyStandards = [
+  'I',
+  'II',
+  'III',
+  'IV',
+  'V',
+  'VI',
+  'VII',
+  'VIII',
+  'IX',
+  'X',
+  'XI',
+  'XII',
+];
+
 final List<String> dummyStudentNames = [
   'Student Name 1',
   'Student Name 2',
