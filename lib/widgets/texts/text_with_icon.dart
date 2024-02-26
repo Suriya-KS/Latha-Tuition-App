@@ -17,9 +17,16 @@ class TextWithIcon extends StatelessWidget {
         Icon(
           icon,
           size: 18,
+          color: Theme.of(context).colorScheme.primary,
         ),
         const SizedBox(width: 5),
-        Text(text),
+        Expanded(
+          child: Text(
+            text,
+            overflow: TextOverflow.ellipsis,
+            maxLines: 10,
+          ),
+        ),
       ],
     );
   }

@@ -4,18 +4,21 @@ class SubtitleText extends StatelessWidget {
   const SubtitleText({
     required this.subtitle,
     this.color,
+    this.alignment,
     super.key,
   });
 
   final String subtitle;
   final Color? color;
+  final Alignment? alignment;
 
   @override
   Widget build(BuildContext context) {
     return Align(
-      alignment: Alignment.centerLeft,
+      alignment: alignment ?? Alignment.centerLeft,
       child: Text(
         subtitle,
+        textAlign: TextAlign.center,
         style: TextStyle(
           fontSize: 18,
           fontWeight: FontWeight.bold,

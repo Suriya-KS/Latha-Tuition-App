@@ -167,7 +167,7 @@ class _StudentRegistrationFormState extends State<StudentRegistrationForm> {
           const SizedBox(height: 10),
           DropdownInput(
             labelText: 'Education Board',
-            prefixIcon: Icons.library_books_outlined,
+            prefixIcon: Icons.menu_book_outlined,
             items: dummyEducationBoards,
             onChanged: (value) {},
             validator: validateDropdownValue,

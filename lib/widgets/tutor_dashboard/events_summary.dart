@@ -5,7 +5,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:latha_tuition_app/utilities/constants.dart';
 import 'package:latha_tuition_app/utilities/dummy_data.dart';
 import 'package:latha_tuition_app/providers/calendar_view_provider.dart';
-import 'package:latha_tuition_app/widgets/form_inputs/toggle_input.dart';
+import 'package:latha_tuition_app/widgets/form_inputs/label_toggle_input.dart';
 import 'package:latha_tuition_app/widgets/tutor_dashboard/events_list.dart';
 
 class EventsSummary extends ConsumerStatefulWidget {
@@ -18,8 +18,21 @@ class EventsSummary extends ConsumerStatefulWidget {
 class _EventsSummaryState extends ConsumerState<EventsSummary> {
   final GlobalKey columnKey = GlobalKey();
 
+  double columnHeight = 200;
+
   late List<Map<String, dynamic>> items;
   late List<bool> isSelected;
+
+  void updateColumnHeight() {
+    if (columnKey.currentContext != null) {
+      RenderBox renderBox =
+          columnKey.currentContext!.findRenderObject() as RenderBox;
+
+      setState(() {
+        columnHeight = renderBox.size.height;
+      });
+    }
+  }
 
   void toggleHandler(int index) {
     ref.read(calendarViewProvider.notifier).changeActiveToggle(index);
@@ -44,23 +57,19 @@ class _EventsSummaryState extends ConsumerState<EventsSummary> {
       items = dummyTestMarksData;
       isSelected = [false, true];
     }
+
+    WidgetsBinding.instance.addPostFrameCallback(
+      (duration) => updateColumnHeight(),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    double columnHeight = 200;
-
-    if (columnKey.currentContext != null) {
-      RenderBox renderBox =
-          columnKey.currentContext!.findRenderObject() as RenderBox;
-      columnHeight = renderBox.size.height;
-    }
-
     return Expanded(
       child: Column(
         key: columnKey,
         children: [
-          ToggleInput(
+          LabelToggleInput(
             labelTextLeft: 'Attendance',
             labelTextRight: 'Tests',
             iconLeft: Icons.groups_outlined,

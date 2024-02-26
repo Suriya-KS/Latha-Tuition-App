@@ -78,3 +78,24 @@ final List<String> dummyStudentNames = [
   'Student Name 14',
   'Student Name 15',
 ];
+
+final Map<String, dynamic> dummyStudentDetails = {
+  'name': 'Student Name',
+  'phoneNumber': '+91 1234567890',
+  'emailAddress': 'studentname@email.com',
+  'gender': 'Male',
+  'schoolName': 'School Name public school',
+  'academicYear': '2000 - 2002',
+  'educationBoard': 'CBSE',
+  'standard': 'XI',
+  'addressLine1': 'This is the address line 1 of the student',
+  'addressLine2': 'This is the address line 2 of the student',
+  'pincode': '123456',
+  'city': 'City',
+  'state': 'State',
+  'country': 'Country',
+  'parentsName': "Parent's Name",
+  'parentalRole': 'Mother',
+  'parentsPhoneNumber': '+91 1234512345',
+  'parentsEmailAddress': 'parentname@email.com',
+};

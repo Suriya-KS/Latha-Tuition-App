@@ -9,7 +9,7 @@ import 'package:latha_tuition_app/providers/attendance_provider.dart';
 import 'package:latha_tuition_app/widgets/utilities/track_record_details.dart';
 import 'package:latha_tuition_app/widgets/templates/scrollable_details_list.dart';
 import 'package:latha_tuition_app/widgets/cards/title_input_card.dart';
-import 'package:latha_tuition_app/widgets/form_inputs/toggle_input.dart';
+import 'package:latha_tuition_app/widgets/form_inputs/label_toggle_input.dart';
 
 class AttendanceScreen extends ConsumerWidget {
   const AttendanceScreen({super.key});
@@ -58,7 +58,7 @@ class AttendanceScreen extends ConsumerWidget {
             itemBuilder: (context, index) => index < length
                 ? TitleInputCard(
                     title: dummyStudentNames[index],
-                    input: ToggleInput(
+                    input: LabelToggleInput(
                       iconLeft: Icons.check,
                       iconRight: Icons.close,
                       backgroundColors: [
