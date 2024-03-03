@@ -31,12 +31,12 @@ class EventsList extends ConsumerWidget {
 
     trackSheetMethods.setBatchName(batchName);
     trackSheetMethods.setTime(startTime, endTime);
-    attendanceMethods.startAttendanceTracker(dummyStudentNames.length);
+    attendanceMethods.setInitialState(dummyBatchAttendance);
 
     navigateToTrackScreen(
       context,
-      Screen.calendarView,
-      const AttendanceScreen(),
+      Screen.eventsView,
+      const AttendanceScreen(screen: Screen.eventsView),
     );
   }
 
@@ -54,11 +54,11 @@ class EventsList extends ConsumerWidget {
     trackSheetMethods.setTestName(testName);
     trackSheetMethods.setBatchName(batchName);
     trackSheetMethods.setTime(startTime, endTime);
-    attendanceMethods.startAttendanceTracker(dummyStudentNames.length);
+    attendanceMethods.setInitialState(dummyBatchAttendance);
 
     navigateToTrackScreen(
       context,
-      Screen.calendarView,
+      Screen.eventsView,
       const TestMarksScreen(),
     );
   }

@@ -15,6 +15,69 @@ final List<Map<String, dynamic>> dummyAttendanceData = [
   },
 ];
 
+final List<Map<String, dynamic>> dummyBatchAttendance = [
+  {
+    'name': dummyStudentNames[0],
+    'attendanceStatus': 'present',
+  },
+  {
+    'name': dummyStudentNames[1],
+    'attendanceStatus': 'absent',
+  },
+  {
+    'name': dummyStudentNames[2],
+    'attendanceStatus': 'present',
+  },
+  {
+    'name': dummyStudentNames[3],
+    'attendanceStatus': 'present',
+  },
+  {
+    'name': dummyStudentNames[4],
+    'attendanceStatus': 'absent',
+  },
+  {
+    'name': dummyStudentNames[5],
+    'attendanceStatus': 'absent',
+  },
+  {
+    'name': dummyStudentNames[6],
+    'attendanceStatus': 'present',
+  },
+  {
+    'name': dummyStudentNames[7],
+    'attendanceStatus': 'present',
+  },
+  {
+    'name': dummyStudentNames[8],
+    'attendanceStatus': 'present',
+  },
+  {
+    'name': dummyStudentNames[9],
+    'attendanceStatus': 'present',
+  },
+  {
+    'name': dummyStudentNames[10],
+    'attendanceStatus': 'absent',
+  },
+  {
+    'name': dummyStudentNames[11],
+    'attendanceStatus': 'present',
+  },
+  {
+    'name': dummyStudentNames[12],
+    'attendanceStatus': 'present',
+  },
+  {
+    'name': dummyStudentNames[13],
+    'attendanceStatus': 'present',
+  },
+  {
+    'name': dummyStudentNames[14],
+    'attendanceStatus': 'present',
+  },
+];
+
 final List<Map<String, dynamic>> dummyTestMarksData = [
   {
     'testName': 'Test Name 1',
@@ -99,3 +162,21 @@ final Map<String, dynamic> dummyStudentDetails = {
   'parentsPhoneNumber': '+91 1234512345',
   'parentsEmailAddress': 'parentname@email.com',
 };
+
+final List<Map<String, dynamic>> dummyStudentAttendance = [
+  {
+    'date': DateTime.now(),
+    'time': '08:00 am - 10:00 am',
+    'attendanceStatus': 'absent',
+  },
+  {
+    'date': DateTime(2002, 3, 5),
+    'time': '11:00 am - 12:00 pm',
+    'attendanceStatus': 'present',
+  },
+  {
+    'date': DateTime(2000, 8, 18),
+    'time': '03:30 am - 05:00 pm',
+    'attendanceStatus': 'present',
+  },
+];

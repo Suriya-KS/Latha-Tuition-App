@@ -1,43 +1,24 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-enum Attendance {
-  list,
-}
+class AttendanceNotifier extends StateNotifier<List<dynamic>> {
+  AttendanceNotifier() : super([]);
 
-enum AttendanceStatus {
-  present,
-  absent,
-}
-
-final initialState = {
-  Attendance.list: [],
-};
-
-class AttendanceNotifier extends StateNotifier<Map<Attendance, dynamic>> {
-  AttendanceNotifier() : super(initialState);
-
-  void startAttendanceTracker(int length) {
-    state = {
-      ...state,
-      Attendance.list: List.filled(length, AttendanceStatus.present),
-    };
+  void setInitialState(List<dynamic> initialState) {
+    state = initialState;
   }
 
-  void trackAttendance(int index, AttendanceStatus status) {
-    if (index > state[Attendance.list].length || index < 0) return;
+  void trackAttendance(int index, String status) {
+    if (index > state.length || index < 0) return;
 
-    final attendanceList = List<AttendanceStatus>.from(state[Attendance.list]);
+    final attendanceList = List.from(state);
 
-    attendanceList[index] = status;
+    attendanceList[index]['attendanceStatus'] = status;
 
-    state = {
-      ...state,
-      Attendance.list: attendanceList,
-    };
+    state = [...attendanceList];
   }
 }
 
 final attendanceProvider =
-    StateNotifierProvider<AttendanceNotifier, Map<Attendance, dynamic>>(
+    StateNotifierProvider<AttendanceNotifier, List<dynamic>>(
   (ref) => AttendanceNotifier(),
 );

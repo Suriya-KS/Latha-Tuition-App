@@ -1,23 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:latha_tuition_app/utilities/constants.dart';
+import 'package:latha_tuition_app/utilities/dummy_data.dart';
+import 'package:latha_tuition_app/providers/attendance_provider.dart';
 import 'package:latha_tuition_app/widgets/app_bar/text_app_bar.dart';
 import 'package:latha_tuition_app/widgets/texts/subtitle_text.dart';
 import 'package:latha_tuition_app/widgets/form_inputs/toggle_input.dart';
 import 'package:latha_tuition_app/widgets/student_information.dart/personal_details_view.dart';
+import 'package:latha_tuition_app/widgets/student_information.dart/attendance_records_view.dart';
 
-class StudentInformationScreen extends StatefulWidget {
+class StudentInformationScreen extends ConsumerStatefulWidget {
   const StudentInformationScreen({super.key});
 
   @override
-  State<StudentInformationScreen> createState() =>
+  ConsumerState<StudentInformationScreen> createState() =>
       _StudentInformationScreenState();
 }
 
-class _StudentInformationScreenState extends State<StudentInformationScreen> {
+class _StudentInformationScreenState
+    extends ConsumerState<StudentInformationScreen> {
   static const pages = [
     PersonalDetailsView(),
-    Placeholder(),
+    AttendanceRecordsView(),
     Placeholder(),
     Placeholder(),
     Placeholder(),
@@ -29,6 +34,12 @@ class _StudentInformationScreenState extends State<StudentInformationScreen> {
     setState(() {
       index = selectedIndex;
     });
+
+    if (selectedIndex == 1) {
+      ref
+          .read(attendanceProvider.notifier)
+          .setInitialState(dummyStudentAttendance);
+    }
   }
 
   @override

@@ -6,11 +6,13 @@ class TitleInputCard extends StatelessWidget {
   const TitleInputCard({
     required this.title,
     required this.input,
+    this.description,
     super.key,
   });
 
   final String title;
   final Widget input;
+  final String? description;
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +28,13 @@ class TitleInputCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Expanded(
-                child: SubtitleText(subtitle: title),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SubtitleText(subtitle: title),
+                    if (description != null) Text(description!),
+                  ],
+                ),
               ),
               const SizedBox(width: 20),
               input,

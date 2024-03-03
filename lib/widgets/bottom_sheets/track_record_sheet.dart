@@ -61,7 +61,9 @@ class _TrackRecordSheetState extends ConsumerState<TrackRecordSheet> {
     setState(() {
       if (index == 0) {
         title = 'Track Attendance';
-        destinationScreen = const AttendanceScreen();
+        destinationScreen = const AttendanceScreen(
+          screen: Screen.trackRecordSheet,
+        );
       }
 
       if (index == 1) {
@@ -85,15 +87,29 @@ class _TrackRecordSheetState extends ConsumerState<TrackRecordSheet> {
       TimeOfDay endTime = stringToTimeOfDay(endTimeController.text);
       DateTime date = DateFormat("MMMM d, yyyy").parse(dateController.text);
 
+      if (widget.screen != Screen.attendance &&
+          widget.screen != Screen.testMarks) {
+        final attendanceMethods = ref.read(attendanceProvider.notifier);
+
+        List attendanceList = [];
+
+        for (int i = 0; i < dummyStudentNames.length; i++) {
+          attendanceList.add({
+            'name': dummyStudentNames[i],
+            'attendanceStatus': 'present',
+          });
+        }
+
+        attendanceMethods.setInitialState(attendanceList);
+      }
+
       final calendarViewMethods = ref.read(calendarViewProvider.notifier);
       final trackSheetMethods = ref.read(trackSheetProvider.notifier);
-      final attendanceMethods = ref.read(attendanceProvider.notifier);
 
       trackSheetMethods.setTestName(testName);
       trackSheetMethods.setTotalMarks(totalMarks);
       calendarViewMethods.setSelectedDate(date);
       trackSheetMethods.setTime(startTime, endTime);
-      attendanceMethods.startAttendanceTracker(dummyStudentNames.length);
 
       navigateToTrackScreen(
         context,
@@ -118,7 +134,9 @@ class _TrackRecordSheetState extends ConsumerState<TrackRecordSheet> {
     if (trackSheetData[TrackSheet.activeToggle] ==
         TrackSheetToggles.attendance) {
       title = 'Track Attendance';
-      destinationScreen = const AttendanceScreen();
+      destinationScreen = const AttendanceScreen(
+        screen: Screen.trackRecordSheet,
+      );
       isSelected = [true, false];
     }
 

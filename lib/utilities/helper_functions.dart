@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
 import 'package:latha_tuition_app/utilities/constants.dart';
+import 'package:latha_tuition_app/providers/attendance_provider.dart';
 import 'package:latha_tuition_app/screens/login.dart';
 
 void navigateToLoginScreen(BuildContext context, Screen? screen) {
@@ -91,4 +93,20 @@ String capitalizeText(String text) {
   }
 
   return words.join(' ');
+}
+
+void attendanceStatusToggleHandler(
+  int toggleIndex,
+  int listIndex,
+  WidgetRef ref,
+) {
+  final attendanceMethods = ref.read(attendanceProvider.notifier);
+
+  if (toggleIndex == 0) {
+    attendanceMethods.trackAttendance(listIndex, 'present');
+  }
+
+  if (toggleIndex == 1) {
+    attendanceMethods.trackAttendance(listIndex, 'absent');
+  }
 }
