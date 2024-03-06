@@ -83,6 +83,12 @@ String formatMarks(double marks) {
   return marks.toStringAsFixed(2);
 }
 
+String formatAmount(double amount) {
+  final formatter = NumberFormat('#,##,###.00');
+
+  return formatter.format(amount);
+}
+
 String capitalizeText(String text) {
   List<String> words = text.split(' ');
 

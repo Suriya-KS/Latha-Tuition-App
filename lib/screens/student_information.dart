@@ -11,6 +11,7 @@ import 'package:latha_tuition_app/widgets/form_inputs/toggle_input.dart';
 import 'package:latha_tuition_app/widgets/student_information.dart/personal_details_view.dart';
 import 'package:latha_tuition_app/widgets/student_information.dart/attendance_records_view.dart';
 import 'package:latha_tuition_app/widgets/student_information.dart/test_marks_view.dart';
+import 'package:latha_tuition_app/widgets/student_information.dart/payment_history_view.dart';
 
 class StudentInformationScreen extends ConsumerStatefulWidget {
   const StudentInformationScreen({super.key});
@@ -26,7 +27,7 @@ class _StudentInformationScreenState
     PersonalDetailsView(),
     AttendanceRecordsView(),
     TestMarksView(),
-    Placeholder(),
+    PaymentHistoryView(),
     Placeholder(),
   ];
 

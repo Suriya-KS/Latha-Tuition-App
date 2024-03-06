@@ -267,3 +267,21 @@ final List<Map<String, dynamic>> dummyStudentTestMarks = [
     'totalMarks': 100
   },
 ];
+
+final List<Map<String, dynamic>> dummyStudentPaymentHistory = [
+  {
+    'date': DateTime(2002, 3, 5),
+    'amount': 2000.2,
+    'status': 'approved',
+  },
+  {
+    'date': DateTime(2000, 8, 18),
+    'amount': 1500,
+    'status': 'approved',
+  },
+  {
+    'date': DateTime.now(),
+    'amount': 2200.5,
+    'status': 'rejected',
+  },
+];
