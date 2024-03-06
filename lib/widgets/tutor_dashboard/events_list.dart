@@ -7,6 +7,7 @@ import 'package:latha_tuition_app/utilities/helper_functions.dart';
 import 'package:latha_tuition_app/providers/calendar_view_provider.dart';
 import 'package:latha_tuition_app/providers/track_sheet_provider.dart';
 import 'package:latha_tuition_app/providers/attendance_provider.dart';
+import 'package:latha_tuition_app/providers/test_marks_provider.dart';
 import 'package:latha_tuition_app/screens/attendance.dart';
 import 'package:latha_tuition_app/screens/test_marks.dart';
 import 'package:latha_tuition_app/widgets/cards/text_avatar_card.dart';
@@ -50,11 +51,13 @@ class EventsList extends ConsumerWidget {
   ) {
     final trackSheetMethods = ref.read(trackSheetProvider.notifier);
     final attendanceMethods = ref.read(attendanceProvider.notifier);
+    final testMarksMethods = ref.read(testMarksProvider.notifier);
 
     trackSheetMethods.setTestName(testName);
     trackSheetMethods.setBatchName(batchName);
     trackSheetMethods.setTime(startTime, endTime);
     attendanceMethods.setInitialState(dummyBatchAttendance);
+    testMarksMethods.setInitialState(dummyBatchTestMarks);
 
     navigateToTrackScreen(
       context,

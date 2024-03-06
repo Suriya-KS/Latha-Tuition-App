@@ -1,5 +1,23 @@
 import 'package:flutter/material.dart';
 
+final List<String> dummyStudentNames = [
+  'Student Name 1',
+  'Student Name 2',
+  'Student Name 3',
+  'Student Name 4',
+  'Student Name 5',
+  'Student Name 6',
+  'Student Name 7',
+  'Student Name 8',
+  'Student Name 9',
+  'Student Name 10',
+  'Student Name 11',
+  'Student Name 12',
+  'Student Name 13',
+  'Student Name 14',
+  'Student Name 15',
+];
+
 final List<Map<String, dynamic>> dummyAttendanceData = [
   {
     'batchName': 'Batch 1',
@@ -95,6 +113,69 @@ final List<Map<String, dynamic>> dummyTestMarksData = [
   },
 ];
 
+final List<Map<String, dynamic>> dummyBatchTestMarks = [
+  {
+    'name': dummyStudentNames[0],
+    'marks': 52,
+  },
+  {
+    'name': dummyStudentNames[1],
+    'marks': 36,
+  },
+  {
+    'name': dummyStudentNames[2],
+    'marks': 87,
+  },
+  {
+    'name': dummyStudentNames[3],
+    'marks': 98,
+  },
+  {
+    'name': dummyStudentNames[4],
+    'marks': 67,
+  },
+  {
+    'name': dummyStudentNames[5],
+    'marks': 43,
+  },
+  {
+    'name': dummyStudentNames[6],
+    'marks': 21,
+  },
+  {
+    'name': dummyStudentNames[7],
+    'marks': 90,
+  },
+  {
+    'name': dummyStudentNames[8],
+    'marks': 75,
+  },
+  {
+    'name': dummyStudentNames[9],
+    'marks': 11,
+  },
+  {
+    'name': dummyStudentNames[10],
+    'marks': 64,
+  },
+  {
+    'name': dummyStudentNames[11],
+    'marks': 55,
+  },
+  {
+    'name': dummyStudentNames[12],
+    'marks': 88,
+  },
+  {
+    'name': dummyStudentNames[13],
+    'marks': 70,
+  },
+  {
+    'name': dummyStudentNames[14],
+    'marks': 69,
+  },
+];
+
 final List<String> dummyBatchNames = [
   'Batch 1',
   'Batch 2',
@@ -122,24 +203,6 @@ final List<String> dummyStandards = [
   'X',
   'XI',
   'XII',
-];
-
-final List<String> dummyStudentNames = [
-  'Student Name 1',
-  'Student Name 2',
-  'Student Name 3',
-  'Student Name 4',
-  'Student Name 5',
-  'Student Name 6',
-  'Student Name 7',
-  'Student Name 8',
-  'Student Name 9',
-  'Student Name 10',
-  'Student Name 11',
-  'Student Name 12',
-  'Student Name 13',
-  'Student Name 14',
-  'Student Name 15',
 ];
 
 final Map<String, dynamic> dummyStudentDetails = {
@@ -178,5 +241,29 @@ final List<Map<String, dynamic>> dummyStudentAttendance = [
     'date': DateTime(2000, 8, 18),
     'time': '03:30 am - 05:00 pm',
     'attendanceStatus': 'present',
+  },
+];
+
+final List<Map<String, dynamic>> dummyStudentTestMarks = [
+  {
+    'name': 'Test name 1',
+    'date': DateTime.now(),
+    'time': '08:00 am - 10:00 am',
+    'marks': 82,
+    'totalMarks': 100
+  },
+  {
+    'name': 'Test name 2',
+    'date': DateTime(2002, 3, 5),
+    'time': '11:00 am - 12:00 pm',
+    'marks': 69,
+    'totalMarks': 200
+  },
+  {
+    'name': 'Test name 3',
+    'date': DateTime(2000, 8, 18),
+    'time': '03:30 am - 05:00 pm',
+    'marks': 96,
+    'totalMarks': 100
   },
 ];

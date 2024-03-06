@@ -12,7 +12,7 @@ class TitleInputCard extends StatelessWidget {
 
   final String title;
   final Widget input;
-  final String? description;
+  final Widget? description;
 
   @override
   Widget build(BuildContext context) {
@@ -26,13 +26,14 @@ class TitleInputCard extends StatelessWidget {
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     SubtitleText(subtitle: title),
-                    if (description != null) Text(description!),
+                    if (description != null) description!,
                   ],
                 ),
               ),

@@ -9,6 +9,7 @@ import 'package:latha_tuition_app/utilities/form_validation_functions.dart';
 import 'package:latha_tuition_app/providers/calendar_view_provider.dart';
 import 'package:latha_tuition_app/providers/track_sheet_provider.dart';
 import 'package:latha_tuition_app/providers/attendance_provider.dart';
+import 'package:latha_tuition_app/providers/test_marks_provider.dart';
 import 'package:latha_tuition_app/screens/attendance.dart';
 import 'package:latha_tuition_app/screens/test_marks.dart';
 import 'package:latha_tuition_app/widgets/buttons/primary_button.dart';
@@ -90,8 +91,10 @@ class _TrackRecordSheetState extends ConsumerState<TrackRecordSheet> {
       if (widget.screen != Screen.attendance &&
           widget.screen != Screen.testMarks) {
         final attendanceMethods = ref.read(attendanceProvider.notifier);
+        final testMarksMethods = ref.read(testMarksProvider.notifier);
 
         List attendanceList = [];
+        List testMarksList = [];
 
         for (int i = 0; i < dummyStudentNames.length; i++) {
           attendanceList.add({
@@ -100,7 +103,15 @@ class _TrackRecordSheetState extends ConsumerState<TrackRecordSheet> {
           });
         }
 
+        for (int i = 0; i < dummyStudentNames.length; i++) {
+          testMarksList.add({
+            'name': dummyStudentNames[i],
+            'marks': '',
+          });
+        }
+
         attendanceMethods.setInitialState(attendanceList);
+        testMarksMethods.setInitialState(testMarksList);
       }
 
       final calendarViewMethods = ref.read(calendarViewProvider.notifier);
@@ -209,6 +220,7 @@ class _TrackRecordSheetState extends ConsumerState<TrackRecordSheet> {
                   labelText: 'Test Name',
                   prefixIcon: Icons.assignment_outlined,
                   inputType: TextInputType.text,
+                  initialValue: testNameController.text,
                   controller: testNameController,
                   validator: (value) =>
                       validateRequiredInput(value, 'the', 'test name'),
@@ -235,6 +247,7 @@ class _TrackRecordSheetState extends ConsumerState<TrackRecordSheet> {
                         labelText: 'Total Marks',
                         prefixIcon: Icons.equalizer_outlined,
                         inputType: TextInputType.number,
+                        initialValue: totalMarksController.text,
                         controller: totalMarksController,
                         validator: (value) =>
                             validateTotalMarks(totalMarksController.text),

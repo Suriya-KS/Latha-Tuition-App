@@ -4,11 +4,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:latha_tuition_app/utilities/constants.dart';
 import 'package:latha_tuition_app/utilities/dummy_data.dart';
 import 'package:latha_tuition_app/providers/attendance_provider.dart';
+import 'package:latha_tuition_app/providers/test_marks_provider.dart';
 import 'package:latha_tuition_app/widgets/app_bar/text_app_bar.dart';
 import 'package:latha_tuition_app/widgets/texts/subtitle_text.dart';
 import 'package:latha_tuition_app/widgets/form_inputs/toggle_input.dart';
 import 'package:latha_tuition_app/widgets/student_information.dart/personal_details_view.dart';
 import 'package:latha_tuition_app/widgets/student_information.dart/attendance_records_view.dart';
+import 'package:latha_tuition_app/widgets/student_information.dart/test_marks_view.dart';
 
 class StudentInformationScreen extends ConsumerStatefulWidget {
   const StudentInformationScreen({super.key});
@@ -23,7 +25,7 @@ class _StudentInformationScreenState
   static const pages = [
     PersonalDetailsView(),
     AttendanceRecordsView(),
-    Placeholder(),
+    TestMarksView(),
     Placeholder(),
     Placeholder(),
   ];
@@ -39,6 +41,10 @@ class _StudentInformationScreenState
       ref
           .read(attendanceProvider.notifier)
           .setInitialState(dummyStudentAttendance);
+    } else if (selectedIndex == 2) {
+      ref
+          .read(testMarksProvider.notifier)
+          .setInitialState(dummyStudentTestMarks);
     }
   }
 

@@ -8,6 +8,7 @@ class TextInput extends StatelessWidget {
     this.prefixText,
     this.suffixIcon,
     this.suffixIconOnPressed,
+    this.initialValue,
     this.obscureText = false,
     this.controller,
     this.validator,
@@ -20,12 +21,17 @@ class TextInput extends StatelessWidget {
   final String? prefixText;
   final IconData? suffixIcon;
   final void Function()? suffixIconOnPressed;
+  final String? initialValue;
   final bool obscureText;
   final TextEditingController? controller;
   final String? Function(String?)? validator;
 
   @override
   Widget build(BuildContext context) {
+    if (controller != null) {
+      controller!.text = initialValue ?? '';
+    }
+
     return TextFormField(
       keyboardType: inputType,
       decoration: InputDecoration(

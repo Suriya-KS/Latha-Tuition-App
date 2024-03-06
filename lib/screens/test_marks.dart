@@ -3,8 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:latha_tuition_app/providers/calendar_view_provider.dart';
 import 'package:latha_tuition_app/providers/track_sheet_provider.dart';
+import 'package:latha_tuition_app/providers/test_marks_provider.dart';
 import 'package:latha_tuition_app/utilities/constants.dart';
-import 'package:latha_tuition_app/utilities/dummy_data.dart';
 import 'package:latha_tuition_app/utilities/form_validation_functions.dart';
 import 'package:latha_tuition_app/widgets/cards/title_input_card.dart';
 import 'package:latha_tuition_app/widgets/form_inputs/text_input.dart';
@@ -30,7 +30,9 @@ class _TestMarksScreenState extends ConsumerState<TestMarksScreen> {
   void initState() {
     super.initState();
 
-    length = dummyStudentNames.length;
+    final testMarksList = ref.read(testMarksProvider);
+
+    length = testMarksList.length;
     marksControllers = List.generate(
       length,
       (index) => TextEditingController(),
@@ -50,6 +52,7 @@ class _TestMarksScreenState extends ConsumerState<TestMarksScreen> {
   Widget build(BuildContext context) {
     final calendarViewData = ref.watch(calendarViewProvider);
     final trackSheetData = ref.watch(trackSheetProvider);
+    final List<dynamic> testMarksList = ref.watch(testMarksProvider);
 
     return ScrollableDetailsList(
       title: 'Track Test Marks',
@@ -70,13 +73,14 @@ class _TestMarksScreenState extends ConsumerState<TestMarksScreen> {
             itemCount: length + 1,
             itemBuilder: (context, index) => index < length
                 ? TitleInputCard(
-                    title: dummyStudentNames[index],
+                    title: testMarksList[index]['name'],
                     input: SizedBox(
                       width: 120,
                       child: TextInput(
                         labelText: 'Marks',
                         prefixIcon: Icons.assignment_outlined,
                         inputType: TextInputType.number,
+                        initialValue: testMarksList[index]['marks'].toString(),
                         controller: marksControllers[index],
                         validator: (value) => validateMarks(
                           marksControllers[index].text,

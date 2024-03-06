@@ -34,7 +34,7 @@ class AttendanceRecordsView extends ConsumerWidget {
                             attendanceList.length
                         ? TitleInputCard(
                             title: formatDate(attendanceList[index]['date']),
-                            description: attendanceList[index]['time'],
+                            description: Text(attendanceList[index]['time']),
                             input: LabelToggleInput(
                               iconLeft: Icons.check,
                               iconRight: Icons.close,
