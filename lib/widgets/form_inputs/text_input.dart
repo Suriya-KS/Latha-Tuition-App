@@ -48,6 +48,8 @@ class TextInput extends StatelessWidget {
         errorMaxLines: 3,
       ),
       obscureText: obscureText,
+      minLines: 1,
+      maxLines: inputType == TextInputType.multiline ? 5 : 1,
       autovalidateMode: AutovalidateMode.onUserInteraction,
       controller: controller,
       validator: validator,

@@ -4,11 +4,17 @@ class InfoCard extends StatefulWidget {
   const InfoCard({
     required this.icon,
     required this.children,
+    this.iconPosition = 'left',
+    this.isClickable = false,
+    this.onTap,
     super.key,
   });
 
   final IconData icon;
   final List<Widget> children;
+  final String iconPosition;
+  final bool isClickable;
+  final void Function()? onTap;
 
   @override
   State<InfoCard> createState() => _InfoCardState();
@@ -63,9 +69,11 @@ class _InfoCardState extends State<InfoCard> {
         ),
         Positioned(
           top: -iconHeight * 0.5,
-          left: -iconWidth * 0.5,
+          left: widget.iconPosition == 'left' ? -iconWidth * 0.5 : null,
+          right: widget.iconPosition == 'right' ? -iconWidth * 0.5 : null,
           child: Container(
-            padding: const EdgeInsets.all(5),
+            height: 36,
+            width: 36,
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(100),
@@ -78,10 +86,16 @@ class _InfoCardState extends State<InfoCard> {
                 ),
               ],
             ),
-            child: Icon(
-              widget.icon,
-              key: iconKey,
-              color: Theme.of(context).colorScheme.primary,
+            child: IconButton(
+              padding: EdgeInsets.zero,
+              style: IconButton.styleFrom(
+                backgroundColor: Colors.white,
+              ),
+              onPressed: widget.isClickable ? widget.onTap : null,
+              icon: Icon(
+                widget.icon,
+                color: Theme.of(context).colorScheme.primary,
+              ),
             ),
           ),
         ),

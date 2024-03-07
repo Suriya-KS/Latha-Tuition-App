@@ -285,3 +285,21 @@ final List<Map<String, dynamic>> dummyStudentPaymentHistory = [
     'status': 'rejected',
   },
 ];
+
+final List<Map<String, dynamic>> dummyStudentFeedbacks = [
+  {
+    'date': DateTime.now(),
+    'message':
+        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla in mauris eget sapien feugiat condimentum sit amet ac arcu. Nulla porta arcu ac efficitur consectetur. In sed felis orci. Integer commodo cursus augue, auctor dignissim nibh volutpat a. Fusce odio nibh, tempus vel facilisis at, facilisis non libero. Curabitur sed neque mattis, accumsan sapien ultricies, vehicula arcu. Integer ullamcorper at ex sit amet tristique. Proin eget fringilla quam. Nam sit amet vulputate erat. Nam varius scelerisque felis, ut vestibulum leo sagittis ac. Aliquam tristique feugiat ante quis dictum. Suspendisse fermentum euismod venenatis. Mauris eget consectetur tellus, vitae eleifend lacus.'
+  },
+  {
+    'date': DateTime(2002, 3, 5),
+    'message':
+        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce imperdiet risus justo, eget egestas nisl ultricies non. Suspendisse ac elit leo. Cras posuere porta purus, nec egestas dolor posuere nec. Nam dolor urna, ultrices ac vestibulum ac, pretium cursus urna. Cras viverra rutrum est, egestas maximus nulla. Proin vitae dolor sagittis, dignissim urna a, vestibulum est. Nam id nunc commodo, aliquam dolor et, bibendum ipsum. Suspendisse erat diam, auctor ac eleifend nec, pharetra in massa.',
+  },
+  {
+    'date': DateTime(2000, 8, 18),
+    'message':
+        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc a enim et nulla auctor molestie non sit amet erat. Nunc quam diam, sodales ac odio a, blandit dictum augue. Aenean at justo at nibh pellentesque rutrum nec sed eros. Maecenas efficitur quis magna nec porta. Donec dapibus non tellus non fringilla. Suspendisse nibh odio, tempor quis est a, consectetur interdum velit. Etiam enim lacus, dapibus a eros ac, vehicula mollis eros. Fusce in lacus ac ipsum vulputate ullamcorper. Sed sodales magna in vulputate pellentesque.',
+  },
+];

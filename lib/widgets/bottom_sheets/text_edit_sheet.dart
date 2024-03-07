@@ -12,6 +12,7 @@ class TextEditSheet extends StatefulWidget {
     required this.fieldName,
     required this.buttonText,
     required this.onPressed,
+    this.inputType,
     this.initialValue,
     super.key,
   });
@@ -20,6 +21,7 @@ class TextEditSheet extends StatefulWidget {
   final String fieldName;
   final String buttonText;
   final void Function(String) onPressed;
+  final TextInputType? inputType;
   final String? initialValue;
 
   @override
@@ -53,8 +55,6 @@ class _TextEditSheetState extends State<TextEditSheet> {
 
   @override
   Widget build(BuildContext context) {
-    controller.text = widget.initialValue ?? '';
-
     return Column(
       children: [
         TitleText(title: widget.title),
@@ -66,7 +66,10 @@ class _TextEditSheetState extends State<TextEditSheet> {
               TextInput(
                 labelText: capitalizeText(widget.fieldName),
                 prefixIcon: Icons.assignment_outlined,
-                inputType: TextInputType.text,
+                inputType: widget.inputType != null
+                    ? widget.inputType!
+                    : TextInputType.text,
+                initialValue: widget.initialValue,
                 controller: controller,
                 validator: (value) => validateUpdateText(
                   value,
