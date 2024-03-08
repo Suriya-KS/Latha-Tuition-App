@@ -303,3 +303,9 @@ final List<Map<String, dynamic>> dummyStudentFeedbacks = [
         'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc a enim et nulla auctor molestie non sit amet erat. Nunc quam diam, sodales ac odio a, blandit dictum augue. Aenean at justo at nibh pellentesque rutrum nec sed eros. Maecenas efficitur quis magna nec porta. Donec dapibus non tellus non fringilla. Suspendisse nibh odio, tempor quis est a, consectetur interdum velit. Etiam enim lacus, dapibus a eros ac, vehicula mollis eros. Fusce in lacus ac ipsum vulputate ullamcorper. Sed sodales magna in vulputate pellentesque.',
   },
 ];
+
+final List<Map<String, dynamic>> dummyStudentApprovals = [
+  dummyStudentDetails,
+  dummyStudentDetails,
+  dummyStudentDetails,
+];

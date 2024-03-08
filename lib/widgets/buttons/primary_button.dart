@@ -5,19 +5,27 @@ class PrimaryButton extends StatelessWidget {
     this.title,
     this.iconData,
     this.onPressed,
+    this.isOutlined = false,
     super.key,
   });
 
   final String? title;
   final IconData? iconData;
   final void Function()? onPressed;
+  final bool isOutlined;
 
   @override
   Widget build(BuildContext context) {
-    return ElevatedButton(
-      style: ElevatedButton.styleFrom(
-        backgroundColor: Theme.of(context).colorScheme.onBackground,
-        foregroundColor: Colors.white,
+    return OutlinedButton(
+      style: OutlinedButton.styleFrom(
+        backgroundColor: !isOutlined
+            ? Theme.of(context).colorScheme.onBackground
+            : Colors.transparent,
+        foregroundColor:
+            !isOutlined ? Colors.white : Theme.of(context).colorScheme.error,
+        side: isOutlined
+            ? BorderSide(color: Theme.of(context).colorScheme.error)
+            : BorderSide.none,
         elevation: 0,
       ),
       onPressed: onPressed ?? () {},

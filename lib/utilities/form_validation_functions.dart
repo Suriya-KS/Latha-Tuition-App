@@ -254,3 +254,21 @@ String? validateMarks(String marksString, String totalMarksString) {
 
   return null;
 }
+
+String? validateFeesAmount(String? value) {
+  if (value == null || value.isEmpty) {
+    return 'Please enter the fees amount';
+  }
+
+  double? amount = double.tryParse(value);
+
+  if (amount == null) {
+    return 'Please enter a valid amount';
+  }
+
+  if (amount <= 0) {
+    return 'Fees amount must be greater than zero';
+  }
+
+  return null;
+}

@@ -12,8 +12,8 @@ class IconTextTile extends StatelessWidget {
   });
 
   final String title;
-  final String description;
-  final IconData icon;
+  final Widget description;
+  final Widget icon;
   final void Function() onTap;
 
   @override
@@ -23,9 +23,12 @@ class IconTextTile extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: screenPadding),
         child: ListTile(
-          title: Text(title),
-          leading: Icon(icon),
-          subtitle: Text(description),
+          title: Text(
+            title,
+            style: const TextStyle(fontWeight: FontWeight.bold),
+          ),
+          leading: icon,
+          subtitle: description,
           trailing: const Icon(
             Icons.arrow_forward_ios_rounded,
             size: 18,
