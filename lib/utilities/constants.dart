@@ -15,6 +15,8 @@ const confirmImage = "assets/images/confirm.svg";
 const notFoundImage = "assets/images/not_found.svg";
 const searchImage = "assets/images/search.svg";
 const pendingApprovalImage = "assets/images/pending_approval.svg";
+const phoneConfirmImage = "assets/images/phone_confirm.svg";
+const groupPaymentImage = "assets/images/group_payment.svg";
 const placeholderImage = "assets/images/placeholder.svg";
 
 const alphabets = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';

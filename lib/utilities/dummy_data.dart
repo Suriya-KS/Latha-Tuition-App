@@ -309,3 +309,24 @@ final List<Map<String, dynamic>> dummyStudentApprovals = [
   dummyStudentDetails,
   dummyStudentDetails,
 ];
+
+final List<Map<String, dynamic>> dummyBatchPaymentHistory = [
+  {
+    'name': dummyStudentNames[0],
+    'date': DateTime(2002, 3, 5),
+    'amount': 2000.2,
+    'status': 'approved',
+  },
+  {
+    'name': dummyStudentNames[1],
+    'date': DateTime(2000, 8, 18),
+    'amount': 1500,
+    'status': 'approved',
+  },
+  {
+    'name': dummyStudentNames[2],
+    'date': DateTime.now(),
+    'amount': 2200.5,
+    'status': 'rejected',
+  },
+];

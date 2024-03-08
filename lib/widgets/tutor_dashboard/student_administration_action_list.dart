@@ -5,6 +5,7 @@ import 'package:latha_tuition_app/utilities/modal_bottom_sheet.dart';
 import 'package:latha_tuition_app/screens/student_approval.dart';
 import 'package:latha_tuition_app/widgets/cards/box_card.dart';
 import 'package:latha_tuition_app/widgets/bottom_sheets/student_search_sheet.dart';
+import 'package:latha_tuition_app/widgets/bottom_sheets/batch_search_sheet.dart';
 
 class StudentAdministrationActionList extends StatelessWidget {
   const StudentAdministrationActionList({super.key});
@@ -13,6 +14,13 @@ class StudentAdministrationActionList extends StatelessWidget {
     modalBottomSheet(
       context,
       const StudentSearchSheet(),
+    );
+  }
+
+  void batchPaymentHistoryTapHandler(BuildContext context) {
+    modalBottomSheet(
+      context,
+      const BatchSearchSheet(),
     );
   }
 
@@ -29,27 +37,53 @@ class StudentAdministrationActionList extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: screenPadding),
-      child: IntrinsicHeight(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Expanded(
-              child: BoxCard(
-                title: 'Student Search',
-                image: searchImage,
-                onTap: () => studentSearchTapHandler(context),
-              ),
+      child: Column(
+        children: [
+          IntrinsicHeight(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: BoxCard(
+                    title: 'Student Search',
+                    image: searchImage,
+                    onTap: () => studentSearchTapHandler(context),
+                  ),
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: BoxCard(
+                    title: 'Batch wise Payments',
+                    image: groupPaymentImage,
+                    onTap: () => batchPaymentHistoryTapHandler(context),
+                  ),
+                ),
+              ],
             ),
-            const SizedBox(width: 10),
-            Expanded(
-              child: BoxCard(
-                title: 'Student Approval',
-                image: pendingApprovalImage,
-                onTap: () => studentApprovalTapHandler(context),
-              ),
+          ),
+          IntrinsicHeight(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: BoxCard(
+                    title: 'Student Approval',
+                    image: pendingApprovalImage,
+                    onTap: () => studentApprovalTapHandler(context),
+                  ),
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: BoxCard(
+                    title: 'Payment Approval',
+                    image: phoneConfirmImage,
+                    onTap: () {},
+                  ),
+                ),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

@@ -42,7 +42,8 @@ class _PaymentHistoryViewState extends State<PaymentHistoryView> {
                     ? TextStatusCard(
                         title: formatDate(paymentHistoryList[index]['date']),
                         description: Text(
-                            '₹ ${formatAmount(double.tryParse(paymentHistoryList[index]['amount'].toString()) ?? 0)}'),
+                          '₹ ${formatAmount(double.tryParse(paymentHistoryList[index]['amount'].toString()) ?? 0)}',
+                        ),
                         status: paymentHistoryList[index]['status'],
                       )
                     : const SizedBox(height: screenPadding),
