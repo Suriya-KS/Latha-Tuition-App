@@ -1,23 +1,31 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:latha_tuition_app/utilities/form_validation_functions.dart';
+import 'package:latha_tuition_app/providers/awaiting_admission_provider.dart';
+import 'package:latha_tuition_app/providers/admission_provider.dart';
 import 'package:latha_tuition_app/widgets/buttons/primary_button.dart';
 import 'package:latha_tuition_app/widgets/form_inputs/text_input.dart';
 
-class StudentSignUpForm extends StatefulWidget {
+class StudentSignUpForm extends ConsumerStatefulWidget {
   const StudentSignUpForm({super.key});
 
   @override
-  State<StudentSignUpForm> createState() => _StudentSignUpFormState();
+  ConsumerState<StudentSignUpForm> createState() => _StudentSignUpFormState();
 }
 
-class _StudentSignUpFormState extends State<StudentSignUpForm> {
+class _StudentSignUpFormState extends ConsumerState<StudentSignUpForm> {
+  final authentication = FirebaseAuth.instance;
+  final firestore = FirebaseFirestore.instance;
   final formKey = GlobalKey<FormState>();
 
   bool passwordObscureText = true;
   bool confirmPasswordObscureText = true;
 
-  late TextEditingController phoneController;
+  late String emailAddress;
+  late TextEditingController emailController;
   late TextEditingController passwordController;
   late TextEditingController confirmPasswordController;
 
@@ -33,18 +41,77 @@ class _StudentSignUpFormState extends State<StudentSignUpForm> {
     });
   }
 
+  void submitFormHandler(BuildContext context) async {
+    if (!formKey.currentState!.validate()) return;
+
+    try {
+      final userCredentials =
+          await authentication.createUserWithEmailAndPassword(
+        email: emailController.text,
+        password: passwordController.text,
+      );
+
+      final studentID = userCredentials.user!.uid;
+
+      final Map<String, dynamic> studentDetails =
+          ref.read(admissionProvider)[Admission.studentDetails];
+
+      studentDetails.remove('awaitingApproval');
+
+      await firestore.collection('students').doc(studentID).set({
+        ...studentDetails,
+      });
+
+      final awaitingAdmissionStudentID =
+          ref.read(awaitingAdmissionProvider)[AwaitingAdmission.studentID];
+
+      await firestore
+          .collection('studentAdmissionRequests')
+          .doc(awaitingAdmissionStudentID)
+          .delete();
+
+      await ref.read(awaitingAdmissionProvider.notifier).clearData();
+
+      if (!context.mounted) return;
+
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const Placeholder(),
+        ),
+        (route) => false,
+      );
+    } on FirebaseAuthException catch (error) {
+      final errorMessage = validateAuthentication(error);
+
+      if (!context.mounted) return;
+      if (errorMessage == null) return;
+
+      ScaffoldMessenger.of(context).removeCurrentSnackBar();
+
+      SnackBar snackBar = SnackBar(
+        content: Text(errorMessage),
+      );
+
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    }
+  }
+
   @override
   void initState() {
     super.initState();
 
-    phoneController = TextEditingController();
+    emailAddress =
+        ref.read(admissionProvider)[Admission.studentDetails]['emailAddress'];
+
+    emailController = TextEditingController();
     passwordController = TextEditingController();
     confirmPasswordController = TextEditingController();
   }
 
   @override
   void dispose() {
-    phoneController.dispose();
+    emailController.dispose();
     passwordController.dispose();
     confirmPasswordController.dispose();
 
@@ -58,12 +125,13 @@ class _StudentSignUpFormState extends State<StudentSignUpForm> {
       child: Column(
         children: [
           TextInput(
-            labelText: 'Phone Number',
-            prefixText: '+91 ',
-            prefixIcon: Icons.phone_outlined,
-            inputType: TextInputType.phone,
-            controller: phoneController,
-            validator: validatePhoneNumber,
+            labelText: 'Email Address',
+            prefixIcon: Icons.mail_outline,
+            inputType: TextInputType.emailAddress,
+            initialValue: emailAddress,
+            readOnly: true,
+            controller: emailController,
+            validator: validateEmail,
           ),
           const SizedBox(height: 10),
           TextInput(
@@ -95,7 +163,10 @@ class _StudentSignUpFormState extends State<StudentSignUpForm> {
             ),
           ),
           const SizedBox(height: 50),
-          const PrimaryButton(title: 'Sign Up'),
+          PrimaryButton(
+            title: 'Sign Up',
+            onPressed: () => submitFormHandler(context),
+          ),
         ],
       ),
     );

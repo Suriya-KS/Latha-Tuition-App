@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
 import 'package:latha_tuition_app/utilities/constants.dart';
 import 'package:latha_tuition_app/providers/attendance_provider.dart';
 import 'package:latha_tuition_app/screens/login.dart';
+import 'package:latha_tuition_app/screens/student_registration.dart';
 
 void navigateToLoginScreen(BuildContext context, Screen? screen) {
   if (screen == Screen.onboarding) {
@@ -44,6 +46,44 @@ void navigateToTrackScreen(
       builder: (BuildContext context) => destinationScreen,
     ),
   );
+}
+
+void navigateToStudentRegistrationScreen(
+  BuildContext context, {
+  Screen? screen,
+}) {
+  if (screen == Screen.onboarding) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (BuildContext context) => const StudentRegistrationScreen(),
+      ),
+    );
+  } else {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (BuildContext context) => const StudentRegistrationScreen(),
+      ),
+    );
+  }
+}
+
+Future<UserType?> getAuthenticatedUserType(
+  BuildContext context,
+  String userID,
+) async {
+  final studentDocumentSnapshot =
+      await FirebaseFirestore.instance.collection('students').doc(userID).get();
+
+  if (studentDocumentSnapshot.exists) return UserType.student;
+
+  final tutorDocumentSnapshot =
+      await FirebaseFirestore.instance.collection('tutors').doc(userID).get();
+
+  if (tutorDocumentSnapshot.exists) return UserType.tutor;
+
+  return null;
 }
 
 String formatDate(DateTime date) {

@@ -1,3 +1,5 @@
+import 'package:firebase_auth/firebase_auth.dart';
+
 import 'package:latha_tuition_app/utilities/constants.dart';
 
 String? validateName(String? value) {
@@ -269,6 +271,25 @@ String? validateFeesAmount(String? value) {
   if (amount <= 0) {
     return 'Fees amount must be greater than zero';
   }
+
+  return null;
+}
+
+String? validateAuthentication(FirebaseAuthException error) {
+  String errorMessage = '';
+
+  switch (error.code) {
+    case 'email-already-in-use':
+      errorMessage = 'Email address is already registered';
+      break;
+    case 'invalid-credential':
+      errorMessage = 'Email address or password is incorrect';
+      break;
+    default:
+      errorMessage = 'Something went wrong, please try again later';
+  }
+
+  if (errorMessage != '') return errorMessage;
 
   return null;
 }

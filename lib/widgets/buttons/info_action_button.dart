@@ -17,15 +17,25 @@ class InfoActionButton extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Text(infoText),
-        TextButton(
-          style: TextButton.styleFrom(
-            padding: const EdgeInsets.symmetric(horizontal: 5),
-          ),
-          onPressed: onPressed,
-          child: Text(
-            buttonText,
-            style: const TextStyle(fontWeight: FontWeight.w700),
+        Flexible(
+          child: Text(infoText),
+        ),
+        InkWell(
+          borderRadius: BorderRadius.circular(100),
+          onTap: onPressed,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+              vertical: 5,
+              horizontal: 8,
+            ),
+            child: Text(
+              buttonText,
+              maxLines: 2,
+              style: TextStyle(
+                fontWeight: FontWeight.w700,
+                color: Theme.of(context).colorScheme.primary,
+              ),
+            ),
           ),
         ),
       ],

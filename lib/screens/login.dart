@@ -1,17 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:latha_tuition_app/utilities/constants.dart';
 import 'package:latha_tuition_app/utilities/modal_bottom_sheet.dart';
+import 'package:latha_tuition_app/providers/awaiting_admission_provider.dart';
 import 'package:latha_tuition_app/widgets/templates/scrollable_image_content.dart';
 import 'package:latha_tuition_app/widgets/buttons/info_action_button.dart';
 import 'package:latha_tuition_app/widgets/bottom_sheets/registration_sheet.dart';
 import 'package:latha_tuition_app/widgets/login/login_form.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends ConsumerWidget {
   const LoginScreen({super.key});
 
+  void showRegistrationSheet(BuildContext context, WidgetRef ref) {
+    ref.read(awaitingAdmissionProvider.notifier).setParentContext(context);
+
+    modalBottomSheet(
+      context,
+      const RegistrationSheet(screen: null),
+    );
+  }
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final screenSize = MediaQuery.of(context);
 
     return Scaffold(
@@ -25,13 +36,11 @@ class LoginScreen extends StatelessWidget {
           child: Column(
             children: [
               const LoginForm(),
+              const SizedBox(height: 10),
               InfoActionButton(
                 infoText: 'New here?',
                 buttonText: 'Join Us',
-                onPressed: () => modalBottomSheet(
-                  context,
-                  const RegistrationSheet(screen: Screen.login),
-                ),
+                onPressed: () => showRegistrationSheet(context, ref),
               ),
             ],
           ),

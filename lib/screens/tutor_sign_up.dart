@@ -24,6 +24,7 @@ class TutorSignUpScreen extends StatelessWidget {
           child: Column(
             children: [
               const TutorSignUpForm(),
+              const SizedBox(height: 10),
               InfoActionButton(
                 infoText: 'Already joined?',
                 buttonText: 'Login here',

@@ -24,6 +24,7 @@ class StudentRegistrationScreen extends StatelessWidget {
           child: Column(
             children: [
               const StudentRegistrationForm(),
+              const SizedBox(height: 10),
               InfoActionButton(
                 infoText: 'Already a student?',
                 buttonText: 'Login here',

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class TextInput extends StatelessWidget {
+class TextInput extends StatefulWidget {
   const TextInput({
     required this.labelText,
     required this.prefixIcon,
@@ -10,6 +10,7 @@ class TextInput extends StatelessWidget {
     this.suffixIconOnPressed,
     this.initialValue,
     this.obscureText = false,
+    this.readOnly = false,
     this.controller,
     this.validator,
     super.key,
@@ -23,36 +24,48 @@ class TextInput extends StatelessWidget {
   final void Function()? suffixIconOnPressed;
   final String? initialValue;
   final bool obscureText;
+  final bool readOnly;
   final TextEditingController? controller;
   final String? Function(String?)? validator;
 
   @override
-  Widget build(BuildContext context) {
-    if (controller != null) {
-      controller!.text = initialValue ?? '';
-    }
+  State<TextInput> createState() => _TextInputState();
+}
 
+class _TextInputState extends State<TextInput> {
+  @override
+  void initState() {
+    super.initState();
+
+    if (widget.controller != null) {
+      widget.controller!.text = widget.initialValue ?? '';
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return TextFormField(
-      keyboardType: inputType,
+      keyboardType: widget.inputType,
       decoration: InputDecoration(
-        label: Text(labelText),
-        prefixText: prefixText ?? '',
-        prefixIcon: Icon(prefixIcon),
-        suffixIcon: suffixIcon != null
+        label: Text(widget.labelText),
+        prefixText: widget.prefixText ?? '',
+        prefixIcon: Icon(widget.prefixIcon),
+        suffixIcon: widget.suffixIcon != null
             ? IconButton(
-                icon: Icon(suffixIcon),
-                onPressed: suffixIconOnPressed ?? () {},
+                icon: Icon(widget.suffixIcon),
+                onPressed: widget.suffixIconOnPressed ?? () {},
               )
             : null,
         prefixIconColor: Theme.of(context).colorScheme.primary,
         errorMaxLines: 3,
       ),
-      obscureText: obscureText,
+      obscureText: widget.obscureText,
       minLines: 1,
-      maxLines: inputType == TextInputType.multiline ? 5 : 1,
+      maxLines: widget.inputType == TextInputType.multiline ? 5 : 1,
       autovalidateMode: AutovalidateMode.onUserInteraction,
-      controller: controller,
-      validator: validator,
+      readOnly: widget.readOnly,
+      controller: widget.controller,
+      validator: widget.validator,
     );
   }
 }

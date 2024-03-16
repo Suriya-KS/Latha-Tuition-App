@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:latha_tuition_app/utilities/form_validation_functions.dart';
+import 'package:latha_tuition_app/screens/tutor_dashboard.dart';
 import 'package:latha_tuition_app/widgets/buttons/primary_button.dart';
 import 'package:latha_tuition_app/widgets/form_inputs/text_input.dart';
 
@@ -12,6 +15,8 @@ class TutorSignUpForm extends StatefulWidget {
 }
 
 class _TutorSignUpFormState extends State<TutorSignUpForm> {
+  final authentication = FirebaseAuth.instance;
+  final firestore = FirebaseFirestore.instance;
   final formKey = GlobalKey<FormState>();
 
   bool passwordObscureText = true;
@@ -33,6 +38,45 @@ class _TutorSignUpFormState extends State<TutorSignUpForm> {
     setState(() {
       confirmPasswordObscureText = !confirmPasswordObscureText;
     });
+  }
+
+  void submitHandler(BuildContext context) async {
+    if (!formKey.currentState!.validate()) return;
+
+    try {
+      final userCredentials =
+          await authentication.createUserWithEmailAndPassword(
+        email: emailController.text,
+        password: passwordController.text,
+      );
+
+      await firestore.collection('tutors').doc(userCredentials.user!.uid).set({
+        'name': nameController.text,
+        'emailAddress': emailController.text,
+        'phoneNumber': phoneController.text,
+      });
+
+      if (!context.mounted) return;
+
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (context) => const TutorDashboardScreen()),
+        (route) => false,
+      );
+    } on FirebaseAuthException catch (error) {
+      final errorMessage = validateAuthentication(error);
+
+      if (!context.mounted) return;
+      if (errorMessage == null) return;
+
+      ScaffoldMessenger.of(context).removeCurrentSnackBar();
+
+      SnackBar snackBar = SnackBar(
+        content: Text(errorMessage),
+      );
+
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    }
   }
 
   @override
@@ -117,7 +161,10 @@ class _TutorSignUpFormState extends State<TutorSignUpForm> {
             ),
           ),
           const SizedBox(height: 50),
-          const PrimaryButton(title: 'Sign Up'),
+          PrimaryButton(
+            title: 'Sign Up',
+            onPressed: () => submitHandler(context),
+          ),
         ],
       ),
     );

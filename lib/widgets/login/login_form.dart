@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
+import 'package:latha_tuition_app/utilities/constants.dart';
+import 'package:latha_tuition_app/utilities/helper_functions.dart';
 import 'package:latha_tuition_app/utilities/form_validation_functions.dart';
 import 'package:latha_tuition_app/utilities/modal_bottom_sheet.dart';
 import 'package:latha_tuition_app/screens/tutor_dashboard.dart';
@@ -15,11 +19,13 @@ class LoginForm extends StatefulWidget {
 }
 
 class _LoginFormState extends State<LoginForm> {
+  final authentication = FirebaseAuth.instance;
+  final firestore = FirebaseFirestore.instance;
   final formKey = GlobalKey<FormState>();
 
   bool obscureText = true;
 
-  late TextEditingController phoneController;
+  late TextEditingController emailController;
   late TextEditingController passwordController;
 
   void togglePasswordVisibility() {
@@ -28,18 +34,55 @@ class _LoginFormState extends State<LoginForm> {
     });
   }
 
-  void navigateToDashboard() {
-    Navigator.of(context).pushAndRemoveUntil(
-      MaterialPageRoute(
-        builder: (BuildContext context) => const TutorDashboardScreen(),
-      ),
-      (route) => false,
-    );
-  }
+  void submitFormHandler(BuildContext context) async {
+    if (!formKey.currentState!.validate()) return;
 
-  void submitFormHandler() {
-    if (formKey.currentState!.validate()) {
-      navigateToDashboard();
+    try {
+      final userCredentials = await authentication.signInWithEmailAndPassword(
+        email: emailController.text,
+        password: passwordController.text,
+      );
+
+      if (userCredentials.user == null) {
+        throw FirebaseAuthException(code: 'user-not-found');
+      }
+
+      if (!context.mounted) return;
+
+      final userID = userCredentials.user!.uid;
+
+      final userType = await getAuthenticatedUserType(context, userID);
+
+      if (!context.mounted) return;
+
+      if (userType == UserType.student) {
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => const Placeholder()),
+          (route) => false,
+        );
+      } else if (userType == UserType.tutor) {
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => const TutorDashboardScreen()),
+          (route) => false,
+        );
+      } else {
+        throw FirebaseAuthException(code: 'user-not-found');
+      }
+    } on FirebaseAuthException catch (error) {
+      final errorMessage = validateAuthentication(error);
+
+      if (!context.mounted) return;
+      if (errorMessage == null) return;
+
+      ScaffoldMessenger.of(context).removeCurrentSnackBar();
+
+      SnackBar snackBar = SnackBar(
+        content: Text(errorMessage),
+      );
+
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
     }
   }
 
@@ -47,13 +90,13 @@ class _LoginFormState extends State<LoginForm> {
   void initState() {
     super.initState();
 
-    phoneController = TextEditingController();
+    emailController = TextEditingController();
     passwordController = TextEditingController();
   }
 
   @override
   void dispose() {
-    phoneController.dispose();
+    emailController.dispose();
     passwordController.dispose();
 
     super.dispose();
@@ -66,12 +109,11 @@ class _LoginFormState extends State<LoginForm> {
       child: Column(
         children: [
           TextInput(
-            labelText: 'Phone Number',
-            prefixText: '+91 ',
-            prefixIcon: Icons.phone_outlined,
-            inputType: TextInputType.phone,
-            controller: phoneController,
-            validator: validatePhoneNumber,
+            labelText: 'Email Address',
+            prefixIcon: Icons.mail_outline,
+            inputType: TextInputType.emailAddress,
+            controller: emailController,
+            validator: validateEmail,
           ),
           const SizedBox(height: 10),
           TextInput(
@@ -100,7 +142,7 @@ class _LoginFormState extends State<LoginForm> {
           const SizedBox(height: 30),
           PrimaryButton(
             title: 'Login',
-            onPressed: submitFormHandler,
+            onPressed: () => submitFormHandler(context),
           ),
         ],
       ),

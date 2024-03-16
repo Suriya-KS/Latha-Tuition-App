@@ -12,13 +12,17 @@ class ScrollableImageContent extends StatelessWidget {
     required this.title,
     required this.description,
     required this.child,
+    this.imageHeightFactor,
+    this.imageAlignment,
   });
 
-  final Widget child;
   final MediaQueryData screenSize;
   final String imagePath;
   final String title;
   final String description;
+  final Widget child;
+  final double? imageHeightFactor;
+  final Alignment? imageAlignment;
 
   @override
   Widget build(BuildContext context) {
@@ -39,10 +43,10 @@ class ScrollableImageContent extends StatelessWidget {
               Column(
                 children: [
                   Align(
-                    alignment: Alignment.centerLeft,
+                    alignment: imageAlignment ?? Alignment.centerLeft,
                     child: SvgPicture.asset(
                       imagePath,
-                      height: screenHeight * 0.25,
+                      height: screenHeight * (imageHeightFactor ?? 0.25),
                     ),
                   ),
                   const SizedBox(height: 50),

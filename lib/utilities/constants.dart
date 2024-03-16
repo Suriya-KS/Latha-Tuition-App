@@ -17,6 +17,8 @@ const searchImage = "assets/images/search.svg";
 const pendingApprovalImage = "assets/images/pending_approval.svg";
 const phoneConfirmImage = "assets/images/phone_confirm.svg";
 const groupPaymentImage = "assets/images/group_payment.svg";
+const errorImage = "assets/images/error.svg";
+const waitingImage = "assets/images/waiting.svg";
 const placeholderImage = "assets/images/placeholder.svg";
 
 const alphabets = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -43,4 +45,11 @@ enum Screen {
   trackRecordSheet,
   attendance,
   testMarks,
+  studentAwaitingApproval,
+  fetchAdmissionStatusSheet,
+}
+
+enum UserType {
+  student,
+  tutor,
 }

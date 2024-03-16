@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:liquid_swipe/liquid_swipe.dart';
 
 import 'package:latha_tuition_app/utilities/constants.dart';
 import 'package:latha_tuition_app/utilities/modal_bottom_sheet.dart';
+import 'package:latha_tuition_app/providers/awaiting_admission_provider.dart';
 import 'package:latha_tuition_app/widgets/buttons/primary_button.dart';
 import 'package:latha_tuition_app/widgets/bottom_sheets/registration_sheet.dart';
 import 'package:latha_tuition_app/widgets/onboarding/onboarding_page.dart';
 
-class OnboardingPageList extends StatelessWidget {
+class OnboardingPageList extends ConsumerWidget {
   const OnboardingPageList({
     required this.liquidController,
     required this.currentPageIndex,
@@ -21,8 +23,17 @@ class OnboardingPageList extends StatelessWidget {
   final int lastPageIndex;
   final void Function(int) onPageChange;
 
+  void showRegistrationSheet(BuildContext context, WidgetRef ref) {
+    ref.read(awaitingAdmissionProvider.notifier).setParentContext(context);
+
+    modalBottomSheet(
+      context,
+      const RegistrationSheet(screen: Screen.onboarding),
+    );
+  }
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return LiquidSwipe(
       slideIconWidget: currentPageIndex < lastPageIndex
           ? const Icon(
@@ -64,10 +75,7 @@ class OnboardingPageList extends StatelessWidget {
               alignment: Alignment.centerRight,
               child: PrimaryButton(
                 iconData: Icons.arrow_right_alt,
-                onPressed: () => modalBottomSheet(
-                  context,
-                  const RegistrationSheet(screen: Screen.onboarding),
-                ),
+                onPressed: () => showRegistrationSheet(context, ref),
               ),
             ),
           ],
