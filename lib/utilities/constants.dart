@@ -24,14 +24,6 @@ const placeholderImage = "assets/images/placeholder.svg";
 const alphabets = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
 const specialCharacters = ' !"#\$%&\'()*+,-./:;<=>?@[\\]^_`{|}~';
 
-final studentInformationScreenTitles = [
-  'Personal Details',
-  'Attendance Records',
-  'Test Marks',
-  'Payment History',
-  'Feedbacks'
-];
-
 const passwordVerificationCodeResendTime = Duration(seconds: 60);
 
 const screenPadding = 30.0;

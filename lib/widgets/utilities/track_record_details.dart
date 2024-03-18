@@ -39,7 +39,7 @@ class TrackRecordDetails extends ConsumerWidget {
     }
   }
 
-  void editHandler(BuildContext context, WidgetRef ref) {
+  void editTrackRecordHandler(BuildContext context, WidgetRef ref) {
     if (screen == Screen.attendance) {
       ref.read(trackSheetProvider.notifier).changeActiveToggle(0);
     }
@@ -111,7 +111,7 @@ class TrackRecordDetails extends ConsumerWidget {
           top: 10,
           right: 10,
           child: IconButton(
-            onPressed: () => editHandler(context, ref),
+            onPressed: () => editTrackRecordHandler(context, ref),
             icon: const Icon(Icons.edit_outlined),
           ),
         ),

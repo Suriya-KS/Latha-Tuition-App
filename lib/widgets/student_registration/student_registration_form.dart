@@ -62,7 +62,7 @@ class _StudentRegistrationFormState
     return academicYears;
   }
 
-  void submitFormHandler(BuildContext context) async {
+  void studentRegistrationHandler(BuildContext context) async {
     if (!formKey.currentState!.validate()) return;
 
     final documentReference =
@@ -307,7 +307,7 @@ class _StudentRegistrationFormState
           const SizedBox(height: 50),
           PrimaryButton(
             title: 'Enroll',
-            onPressed: () => submitFormHandler(context),
+            onPressed: () => studentRegistrationHandler(context),
           ),
         ],
       ),

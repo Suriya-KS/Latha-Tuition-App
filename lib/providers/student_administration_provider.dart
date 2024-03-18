@@ -58,39 +58,39 @@ class StudentAdministrationNotifier
   }
 
   void addEducationBoard(String educationBoard, {int? index}) {
-    final batches = [...state[StudentAdministration.educationBoards]];
+    final educationBoard = [...state[StudentAdministration.educationBoards]];
 
     if (index == null) {
-      batches.add(educationBoard);
+      educationBoard.add(educationBoard);
     } else {
-      batches.insert(index, educationBoard);
+      educationBoard.insert(index, educationBoard);
     }
 
     state = {
       ...state,
-      StudentAdministration.educationBoards: batches,
+      StudentAdministration.educationBoards: educationBoard,
     };
   }
 
   void updateEducationBoard(String educationBoard, int index) {
-    final batches = [...state[StudentAdministration.educationBoards]];
+    final educationBoard = [...state[StudentAdministration.educationBoards]];
 
-    batches[index] = educationBoard;
+    educationBoard[index] = educationBoard;
 
     state = {
       ...state,
-      StudentAdministration.educationBoards: batches,
+      StudentAdministration.educationBoards: educationBoard,
     };
   }
 
   void deleteEducationBoard(int index) {
-    final batches = [...state[StudentAdministration.educationBoards]];
+    final educationBoard = [...state[StudentAdministration.educationBoards]];
 
-    batches.removeAt(index);
+    educationBoard.removeAt(index);
 
     state = {
       ...state,
-      StudentAdministration.educationBoards: batches,
+      StudentAdministration.educationBoards: educationBoard,
     };
   }
 

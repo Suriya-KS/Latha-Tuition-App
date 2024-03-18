@@ -26,7 +26,7 @@ class _TutorDashboardScreenState extends State<TutorDashboardScreen> {
     });
   }
 
-  void popHandler(bool didPop) {
+  void dashboardPopHandler(bool didPop) {
     if (currentPageIndex != 0) {
       setState(() {
         currentPageIndex = 0;
@@ -38,7 +38,7 @@ class _TutorDashboardScreenState extends State<TutorDashboardScreen> {
   Widget build(BuildContext context) {
     return PopScope(
       canPop: currentPageIndex == 0 ? true : false,
-      onPopInvoked: popHandler,
+      onPopInvoked: dashboardPopHandler,
       child: Scaffold(
         bottomNavigationBar: CurvedBottomNavigationBar(
           index: currentPageIndex,

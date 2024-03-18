@@ -29,10 +29,10 @@ class _StudentApprovalDetailsScreenState
 
   late TextEditingController feesAmountController;
 
-  void submitFormHandler() {
-    if (formKey.currentState!.validate()) {
-      Navigator.pop(context);
-    }
+  void approveStudentHandler() {
+    if (!formKey.currentState!.validate()) return;
+
+    Navigator.pop(context);
   }
 
   @override
@@ -185,7 +185,7 @@ class _StudentApprovalDetailsScreenState
                           ),
                           PrimaryButton(
                             title: 'Approve',
-                            onPressed: submitFormHandler,
+                            onPressed: approveStudentHandler,
                           ),
                         ],
                       ),

@@ -34,7 +34,7 @@ class _FeedbacksViewState extends State<FeedbacksView> {
     });
   }
 
-  void addHandler(BuildContext context) {
+  void addFeedbackHandler(BuildContext context) {
     modalBottomSheet(
       context,
       TextEditSheet(
@@ -47,7 +47,7 @@ class _FeedbacksViewState extends State<FeedbacksView> {
     );
   }
 
-  void editHandler(BuildContext context, String feedback, int index) {
+  void editFeedbackHandler(BuildContext context, String feedback, int index) {
     modalBottomSheet(
       context,
       TextEditSheet(
@@ -90,7 +90,7 @@ class _FeedbacksViewState extends State<FeedbacksView> {
                         icon: Icons.edit_outlined,
                         iconPosition: 'right',
                         isClickable: true,
-                        onTap: () => editHandler(
+                        onTap: () => editFeedbackHandler(
                           context,
                           feedbacks[i]['message'],
                           i,
@@ -111,7 +111,7 @@ class _FeedbacksViewState extends State<FeedbacksView> {
           ),
           FloatingCircularActionButton(
             icon: Icons.add_outlined,
-            onPressed: () => addHandler(context),
+            onPressed: () => addFeedbackHandler(context),
           ),
         ],
       ),

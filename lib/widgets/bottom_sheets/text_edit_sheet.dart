@@ -41,9 +41,9 @@ class _TextEditSheetState extends State<TextEditSheet> {
   }
 
   submitHandler() {
-    if (formKey.currentState!.validate()) {
-      widget.onPressed(controller.text);
-    }
+    if (!formKey.currentState!.validate()) return;
+
+    widget.onPressed(controller.text);
   }
 
   @override

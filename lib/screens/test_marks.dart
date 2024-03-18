@@ -22,7 +22,7 @@ class _TestMarksScreenState extends ConsumerState<TestMarksScreen> {
   late int length;
   late List<TextEditingController> marksControllers;
 
-  void submitHandler(BuildContext context) {
+  void trackMarksHandler(BuildContext context) {
     Navigator.pop(context);
   }
 
@@ -56,7 +56,7 @@ class _TestMarksScreenState extends ConsumerState<TestMarksScreen> {
 
     return ScrollableDetailsList(
       title: 'Track Test Marks',
-      onPressed: () => submitHandler(context),
+      onPressed: () => trackMarksHandler(context),
       children: [
         TrackRecordDetails(
           title: trackSheetData[TrackSheet.testName],

@@ -56,7 +56,7 @@ class _TrackRecordSheetState extends ConsumerState<TrackRecordSheet> {
     return TimeOfDay(hour: hour, minute: minute);
   }
 
-  void toggleHandler(int index) {
+  void toggleTrackRecordHandler(int index) {
     ref.read(trackSheetProvider.notifier).changeActiveToggle(index);
 
     setState(() {
@@ -74,60 +74,60 @@ class _TrackRecordSheetState extends ConsumerState<TrackRecordSheet> {
     });
   }
 
-  void dropdownChangeHandler(String? value) {
+  void changeBatchHandler(String? value) {
     if (value == null) return;
 
     ref.read(trackSheetProvider.notifier).setBatchName(value);
   }
 
-  void submitHandler() {
-    if (formKey.currentState!.validate()) {
-      String testName = testNameController.text;
-      double? totalMarks = double.tryParse(totalMarksController.text);
-      TimeOfDay startTime = stringToTimeOfDay(startTimeController.text);
-      TimeOfDay endTime = stringToTimeOfDay(endTimeController.text);
-      DateTime date = DateFormat("MMMM d, yyyy").parse(dateController.text);
+  void trackRecordHandler() {
+    if (!formKey.currentState!.validate()) return;
 
-      if (widget.screen != Screen.attendance &&
-          widget.screen != Screen.testMarks) {
-        final attendanceMethods = ref.read(attendanceProvider.notifier);
-        final testMarksMethods = ref.read(testMarksProvider.notifier);
+    String testName = testNameController.text;
+    double? totalMarks = double.tryParse(totalMarksController.text);
+    TimeOfDay startTime = stringToTimeOfDay(startTimeController.text);
+    TimeOfDay endTime = stringToTimeOfDay(endTimeController.text);
+    DateTime date = DateFormat("MMMM d, yyyy").parse(dateController.text);
 
-        List attendanceList = [];
-        List testMarksList = [];
+    if (widget.screen != Screen.attendance &&
+        widget.screen != Screen.testMarks) {
+      final attendanceMethods = ref.read(attendanceProvider.notifier);
+      final testMarksMethods = ref.read(testMarksProvider.notifier);
 
-        for (int i = 0; i < dummyStudentNames.length; i++) {
-          attendanceList.add({
-            'name': dummyStudentNames[i],
-            'attendanceStatus': 'present',
-          });
-        }
+      List attendanceList = [];
+      List testMarksList = [];
 
-        for (int i = 0; i < dummyStudentNames.length; i++) {
-          testMarksList.add({
-            'name': dummyStudentNames[i],
-            'marks': '',
-          });
-        }
-
-        attendanceMethods.setInitialState(attendanceList);
-        testMarksMethods.setInitialState(testMarksList);
+      for (int i = 0; i < dummyStudentNames.length; i++) {
+        attendanceList.add({
+          'name': dummyStudentNames[i],
+          'attendanceStatus': 'present',
+        });
       }
 
-      final calendarViewMethods = ref.read(calendarViewProvider.notifier);
-      final trackSheetMethods = ref.read(trackSheetProvider.notifier);
+      for (int i = 0; i < dummyStudentNames.length; i++) {
+        testMarksList.add({
+          'name': dummyStudentNames[i],
+          'marks': '',
+        });
+      }
 
-      trackSheetMethods.setTestName(testName);
-      trackSheetMethods.setTotalMarks(totalMarks);
-      calendarViewMethods.setSelectedDate(date);
-      trackSheetMethods.setTime(startTime, endTime);
-
-      navigateToTrackScreen(
-        context,
-        widget.screen ?? Screen.trackRecordSheet,
-        destinationScreen,
-      );
+      attendanceMethods.setInitialState(attendanceList);
+      testMarksMethods.setInitialState(testMarksList);
     }
+
+    final calendarViewMethods = ref.read(calendarViewProvider.notifier);
+    final trackSheetMethods = ref.read(trackSheetProvider.notifier);
+
+    trackSheetMethods.setTestName(testName);
+    trackSheetMethods.setTotalMarks(totalMarks);
+    calendarViewMethods.setSelectedDate(date);
+    trackSheetMethods.setTime(startTime, endTime);
+
+    navigateToTrackScreen(
+      context,
+      widget.screen ?? Screen.trackRecordSheet,
+      destinationScreen,
+    );
   }
 
   @override
@@ -209,7 +209,7 @@ class _TrackRecordSheetState extends ConsumerState<TrackRecordSheet> {
                   iconLeft: Icons.groups_outlined,
                   iconRight: Icons.assignment_outlined,
                   isSelected: isSelected,
-                  onToggle: toggleHandler,
+                  onToggle: toggleTrackRecordHandler,
                 ),
               if (trackSheetData[TrackSheet.activeToggle] ==
                   TrackSheetToggles.tests)
@@ -235,7 +235,7 @@ class _TrackRecordSheetState extends ConsumerState<TrackRecordSheet> {
                   labelText: 'Batch',
                   prefixIcon: Icons.groups_outlined,
                   items: dummyBatchNames,
-                  onChanged: dropdownChangeHandler,
+                  onChanged: changeBatchHandler,
                   validator: validateDropdownValue,
                 ),
               if (trackSheetData[TrackSheet.activeToggle] ==
@@ -262,7 +262,7 @@ class _TrackRecordSheetState extends ConsumerState<TrackRecordSheet> {
                         labelText: 'Batch',
                         prefixIcon: Icons.groups_outlined,
                         items: dummyBatchNames,
-                        onChanged: dropdownChangeHandler,
+                        onChanged: changeBatchHandler,
                         validator: validateDropdownValue,
                       ),
                     ),
@@ -311,7 +311,7 @@ class _TrackRecordSheetState extends ConsumerState<TrackRecordSheet> {
                         widget.screen == Screen.testMarks
                     ? 'Update'
                     : 'Track',
-                onPressed: submitHandler,
+                onPressed: trackRecordHandler,
               ),
             ],
           ),

@@ -37,6 +37,7 @@ void navigateToTrackScreen(
 
   if (screen == Screen.attendance || screen == Screen.testMarks) {
     Navigator.pop(context);
+
     return;
   }
 
@@ -73,13 +74,15 @@ Future<UserType?> getAuthenticatedUserType(
   BuildContext context,
   String userID,
 ) async {
+  final firestore = FirebaseFirestore.instance;
+
   final studentDocumentSnapshot =
-      await FirebaseFirestore.instance.collection('students').doc(userID).get();
+      await firestore.collection('students').doc(userID).get();
 
   if (studentDocumentSnapshot.exists) return UserType.student;
 
   final tutorDocumentSnapshot =
-      await FirebaseFirestore.instance.collection('tutors').doc(userID).get();
+      await firestore.collection('tutors').doc(userID).get();
 
   if (tutorDocumentSnapshot.exists) return UserType.tutor;
 

@@ -10,7 +10,7 @@ import 'package:latha_tuition_app/widgets/form_inputs/dropdown_input.dart';
 class BatchSearchSheet extends StatelessWidget {
   const BatchSearchSheet({super.key});
 
-  void changeHandler(BuildContext context, String? batchName) {
+  void changeBatchHandler(BuildContext context, String? batchName) {
     if (batchName == null) return;
 
     Navigator.pop(context);
@@ -35,7 +35,7 @@ class BatchSearchSheet extends StatelessWidget {
               labelText: 'Batch Name',
               prefixIcon: Icons.groups_outlined,
               items: dummyBatchNames,
-              onChanged: (value) => changeHandler(context, value),
+              onChanged: (value) => changeBatchHandler(context, value),
               validator: (value) =>
                   validateRequiredInput(value, 'a', 'batch name'),
             ),

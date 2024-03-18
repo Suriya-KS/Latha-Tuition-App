@@ -6,6 +6,7 @@ import 'package:latha_tuition_app/utilities/constants.dart';
 import 'package:latha_tuition_app/utilities/helper_functions.dart';
 import 'package:latha_tuition_app/utilities/form_validation_functions.dart';
 import 'package:latha_tuition_app/utilities/modal_bottom_sheet.dart';
+import 'package:latha_tuition_app/utilities/snack_bar.dart';
 import 'package:latha_tuition_app/screens/tutor_dashboard.dart';
 import 'package:latha_tuition_app/widgets/buttons/primary_button.dart';
 import 'package:latha_tuition_app/widgets/bottom_sheets/password_recovery_option_sheet.dart';
@@ -34,7 +35,7 @@ class _LoginFormState extends State<LoginForm> {
     });
   }
 
-  void submitFormHandler(BuildContext context) async {
+  void loginHandler(BuildContext context) async {
     if (!formKey.currentState!.validate()) return;
 
     try {
@@ -76,13 +77,10 @@ class _LoginFormState extends State<LoginForm> {
       if (!context.mounted) return;
       if (errorMessage == null) return;
 
-      ScaffoldMessenger.of(context).removeCurrentSnackBar();
-
-      SnackBar snackBar = SnackBar(
+      snackBar(
+        context,
         content: Text(errorMessage),
       );
-
-      ScaffoldMessenger.of(context).showSnackBar(snackBar);
     }
   }
 
@@ -142,7 +140,7 @@ class _LoginFormState extends State<LoginForm> {
           const SizedBox(height: 30),
           PrimaryButton(
             title: 'Login',
-            onPressed: () => submitFormHandler(context),
+            onPressed: () => loginHandler(context),
           ),
         ],
       ),

@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:latha_tuition_app/utilities/form_validation_functions.dart';
+import 'package:latha_tuition_app/utilities/snack_bar.dart';
 import 'package:latha_tuition_app/screens/tutor_dashboard.dart';
 import 'package:latha_tuition_app/widgets/buttons/primary_button.dart';
 import 'package:latha_tuition_app/widgets/form_inputs/text_input.dart';
@@ -40,7 +41,7 @@ class _TutorSignUpFormState extends State<TutorSignUpForm> {
     });
   }
 
-  void submitHandler(BuildContext context) async {
+  void tutorSignUpHandler(BuildContext context) async {
     if (!formKey.currentState!.validate()) return;
 
     try {
@@ -69,13 +70,10 @@ class _TutorSignUpFormState extends State<TutorSignUpForm> {
       if (!context.mounted) return;
       if (errorMessage == null) return;
 
-      ScaffoldMessenger.of(context).removeCurrentSnackBar();
-
-      SnackBar snackBar = SnackBar(
+      snackBar(
+        context,
         content: Text(errorMessage),
       );
-
-      ScaffoldMessenger.of(context).showSnackBar(snackBar);
     }
   }
 
@@ -163,7 +161,7 @@ class _TutorSignUpFormState extends State<TutorSignUpForm> {
           const SizedBox(height: 50),
           PrimaryButton(
             title: 'Sign Up',
-            onPressed: () => submitHandler(context),
+            onPressed: () => tutorSignUpHandler(context),
           ),
         ],
       ),

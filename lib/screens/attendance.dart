@@ -18,7 +18,8 @@ class AttendanceScreen extends ConsumerWidget {
   });
 
   final Screen screen;
-  void submitHandler(BuildContext context) {
+
+  void trackAttendanceHandler(BuildContext context) {
     Navigator.pop(context);
   }
 
@@ -31,7 +32,7 @@ class AttendanceScreen extends ConsumerWidget {
 
     return ScrollableDetailsList(
       title: 'Track Attendance',
-      onPressed: () => submitHandler(context),
+      onPressed: () => trackAttendanceHandler(context),
       children: [
         TrackRecordDetails(
           title: trackSheetData[TrackSheet.batchName],

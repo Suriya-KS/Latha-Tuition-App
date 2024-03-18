@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:latha_tuition_app/utilities/form_validation_functions.dart';
+import 'package:latha_tuition_app/utilities/snack_bar.dart';
 import 'package:latha_tuition_app/providers/awaiting_admission_provider.dart';
 import 'package:latha_tuition_app/providers/admission_provider.dart';
 import 'package:latha_tuition_app/widgets/buttons/primary_button.dart';
@@ -41,7 +42,7 @@ class _StudentSignUpFormState extends ConsumerState<StudentSignUpForm> {
     });
   }
 
-  void submitFormHandler(BuildContext context) async {
+  void studentSignUpHandler(BuildContext context) async {
     if (!formKey.currentState!.validate()) return;
 
     try {
@@ -87,13 +88,10 @@ class _StudentSignUpFormState extends ConsumerState<StudentSignUpForm> {
       if (!context.mounted) return;
       if (errorMessage == null) return;
 
-      ScaffoldMessenger.of(context).removeCurrentSnackBar();
-
-      SnackBar snackBar = SnackBar(
+      snackBar(
+        context,
         content: Text(errorMessage),
       );
-
-      ScaffoldMessenger.of(context).showSnackBar(snackBar);
     }
   }
 
@@ -165,7 +163,7 @@ class _StudentSignUpFormState extends ConsumerState<StudentSignUpForm> {
           const SizedBox(height: 50),
           PrimaryButton(
             title: 'Sign Up',
-            onPressed: () => submitFormHandler(context),
+            onPressed: () => studentSignUpHandler(context),
           ),
         ],
       ),

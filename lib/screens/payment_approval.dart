@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:latha_tuition_app/utilities/constants.dart';
 import 'package:latha_tuition_app/utilities/dummy_data.dart';
 import 'package:latha_tuition_app/utilities/helper_functions.dart';
+import 'package:latha_tuition_app/utilities/snack_bar.dart';
 import 'package:latha_tuition_app/widgets/app_bar/text_app_bar.dart';
 import 'package:latha_tuition_app/widgets/cards/text_status_actions_card.dart';
 
@@ -16,9 +17,7 @@ class PaymentApprovalScreen extends StatefulWidget {
 class _PaymentApprovalScreenState extends State<PaymentApprovalScreen> {
   late List<Map<String, dynamic>> paymentDetails;
 
-  void tapHandler(BuildContext context, int index, String status) {
-    ScaffoldMessenger.of(context).removeCurrentSnackBar();
-
+  void statusTapHandler(BuildContext context, int index, String status) {
     final paymentDetail = paymentDetails[index];
     String amount =
         formatAmount(double.tryParse(paymentDetail['amount'].toString()) ?? 0);
@@ -66,17 +65,14 @@ class _PaymentApprovalScreenState extends State<PaymentApprovalScreen> {
       );
     }
 
-    SnackBar snackBar = SnackBar(
+    snackBar(
+      context,
       content: snackBarContent,
-      action: SnackBarAction(
-        label: 'Undo',
-        onPressed: () => setState(() {
-          paymentDetails.insert(index, paymentDetail);
-        }),
-      ),
+      actionLabel: 'Undo',
+      onPressed: () => setState(() {
+        paymentDetails.insert(index, paymentDetail);
+      }),
     );
-
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
 
     setState(() {
       paymentDetails.removeAt(index);
@@ -114,8 +110,16 @@ class _PaymentApprovalScreenState extends State<PaymentApprovalScreen> {
                         Text(formatDate(paymentDetails[index]['date'])),
                       ],
                     ),
-                    onApproveTap: () => tapHandler(context, index, 'approve'),
-                    onRejectTap: () => tapHandler(context, index, 'reject'),
+                    onApproveTap: () => statusTapHandler(
+                      context,
+                      index,
+                      'approve',
+                    ),
+                    onRejectTap: () => statusTapHandler(
+                      context,
+                      index,
+                      'reject',
+                    ),
                   )
                 : const SizedBox(height: screenPadding),
           ),

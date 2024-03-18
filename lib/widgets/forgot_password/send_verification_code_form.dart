@@ -20,12 +20,12 @@ class _SendVerificationCodeFormState
 
   late TextEditingController controller;
 
-  void submitFormHandler() {
-    if (formKey.currentState!.validate()) {
-      ref
-          .read(forgotPasswordProvider.notifier)
-          .switchToVerifyCodeForm(controller.text);
-    }
+  void sendVerificationCodeHandler() {
+    if (!formKey.currentState!.validate()) return;
+
+    ref
+        .read(forgotPasswordProvider.notifier)
+        .switchToVerifyCodeForm(controller.text);
   }
 
   @override
@@ -74,7 +74,7 @@ class _SendVerificationCodeFormState
           const SizedBox(height: 50),
           PrimaryButton(
             title: 'Send Verification Code',
-            onPressed: submitFormHandler,
+            onPressed: sendVerificationCodeHandler,
           ),
         ],
       ),

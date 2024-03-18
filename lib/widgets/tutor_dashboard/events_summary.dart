@@ -34,7 +34,7 @@ class _EventsSummaryState extends ConsumerState<EventsSummary> {
     }
   }
 
-  void toggleHandler(int index) {
+  void toggleTrackedRecordsHandler(int index) {
     ref.read(calendarViewProvider.notifier).changeActiveToggle(index);
 
     setState(() {
@@ -75,7 +75,7 @@ class _EventsSummaryState extends ConsumerState<EventsSummary> {
             iconLeft: Icons.groups_outlined,
             iconRight: Icons.assignment_outlined,
             isSelected: isSelected,
-            onToggle: toggleHandler,
+            onToggle: toggleTrackedRecordsHandler,
           ),
           const SizedBox(height: 20),
           items.isEmpty

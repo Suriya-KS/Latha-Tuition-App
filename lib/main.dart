@@ -57,7 +57,7 @@ class _MyAppState extends ConsumerState<MyApp> {
     if (authentication.currentUser == null) {
       setState(() {
         isLoading = false;
-        screen = const Onboarding();
+        screen = const OnboardingScreen();
       });
 
       return;

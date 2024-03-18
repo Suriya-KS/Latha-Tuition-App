@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'package:latha_tuition_app/utilities/snack_bar.dart';
 import 'package:latha_tuition_app/providers/student_administration_provider.dart';
 import 'package:latha_tuition_app/widgets/utilities/title_icon_list.dart';
 import 'package:latha_tuition_app/widgets/app_bar/text_app_bar.dart';
@@ -9,7 +10,8 @@ import 'package:latha_tuition_app/widgets/buttons/primary_button.dart';
 class ConfigureEducationBoards extends ConsumerWidget {
   const ConfigureEducationBoards({super.key});
 
-  void addHandler(BuildContext context, WidgetRef ref, String educationBoard) {
+  void addEducationBoardHandler(
+      BuildContext context, WidgetRef ref, String educationBoard) {
     Navigator.pop(context);
 
     ref
@@ -17,7 +19,7 @@ class ConfigureEducationBoards extends ConsumerWidget {
         .addEducationBoard(educationBoard);
   }
 
-  void editHandler(
+  void editEducationBoardHandler(
     BuildContext context,
     WidgetRef ref,
     int index,
@@ -30,33 +32,28 @@ class ConfigureEducationBoards extends ConsumerWidget {
         .updateEducationBoard(educationBoard, index);
   }
 
-  void deleteHandler(BuildContext context, WidgetRef ref, int index) {
-    ScaffoldMessenger.of(context).removeCurrentSnackBar();
-
+  void deleteEducationBoardHandler(
+      BuildContext context, WidgetRef ref, int index) {
     final educationBoard = ref.read(studentAdministrationProvider)[
         StudentAdministration.educationBoards][index];
 
-    SnackBar snackBar = SnackBar(
+    snackBar(
+      context,
       content: Text('Education board "$educationBoard" has been deleted'),
-      action: SnackBarAction(
-        label: 'Undo',
-        onPressed: () {
+      actionLabel: 'Undo',
+      onPressed: () =>
           ref.read(studentAdministrationProvider.notifier).addEducationBoard(
                 educationBoard,
                 index: index,
-              );
-        },
-      ),
+              ),
     );
-
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
 
     ref
         .read(studentAdministrationProvider.notifier)
         .deleteEducationBoard(index);
   }
 
-  void submitHandler(BuildContext context) {
+  void saveEducationBoardHandler(BuildContext context) {
     Navigator.pop(context);
   }
 
@@ -78,17 +75,18 @@ class ConfigureEducationBoards extends ConsumerWidget {
                 fieldName: 'education board',
                 items: educationBoards,
                 onListTileTap: (index, educationBoard) =>
-                    editHandler(context, ref, index, educationBoard),
+                    editEducationBoardHandler(
+                        context, ref, index, educationBoard),
                 onIconPressAndSwipe: (index) =>
-                    deleteHandler(context, ref, index),
+                    deleteEducationBoardHandler(context, ref, index),
                 onButtonPress: (educationBoard) =>
-                    addHandler(context, ref, educationBoard),
+                    addEducationBoardHandler(context, ref, educationBoard),
               ),
             ),
             const SizedBox(height: 20),
             PrimaryButton(
               title: 'Save',
-              onPressed: () => submitHandler(context),
+              onPressed: () => saveEducationBoardHandler(context),
             ),
             const SizedBox(height: 30),
           ],

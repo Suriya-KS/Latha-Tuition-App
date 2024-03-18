@@ -15,7 +15,10 @@ class StudentApprovalScreen extends StatefulWidget {
 class _StudentApprovalScreenState extends State<StudentApprovalScreen> {
   late List<Map<String, dynamic>> studentApprovals;
 
-  void tapHandler(BuildContext context, Map<String, dynamic> studentDetails) {
+  void navigateToStudentApprovalDetailsScreen(
+    BuildContext context,
+    Map<String, dynamic> studentDetails,
+  ) {
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -56,7 +59,7 @@ class _StudentApprovalScreenState extends State<StudentApprovalScreen> {
                       ),
                       Row(
                         children: [
-                          const Text('StanEducation Board: '),
+                          const Text('Education Board: '),
                           Text(
                             studentApprovals[i]['educationBoard'],
                             style: const TextStyle(fontWeight: FontWeight.bold),
@@ -71,7 +74,10 @@ class _StudentApprovalScreenState extends State<StudentApprovalScreen> {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                onTap: () => tapHandler(context, studentApprovals[i]),
+                onTap: () => navigateToStudentApprovalDetailsScreen(
+                  context,
+                  studentApprovals[i],
+                ),
               ),
             const SizedBox(height: 20),
           ],

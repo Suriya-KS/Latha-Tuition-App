@@ -32,10 +32,10 @@ class _ResetPasswordFormState extends State<ResetPasswordForm> {
     });
   }
 
-  void submitFormHandler() {
-    if (formKey.currentState!.validate()) {
-      Navigator.pop(context);
-    }
+  void resetPasswordHandler() {
+    if (!formKey.currentState!.validate()) return;
+
+    Navigator.pop(context);
   }
 
   @override
@@ -91,7 +91,7 @@ class _ResetPasswordFormState extends State<ResetPasswordForm> {
           const SizedBox(height: 50),
           PrimaryButton(
             title: 'Reset',
-            onPressed: submitFormHandler,
+            onPressed: resetPasswordHandler,
           ),
         ],
       ),

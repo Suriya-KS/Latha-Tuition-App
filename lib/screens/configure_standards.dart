@@ -8,14 +8,14 @@ import 'package:latha_tuition_app/widgets/buttons/primary_button.dart';
 class ConfigureStandardsScreen extends ConsumerWidget {
   const ConfigureStandardsScreen({super.key});
 
-  void submitHandler(BuildContext context) {
-    Navigator.pop(context);
-  }
-
-  void changeHandler(WidgetRef ref, String standard, bool isChecked) {
+  void changeStandardHandler(WidgetRef ref, String standard, bool isChecked) {
     ref
         .read(studentAdministrationProvider.notifier)
         .updateEnabledStandards(standard, isChecked);
+  }
+
+  void saveStandardHandler(BuildContext context) {
+    Navigator.pop(context);
   }
 
   @override
@@ -44,7 +44,7 @@ class ConfigureStandardsScreen extends ConsumerWidget {
                           horizontal: 50,
                         ),
                         onChanged: (isChecked) =>
-                            changeHandler(ref, standard, isChecked),
+                            changeStandardHandler(ref, standard, isChecked),
                       ),
                   ],
                 ),
@@ -53,7 +53,7 @@ class ConfigureStandardsScreen extends ConsumerWidget {
             const SizedBox(height: 20),
             PrimaryButton(
               title: 'Save',
-              onPressed: () => submitHandler(context),
+              onPressed: () => saveStandardHandler(context),
             ),
             const SizedBox(height: 30),
           ],

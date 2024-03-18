@@ -8,11 +8,11 @@ import 'package:latha_tuition_app/providers/test_marks_provider.dart';
 import 'package:latha_tuition_app/widgets/app_bar/text_app_bar.dart';
 import 'package:latha_tuition_app/widgets/texts/subtitle_text.dart';
 import 'package:latha_tuition_app/widgets/form_inputs/toggle_input.dart';
-import 'package:latha_tuition_app/widgets/student_information.dart/personal_details_view.dart';
-import 'package:latha_tuition_app/widgets/student_information.dart/attendance_records_view.dart';
-import 'package:latha_tuition_app/widgets/student_information.dart/test_marks_view.dart';
-import 'package:latha_tuition_app/widgets/student_information.dart/payment_history_view.dart';
-import 'package:latha_tuition_app/widgets/student_information.dart/feedbacks_view.dart';
+import 'package:latha_tuition_app/widgets/student_information/personal_details_view.dart';
+import 'package:latha_tuition_app/widgets/student_information/attendance_records_view.dart';
+import 'package:latha_tuition_app/widgets/student_information/test_marks_view.dart';
+import 'package:latha_tuition_app/widgets/student_information/payment_history_view.dart';
+import 'package:latha_tuition_app/widgets/student_information/feedbacks_view.dart';
 
 class StudentInformationScreen extends ConsumerStatefulWidget {
   const StudentInformationScreen({super.key});
@@ -24,7 +24,7 @@ class StudentInformationScreen extends ConsumerStatefulWidget {
 
 class _StudentInformationScreenState
     extends ConsumerState<StudentInformationScreen> {
-  static const pages = [
+  static const views = [
     PersonalDetailsView(),
     AttendanceRecordsView(),
     TestMarksView(),
@@ -32,9 +32,17 @@ class _StudentInformationScreenState
     FeedbacksView(),
   ];
 
+  final studentInformationScreenTitles = [
+    'Personal Details',
+    'Attendance Records',
+    'Test Marks',
+    'Payment History',
+    'Feedbacks'
+  ];
+
   late int index;
 
-  void toggleHandler(int selectedIndex) {
+  void studentInformationViewToggleHandler(int selectedIndex) {
     setState(() {
       index = selectedIndex;
     });
@@ -78,7 +86,7 @@ class _StudentInformationScreenState
               child: Align(
                 alignment: Alignment.center,
                 child: ToggleInput(
-                  onToggle: toggleHandler,
+                  onToggle: studentInformationViewToggleHandler,
                   children: const [
                     Icon(Icons.person_outline),
                     Icon(Icons.groups_outlined),
@@ -90,7 +98,7 @@ class _StudentInformationScreenState
               ),
             ),
             const SizedBox(height: 20),
-            pages[index],
+            views[index],
           ],
         ),
       ),

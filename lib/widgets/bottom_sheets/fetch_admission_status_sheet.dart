@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:latha_tuition_app/utilities/constants.dart';
 import 'package:latha_tuition_app/utilities/helper_functions.dart';
 import 'package:latha_tuition_app/utilities/form_validation_functions.dart';
+import 'package:latha_tuition_app/utilities/snack_bar.dart';
 import 'package:latha_tuition_app/providers/awaiting_admission_provider.dart';
 import 'package:latha_tuition_app/screens/student_awaiting_approval.dart';
 import 'package:latha_tuition_app/widgets/buttons/primary_button.dart';
@@ -27,7 +28,7 @@ class _FetchAdmissionStatusSheetState
 
   late TextEditingController emailController;
 
-  void submitFormHandler(BuildContext context) async {
+  void fetchAdmissionStatusHandler(BuildContext context) async {
     if (!formKey.currentState!.validate()) return;
 
     try {
@@ -38,23 +39,18 @@ class _FetchAdmissionStatusSheetState
           .get();
 
       if (querySnapshot.docs.isEmpty && context.mounted) {
-        ScaffoldMessenger.of(context).removeCurrentSnackBar();
-
         final parentContext = ref
             .read(awaitingAdmissionProvider)[AwaitingAdmission.parentContext];
 
-        SnackBar snackBar = SnackBar(
+        snackBar(
+          context,
           content: const Text('Email address is not registered'),
-          action: SnackBarAction(
-            label: 'Register Now',
-            onPressed: () => navigateToStudentRegistrationScreen(
-              parentContext,
-              screen: Screen.fetchAdmissionStatusSheet,
-            ),
+          actionLabel: 'Register Now',
+          onPressed: () => navigateToStudentRegistrationScreen(
+            parentContext,
+            screen: Screen.fetchAdmissionStatusSheet,
           ),
         );
-
-        ScaffoldMessenger.of(context).showSnackBar(snackBar);
 
         Navigator.pop(context);
 
@@ -83,13 +79,10 @@ class _FetchAdmissionStatusSheetState
       if (!context.mounted) return;
       if (errorMessage == null) return;
 
-      ScaffoldMessenger.of(context).removeCurrentSnackBar();
-
-      SnackBar snackBar = SnackBar(
+      snackBar(
+        context,
         content: Text(errorMessage),
       );
-
-      ScaffoldMessenger.of(context).showSnackBar(snackBar);
     }
   }
 
@@ -127,7 +120,7 @@ class _FetchAdmissionStatusSheetState
               const SizedBox(height: 50),
               PrimaryButton(
                 title: 'Check',
-                onPressed: () => submitFormHandler(context),
+                onPressed: () => fetchAdmissionStatusHandler(context),
               ),
               const SizedBox(height: 10),
             ],

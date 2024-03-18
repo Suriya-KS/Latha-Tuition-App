@@ -30,7 +30,7 @@ class _VerifyCodeFormState extends ConsumerState<VerifyCodeForm> {
 
   late Timer timer;
 
-  void resendTimerHandler() {
+  void resetTimer() {
     verificationCode1Controller.clear();
     verificationCode2Controller.clear();
     verificationCode3Controller.clear();
@@ -64,7 +64,7 @@ class _VerifyCodeFormState extends ConsumerState<VerifyCodeForm> {
     );
   }
 
-  void submitFormHandler() {
+  void verifyCodeHandler() {
     navigateToResetPasswordScreen();
   }
 
@@ -77,7 +77,7 @@ class _VerifyCodeFormState extends ConsumerState<VerifyCodeForm> {
     verificationCode3Controller = TextEditingController();
     verificationCode4Controller = TextEditingController();
 
-    resendTimerHandler();
+    resetTimer();
   }
 
   @override
@@ -147,8 +147,7 @@ class _VerifyCodeFormState extends ConsumerState<VerifyCodeForm> {
                     style: TextButton.styleFrom(
                       padding: const EdgeInsets.symmetric(horizontal: 5),
                     ),
-                    onPressed:
-                        secondsRemaining == 0 ? resendTimerHandler : null,
+                    onPressed: secondsRemaining == 0 ? resetTimer : null,
                     child: const Text('Resend Code'),
                   ),
                   secondsRemaining > 0
@@ -159,7 +158,7 @@ class _VerifyCodeFormState extends ConsumerState<VerifyCodeForm> {
               const SizedBox(height: 50),
               PrimaryButton(
                 title: 'Verify',
-                onPressed: submitFormHandler,
+                onPressed: verifyCodeHandler,
               ),
             ],
           ),

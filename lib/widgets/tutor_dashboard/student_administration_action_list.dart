@@ -11,21 +11,7 @@ import 'package:latha_tuition_app/widgets/bottom_sheets/batch_search_sheet.dart'
 class StudentAdministrationActionList extends StatelessWidget {
   const StudentAdministrationActionList({super.key});
 
-  void studentSearchTapHandler(BuildContext context) {
-    modalBottomSheet(
-      context,
-      const StudentSearchSheet(),
-    );
-  }
-
-  void batchPaymentHistoryTapHandler(BuildContext context) {
-    modalBottomSheet(
-      context,
-      const BatchSearchSheet(),
-    );
-  }
-
-  void studentApprovalTapHandler(BuildContext context) {
+  void navigateToStudentApprovalScreen(BuildContext context) {
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -34,7 +20,7 @@ class StudentAdministrationActionList extends StatelessWidget {
     );
   }
 
-  void paymentApprovalTapHandler(BuildContext context) {
+  void navigateToPaymentApprovalScreen(BuildContext context) {
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -57,7 +43,10 @@ class StudentAdministrationActionList extends StatelessWidget {
                   child: BoxCard(
                     title: 'Student Search',
                     image: searchImage,
-                    onTap: () => studentSearchTapHandler(context),
+                    onTap: () => modalBottomSheet(
+                      context,
+                      const StudentSearchSheet(),
+                    ),
                   ),
                 ),
                 const SizedBox(width: 10),
@@ -65,7 +54,10 @@ class StudentAdministrationActionList extends StatelessWidget {
                   child: BoxCard(
                     title: 'Batch wise Payments',
                     image: groupPaymentImage,
-                    onTap: () => batchPaymentHistoryTapHandler(context),
+                    onTap: () => modalBottomSheet(
+                      context,
+                      const BatchSearchSheet(),
+                    ),
                   ),
                 ),
               ],
@@ -79,7 +71,7 @@ class StudentAdministrationActionList extends StatelessWidget {
                   child: BoxCard(
                     title: 'Student Approval',
                     image: pendingApprovalImage,
-                    onTap: () => studentApprovalTapHandler(context),
+                    onTap: () => navigateToStudentApprovalScreen(context),
                   ),
                 ),
                 const SizedBox(width: 10),
@@ -87,7 +79,7 @@ class StudentAdministrationActionList extends StatelessWidget {
                   child: BoxCard(
                     title: 'Payment Approval',
                     image: phoneConfirmImage,
-                    onTap: () => paymentApprovalTapHandler(context),
+                    onTap: () => navigateToPaymentApprovalScreen(context),
                   ),
                 ),
               ],

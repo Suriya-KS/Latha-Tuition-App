@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'package:latha_tuition_app/utilities/snack_bar.dart';
 import 'package:latha_tuition_app/providers/student_administration_provider.dart';
 import 'package:latha_tuition_app/widgets/utilities/title_icon_list.dart';
 import 'package:latha_tuition_app/widgets/app_bar/text_app_bar.dart';
@@ -9,13 +10,13 @@ import 'package:latha_tuition_app/widgets/buttons/primary_button.dart';
 class ConfigureBatchesScreen extends ConsumerWidget {
   const ConfigureBatchesScreen({super.key});
 
-  void addHandler(BuildContext context, WidgetRef ref, String batchName) {
+  void addBatchHandler(BuildContext context, WidgetRef ref, String batchName) {
     Navigator.pop(context);
 
     ref.read(studentAdministrationProvider.notifier).addBatch(batchName);
   }
 
-  void editHandler(
+  void editBatchHandler(
     BuildContext context,
     WidgetRef ref,
     int index,
@@ -28,32 +29,26 @@ class ConfigureBatchesScreen extends ConsumerWidget {
         .updateBatch(batchName, index);
   }
 
-  void deleteHandler(BuildContext context, WidgetRef ref, int index) {
-    ScaffoldMessenger.of(context).removeCurrentSnackBar();
-
+  void deleteBatchHandler(BuildContext context, WidgetRef ref, int index) {
     final batchName =
         ref.read(studentAdministrationProvider)[StudentAdministration.batches]
             [index];
 
-    SnackBar snackBar = SnackBar(
+    snackBar(
+      context,
       content: Text('Batch "$batchName" has been deleted'),
-      action: SnackBarAction(
-        label: 'Undo',
-        onPressed: () {
+      actionLabel: 'Undo',
+      onPressed: () =>
           ref.read(studentAdministrationProvider.notifier).addBatch(
                 batchName,
                 index: index,
-              );
-        },
-      ),
+              ),
     );
-
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
 
     ref.read(studentAdministrationProvider.notifier).deleteBatch(index);
   }
 
-  void submitHandler(BuildContext context) {
+  void saveBatchHandler(BuildContext context) {
     Navigator.pop(context);
   }
 
@@ -75,17 +70,17 @@ class ConfigureBatchesScreen extends ConsumerWidget {
                 fieldName: 'batch name',
                 items: batches,
                 onListTileTap: (index, batchName) =>
-                    editHandler(context, ref, index, batchName),
+                    editBatchHandler(context, ref, index, batchName),
                 onIconPressAndSwipe: (index) =>
-                    deleteHandler(context, ref, index),
+                    deleteBatchHandler(context, ref, index),
                 onButtonPress: (batchName) =>
-                    addHandler(context, ref, batchName),
+                    addBatchHandler(context, ref, batchName),
               ),
             ),
             const SizedBox(height: 20),
             PrimaryButton(
               title: 'Save',
-              onPressed: () => submitHandler(context),
+              onPressed: () => saveBatchHandler(context),
             ),
             const SizedBox(height: 30),
           ],
