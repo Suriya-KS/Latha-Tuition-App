@@ -7,14 +7,14 @@ class TextAvatarCard extends StatelessWidget {
     required this.title,
     required this.avatarText,
     required this.children,
-    required this.onTap,
+    this.onTap,
     super.key,
   });
 
   final String title;
   final String avatarText;
   final List<Widget> children;
-  final void Function() onTap;
+  final void Function()? onTap;
 
   @override
   Widget build(BuildContext context) {

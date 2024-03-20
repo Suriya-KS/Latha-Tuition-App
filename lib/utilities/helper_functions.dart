@@ -7,6 +7,8 @@ import 'package:latha_tuition_app/utilities/constants.dart';
 import 'package:latha_tuition_app/providers/attendance_provider.dart';
 import 'package:latha_tuition_app/screens/login.dart';
 import 'package:latha_tuition_app/screens/student_registration.dart';
+import 'package:latha_tuition_app/screens/student_approval.dart';
+import 'package:latha_tuition_app/screens/payment_approval.dart';
 
 void navigateToLoginScreen(BuildContext context, Screen? screen) {
   if (screen == Screen.onboarding) {
@@ -70,6 +72,24 @@ void navigateToStudentRegistrationScreen(
   }
 }
 
+void navigateToStudentApprovalScreen(BuildContext context) {
+  Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (context) => const StudentApprovalScreen(),
+    ),
+  );
+}
+
+void navigateToPaymentApprovalScreen(BuildContext context) {
+  Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (context) => const PaymentApprovalScreen(),
+    ),
+  );
+}
+
 Future<UserType?> getAuthenticatedUserType(
   BuildContext context,
   String userID,
@@ -89,9 +109,30 @@ Future<UserType?> getAuthenticatedUserType(
   return null;
 }
 
+String formatName(String name) {
+  final firstName = name.split(' ')[0];
+
+  if (firstName.length <= 7) return 'Hi, $firstName';
+
+  String shortenedName = '${firstName.substring(0, 7)}...';
+  return 'Hi, $shortenedName';
+}
+
 String formatDate(DateTime date) {
   final formatter = DateFormat('MMMM d, yyyy');
   return formatter.format(date);
+}
+
+String formatDateDay(DateTime date) {
+  final monthFormatter = DateFormat.MMMM();
+  final dayFormatter = DateFormat.d();
+  final dayOfWeekFormatter = DateFormat.E();
+
+  final month = monthFormatter.format(date);
+  final day = dayFormatter.format(date);
+  final dayOfWeek = dayOfWeekFormatter.format(date);
+
+  return '$month $day, $dayOfWeek';
 }
 
 String formatTime(TimeOfDay time) {

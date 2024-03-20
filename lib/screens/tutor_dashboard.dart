@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:latha_tuition_app/widgets/bottom_navigation_bar/curved_bottom_navigation_bar.dart';
+import 'package:latha_tuition_app/widgets/tutor_dashboard/home_view.dart';
 import 'package:latha_tuition_app/widgets/tutor_dashboard/events_view.dart';
 import 'package:latha_tuition_app/widgets/tutor_dashboard/student_administration_view.dart';
 
@@ -13,7 +14,7 @@ class TutorDashboardScreen extends StatefulWidget {
 
 class _TutorDashboardScreenState extends State<TutorDashboardScreen> {
   static const pages = [
-    Placeholder(),
+    HomeView(),
     EventsView(),
     StudentAdministrationView(),
   ];
@@ -44,9 +45,7 @@ class _TutorDashboardScreenState extends State<TutorDashboardScreen> {
           index: currentPageIndex,
           onTap: changeView,
         ),
-        body: SafeArea(
-          child: pages[currentPageIndex],
-        ),
+        body: pages[currentPageIndex],
       ),
     );
   }

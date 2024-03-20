@@ -11,23 +11,25 @@ class EventsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        const Column(
-          children: [
-            Calendar(),
-            SizedBox(height: 20),
-            EventsSummary(),
-          ],
-        ),
-        FloatingCircularActionButton(
-          icon: Icons.add,
-          onPressed: () => modalBottomSheet(
-            context,
-            const TrackRecordSheet(),
+    return SafeArea(
+      child: Stack(
+        children: [
+          const Column(
+            children: [
+              Calendar(),
+              SizedBox(height: 20),
+              EventsSummary(),
+            ],
           ),
-        ),
-      ],
+          FloatingCircularActionButton(
+            icon: Icons.add,
+            onPressed: () => modalBottomSheet(
+              context,
+              const TrackRecordSheet(),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

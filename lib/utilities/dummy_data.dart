@@ -351,3 +351,39 @@ final List<Map<String, dynamic>> dummyBatchPaymentApproval = [
     'amount': 2200.5,
   },
 ];
+
+final List<Map<String, dynamic>> dummyUpcomingClasses = [
+  {
+    'batchName': 'Batch 1',
+    'standard': 'XII',
+    'date': DateTime.now(),
+    'startTime': const TimeOfDay(hour: 11, minute: 0),
+    'endTime': const TimeOfDay(hour: 12, minute: 0),
+  },
+  {
+    'batchName': 'Batch 2',
+    'standard': 'VIII',
+    'date': DateTime(2002, 3, 5),
+    'startTime': const TimeOfDay(hour: 14, minute: 0),
+    'endTime': const TimeOfDay(hour: 17, minute: 0),
+  },
+];
+
+final List<Map<String, dynamic>> dummyScheduledTests = [
+  {
+    'testName': 'Test Name 1',
+    'batchName': 'Batch 2',
+    'standard': 'XII',
+    'date': DateTime.now(),
+    'startTime': const TimeOfDay(hour: 11, minute: 0),
+    'endTime': const TimeOfDay(hour: 12, minute: 0),
+  },
+  {
+    'testName': 'Test Name 2',
+    'batchName': 'Batch 3',
+    'standard': 'VIII',
+    'date': DateTime(2002, 3, 5),
+    'startTime': const TimeOfDay(hour: 14, minute: 0),
+    'endTime': const TimeOfDay(hour: 17, minute: 0),
+  },
+];
