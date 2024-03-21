@@ -1,67 +1,93 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:latha_tuition_app/utilities/snack_bar.dart';
-import 'package:latha_tuition_app/providers/student_administration_provider.dart';
 import 'package:latha_tuition_app/widgets/utilities/title_icon_list.dart';
 import 'package:latha_tuition_app/widgets/app_bar/text_app_bar.dart';
 import 'package:latha_tuition_app/widgets/buttons/primary_button.dart';
 
-class ConfigureEducationBoards extends ConsumerWidget {
+class ConfigureEducationBoards extends StatefulWidget {
   const ConfigureEducationBoards({super.key});
 
-  void addEducationBoardHandler(
-      BuildContext context, WidgetRef ref, String educationBoard) {
-    Navigator.pop(context);
+  @override
+  State<ConfigureEducationBoards> createState() =>
+      _ConfigureEducationBoardsState();
+}
 
-    ref
-        .read(studentAdministrationProvider.notifier)
-        .addEducationBoard(educationBoard);
+class _ConfigureEducationBoardsState extends State<ConfigureEducationBoards> {
+  final firestore = FirebaseFirestore.instance;
+
+  bool isChanged = false;
+  List<String> educationBoards = [];
+
+  void loadEducationBoards() async {
+    final documentSnapshot =
+        await firestore.collection('settings').doc('studentRegistration').get();
+
+    setState(() {
+      isChanged = false;
+      educationBoards = List<String>.from(
+        documentSnapshot.data()!['educationBoards'],
+      );
+    });
   }
 
-  void editEducationBoardHandler(
-    BuildContext context,
-    WidgetRef ref,
-    int index,
-    String educationBoard,
-  ) {
-    Navigator.pop(context);
+  void addEducationBoardHandler(String educationBoard) {
+    setState(() {
+      isChanged = true;
+      educationBoards.add(educationBoard);
+    });
 
-    ref
-        .read(studentAdministrationProvider.notifier)
-        .updateEducationBoard(educationBoard, index);
+    Navigator.pop(context);
   }
 
-  void deleteEducationBoardHandler(
-      BuildContext context, WidgetRef ref, int index) {
-    final educationBoard = ref.read(studentAdministrationProvider)[
-        StudentAdministration.educationBoards][index];
+  void editEducationBoardHandler(int index, String educationBoard) {
+    setState(() {
+      isChanged = true;
+      educationBoards[index] = educationBoard;
+    });
+
+    Navigator.pop(context);
+  }
+
+  void deleteEducationBoardHandler(int index) {
+    final educationBoard = educationBoards[index];
 
     snackBar(
       context,
       content: Text('Education board "$educationBoard" has been deleted'),
       actionLabel: 'Undo',
-      onPressed: () =>
-          ref.read(studentAdministrationProvider.notifier).addEducationBoard(
-                educationBoard,
-                index: index,
-              ),
+      onPressed: () => setState(() {
+        educationBoards.insert(index, educationBoard);
+      }),
     );
 
-    ref
-        .read(studentAdministrationProvider.notifier)
-        .deleteEducationBoard(index);
+    setState(() {
+      isChanged = true;
+      educationBoards.removeAt(index);
+    });
   }
 
-  void saveEducationBoardHandler(BuildContext context) {
+  void saveEducationBoardHandler(BuildContext context) async {
+    await firestore
+        .collection('settings')
+        .doc('studentRegistration')
+        .update({'educationBoards': educationBoards});
+
+    if (!context.mounted) return;
+
     Navigator.pop(context);
   }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final educationBoards = ref.watch(
-        studentAdministrationProvider)[StudentAdministration.educationBoards];
+  void initState() {
+    super.initState();
 
+    loadEducationBoards();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: const TextAppBar(
         title: 'Manage Education Boards',
@@ -75,19 +101,19 @@ class ConfigureEducationBoards extends ConsumerWidget {
                 fieldName: 'education board',
                 items: educationBoards,
                 onListTileTap: (index, educationBoard) =>
-                    editEducationBoardHandler(
-                        context, ref, index, educationBoard),
+                    editEducationBoardHandler(index, educationBoard),
                 onIconPressAndSwipe: (index) =>
-                    deleteEducationBoardHandler(context, ref, index),
+                    deleteEducationBoardHandler(index),
                 onButtonPress: (educationBoard) =>
-                    addEducationBoardHandler(context, ref, educationBoard),
+                    addEducationBoardHandler(educationBoard),
               ),
             ),
             const SizedBox(height: 20),
-            PrimaryButton(
-              title: 'Save',
-              onPressed: () => saveEducationBoardHandler(context),
-            ),
+            if (isChanged)
+              PrimaryButton(
+                title: 'Save',
+                onPressed: () => saveEducationBoardHandler(context),
+              ),
             const SizedBox(height: 30),
           ],
         ),
