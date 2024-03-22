@@ -23,6 +23,7 @@ const placeholderImage = "assets/images/placeholder.svg";
 
 const alphabets = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
 const specialCharacters = ' !"#\$%&\'()*+,-./:;<=>?@[\\]^_`{|}~';
+const defaultErrorMessage = 'Something went wrong, please try again later';
 
 const passwordVerificationCodeResendTime = Duration(seconds: 60);
 

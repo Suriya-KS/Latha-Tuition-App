@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'package:latha_tuition_app/utilities/constants.dart';
 import 'package:latha_tuition_app/utilities/dummy_data.dart';
 import 'package:latha_tuition_app/utilities/form_validation_functions.dart';
+import 'package:latha_tuition_app/utilities/snack_bar.dart';
+import 'package:latha_tuition_app/providers/loading_provider.dart';
 import 'package:latha_tuition_app/providers/awaiting_admission_provider.dart';
 import 'package:latha_tuition_app/screens/student_awaiting_approval.dart';
 import 'package:latha_tuition_app/widgets/buttons/primary_button.dart';
@@ -21,7 +24,8 @@ class StudentRegistrationForm extends ConsumerStatefulWidget {
 
 class _StudentRegistrationFormState
     extends ConsumerState<StudentRegistrationForm> {
-  final firestore = FirebaseFirestore.instance;
+  final studentAdmissionRequestsCollectionReference =
+      FirebaseFirestore.instance.collection('studentAdmissionRequests');
   final formKey = GlobalKey<FormState>();
 
   String? gender;
@@ -65,43 +69,60 @@ class _StudentRegistrationFormState
   void studentRegistrationHandler(BuildContext context) async {
     if (!formKey.currentState!.validate()) return;
 
-    final documentReference =
-        await firestore.collection('studentAdmissionRequests').add({
-      'name': nameController.text,
-      'emailAddress': emailController.text,
-      'phoneNumber': phoneController.text,
-      'gender': gender,
-      'schoolName': schoolNameController.text,
-      'academicYear': academicYear,
-      'educationBoard': educationBoard,
-      'standard': standard,
-      'addressLine1': addressLine1Controller.text,
-      'addressLine2': addressLine2Controller.text,
-      'pincode': pincodeController.text,
-      'city': cityController.text,
-      'state': stateController.text,
-      'country': countryController.text,
-      'parentName': parentNameController.text,
-      'parentalRole': parentalRole,
-      'parentPhoneNumber': parentPhoneController.text,
-      'parentEmailAddress': parentEmailController.text,
-      'awaitingApproval': true,
-    });
+    final loadingMethods = ref.read(loadingProvider.notifier);
 
-    await ref
-        .read(awaitingAdmissionProvider.notifier)
-        .setStudentID(documentReference.id);
+    loadingMethods.setLoadingStatus(true);
 
-    if (!context.mounted) return;
+    try {
+      final documentReference =
+          await studentAdmissionRequestsCollectionReference.add({
+        'name': nameController.text,
+        'emailAddress': emailController.text,
+        'phoneNumber': phoneController.text,
+        'gender': gender,
+        'schoolName': schoolNameController.text,
+        'academicYear': academicYear,
+        'educationBoard': educationBoard,
+        'standard': standard,
+        'addressLine1': addressLine1Controller.text,
+        'addressLine2': addressLine2Controller.text,
+        'pincode': pincodeController.text,
+        'city': cityController.text,
+        'state': stateController.text,
+        'country': countryController.text,
+        'parentName': parentNameController.text,
+        'parentalRole': parentalRole,
+        'parentPhoneNumber': parentPhoneController.text,
+        'parentEmailAddress': parentEmailController.text,
+        'awaitingApproval': true,
+      });
 
-    Navigator.pushAndRemoveUntil(
-      context,
-      MaterialPageRoute(
-        builder: (BuildContext context) =>
-            const StudentAwaitingApprovalScreen(),
-      ),
-      (route) => false,
-    );
+      await ref
+          .read(awaitingAdmissionProvider.notifier)
+          .setStudentID(documentReference.id);
+
+      loadingMethods.setLoadingStatus(false);
+
+      if (!context.mounted) return;
+
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(
+          builder: (BuildContext context) =>
+              const StudentAwaitingApprovalScreen(),
+        ),
+        (route) => false,
+      );
+    } catch (error) {
+      loadingMethods.setLoadingStatus(false);
+
+      if (!context.mounted) return;
+
+      snackBar(
+        context,
+        content: const Text(defaultErrorMessage),
+      );
+    }
   }
 
   @override

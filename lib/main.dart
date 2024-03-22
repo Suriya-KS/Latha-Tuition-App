@@ -7,6 +7,7 @@ import 'package:latha_tuition_app/firebase_options.dart';
 import 'package:latha_tuition_app/utilities/constants.dart';
 import 'package:latha_tuition_app/utilities/helper_functions.dart';
 import 'package:latha_tuition_app/utilities/app_theme.dart';
+import 'package:latha_tuition_app/utilities/snack_bar.dart';
 import 'package:latha_tuition_app/providers/awaiting_admission_provider.dart';
 import 'package:latha_tuition_app/screens/onboarding.dart';
 import 'package:latha_tuition_app/screens/student_awaiting_approval.dart';
@@ -34,63 +35,67 @@ class MyApp extends ConsumerStatefulWidget {
 }
 
 class _MyAppState extends ConsumerState<MyApp> {
-  final authentication = FirebaseAuth.instance;
+  final authenticatedUser = FirebaseAuth.instance.currentUser;
 
-  bool isLoading = true;
   Widget screen = const Placeholder();
 
   void loadScreen(BuildContext context) async {
-    await ref.read(awaitingAdmissionProvider.notifier).loadStudentID();
+    try {
+      await ref.read(awaitingAdmissionProvider.notifier).loadStudentID();
 
-    final awaitingAdmissionStudentID =
-        ref.read(awaitingAdmissionProvider)[AwaitingAdmission.studentID];
+      final awaitingAdmissionStudentID =
+          ref.read(awaitingAdmissionProvider)[AwaitingAdmission.studentID];
 
-    if (awaitingAdmissionStudentID != null) {
+      if (awaitingAdmissionStudentID != null) {
+        setState(() {
+          screen = const StudentAwaitingApprovalScreen();
+        });
+
+        return;
+      }
+
+      if (authenticatedUser == null) {
+        setState(() {
+          screen = const OnboardingScreen();
+        });
+
+        return;
+      }
+
+      if (!context.mounted) return;
+
+      final userType = await getAuthenticatedUserType(
+        context,
+        authenticatedUser!.uid,
+      );
+
+      if (userType == UserType.student) {
+        setState(() {
+          screen = const Placeholder();
+        });
+
+        return;
+      }
+
+      if (userType == UserType.tutor) {
+        setState(() {
+          screen = const TutorDashboardScreen();
+        });
+
+        return;
+      }
+
       setState(() {
-        isLoading = false;
-        screen = const StudentAwaitingApprovalScreen();
-      });
-
-      return;
-    }
-
-    if (authentication.currentUser == null) {
-      setState(() {
-        isLoading = false;
-        screen = const OnboardingScreen();
-      });
-
-      return;
-    }
-
-    if (!context.mounted) return;
-
-    final userID = authentication.currentUser!.uid;
-
-    final userType = await getAuthenticatedUserType(context, userID);
-
-    if (userType == UserType.student) {
-      setState(() {
-        isLoading = false;
         screen = const Placeholder();
       });
+    } catch (error) {
+      if (!context.mounted) return;
 
-      return;
+      snackBar(
+        context,
+        content: const Text(defaultErrorMessage),
+      );
     }
-
-    if (userType == UserType.tutor) {
-      setState(() {
-        isLoading = false;
-        screen = const TutorDashboardScreen();
-      });
-
-      return;
-    }
-
-    setState(() {
-      isLoading = false;
-      screen = const Placeholder();
-    });
   }
 
   @override

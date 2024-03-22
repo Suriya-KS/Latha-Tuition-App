@@ -6,6 +6,7 @@ class PrimaryButton extends StatelessWidget {
     this.iconData,
     this.onPressed,
     this.isOutlined = false,
+    this.isLoading = false,
     super.key,
   });
 
@@ -13,6 +14,7 @@ class PrimaryButton extends StatelessWidget {
   final IconData? iconData;
   final void Function()? onPressed;
   final bool isOutlined;
+  final bool isLoading;
 
   @override
   Widget build(BuildContext context) {
@@ -36,15 +38,19 @@ class PrimaryButton extends StatelessWidget {
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            Text(
-              title ?? '',
-              style: const TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                letterSpacing: 1.2,
-              ),
-            ),
+          children: [
+            isLoading
+                ? const CircularProgressIndicator.adaptive(
+                    backgroundColor: Colors.white,
+                  )
+                : Text(
+                    title ?? '',
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 1.2,
+                    ),
+                  ),
             if (title != null && iconData != null) const SizedBox(width: 10),
             if (iconData != null)
               Icon(

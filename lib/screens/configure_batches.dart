@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import 'package:latha_tuition_app/utilities/constants.dart';
 import 'package:latha_tuition_app/utilities/snack_bar.dart';
+import 'package:latha_tuition_app/widgets/utilities/loading_overlay.dart';
 import 'package:latha_tuition_app/widgets/utilities/title_icon_list.dart';
 import 'package:latha_tuition_app/widgets/app_bar/text_app_bar.dart';
 import 'package:latha_tuition_app/widgets/buttons/primary_button.dart';
@@ -14,19 +16,45 @@ class ConfigureBatchesScreen extends StatefulWidget {
 }
 
 class _ConfigureBatchesScreenState extends State<ConfigureBatchesScreen> {
-  final firestore = FirebaseFirestore.instance;
+  final settingsDocumentReference = FirebaseFirestore.instance
+      .collection('settings')
+      .doc('studentRegistration');
 
+  bool isLoading = true;
   bool isChanged = false;
   List<String> batchNames = [];
 
-  void loadBatches() async {
-    final documentSnapshot =
-        await firestore.collection('settings').doc('studentRegistration').get();
+  void loadBatches(BuildContext context) async {
+    try {
+      final settingsDocumentSnapshot = await settingsDocumentReference.get();
 
-    setState(() {
-      isChanged = false;
-      batchNames = List<String>.from(documentSnapshot.data()!['batchNames']);
-    });
+      setState(() {
+        isLoading = false;
+      });
+
+      if (!settingsDocumentSnapshot.exists ||
+          !settingsDocumentSnapshot.data()!.containsKey('batchNames')) {
+        return;
+      }
+
+      setState(() {
+        isChanged = false;
+        batchNames = List<String>.from(
+          settingsDocumentSnapshot.data()!['batchNames'],
+        );
+      });
+    } catch (error) {
+      setState(() {
+        isLoading = false;
+      });
+
+      if (!context.mounted) return;
+
+      snackBar(
+        context,
+        content: const Text(defaultErrorMessage),
+      );
+    }
   }
 
   void addBatchHandler(String batchName) {
@@ -66,59 +94,80 @@ class _ConfigureBatchesScreenState extends State<ConfigureBatchesScreen> {
   }
 
   void saveBatchHandler(BuildContext context) async {
-    final documentReference =
-        firestore.collection('settings').doc('studentRegistration');
+    setState(() {
+      isLoading = true;
+    });
 
-    final documentSnapshot = await documentReference.get();
+    try {
+      final settingsDocumentSnapshot = await settingsDocumentReference.get();
 
-    if (documentSnapshot.exists) {
-      await documentReference.update({'batchNames': batchNames});
-    } else {
-      await documentReference.set({'batchNames': batchNames});
+      if (settingsDocumentSnapshot.exists) {
+        await settingsDocumentReference.update({'batchNames': batchNames});
+      } else {
+        await settingsDocumentReference.set({'batchNames': batchNames});
+      }
+
+      setState(() {
+        isLoading = false;
+      });
+
+      if (!context.mounted) return;
+
+      Navigator.pop(context);
+    } catch (error) {
+      setState(() {
+        isLoading = false;
+      });
+
+      if (!context.mounted) return;
+
+      snackBar(
+        context,
+        content: const Text(defaultErrorMessage),
+      );
     }
-
-    if (!context.mounted) return;
-
-    Navigator.pop(context);
   }
 
   @override
   void initState() {
     super.initState();
 
-    loadBatches();
+    loadBatches(context);
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: const TextAppBar(
-        title: 'Manage Batches',
-      ),
-      body: SafeArea(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Expanded(
-              child: TitleIconList(
-                fieldName: 'batch name',
-                items: batchNames,
-                onListTileTap: (index, batchName) => editBatchHandler(
-                  index,
-                  batchName,
+    return LoadingOverlay(
+      isLoading: isLoading,
+      child: Scaffold(
+        appBar: const TextAppBar(
+          title: 'Manage Batches',
+        ),
+        body: SafeArea(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: TitleIconList(
+                  fieldName: 'batch name',
+                  items: batchNames,
+                  onListTileTap: (index, batchName) => editBatchHandler(
+                    index,
+                    batchName,
+                  ),
+                  onIconPressAndSwipe: (index) => deleteBatchHandler(index),
+                  onButtonPress: (batchName) => addBatchHandler(batchName),
                 ),
-                onIconPressAndSwipe: (index) => deleteBatchHandler(index),
-                onButtonPress: (batchName) => addBatchHandler(batchName),
               ),
-            ),
-            const SizedBox(height: 20),
-            if (isChanged)
-              PrimaryButton(
-                title: 'Save',
-                onPressed: () => saveBatchHandler(context),
-              ),
-            const SizedBox(height: 30),
-          ],
+              const SizedBox(height: 20),
+              if (isChanged)
+                PrimaryButton(
+                  title: 'Save',
+                  onPressed: () => saveBatchHandler(context),
+                ),
+              const SizedBox(height: 30),
+            ],
+          ),
         ),
       ),
     );

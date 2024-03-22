@@ -1,27 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:latha_tuition_app/utilities/constants.dart';
 import 'package:latha_tuition_app/utilities/helper_functions.dart';
 import 'package:latha_tuition_app/utilities/form_validation_functions.dart';
 import 'package:latha_tuition_app/utilities/modal_bottom_sheet.dart';
 import 'package:latha_tuition_app/utilities/snack_bar.dart';
+import 'package:latha_tuition_app/providers/loading_provider.dart';
 import 'package:latha_tuition_app/screens/tutor_dashboard.dart';
 import 'package:latha_tuition_app/widgets/buttons/primary_button.dart';
 import 'package:latha_tuition_app/widgets/bottom_sheets/password_recovery_option_sheet.dart';
 import 'package:latha_tuition_app/widgets/form_inputs/text_input.dart';
 
-class LoginForm extends StatefulWidget {
+class LoginForm extends ConsumerStatefulWidget {
   const LoginForm({super.key});
 
   @override
-  State<LoginForm> createState() => _LoginFormState();
+  ConsumerState<LoginForm> createState() => _LoginFormState();
 }
 
-class _LoginFormState extends State<LoginForm> {
+class _LoginFormState extends ConsumerState<LoginForm> {
   final authentication = FirebaseAuth.instance;
-  final firestore = FirebaseFirestore.instance;
   final formKey = GlobalKey<FormState>();
 
   bool obscureText = true;
@@ -38,6 +38,10 @@ class _LoginFormState extends State<LoginForm> {
   void loginHandler(BuildContext context) async {
     if (!formKey.currentState!.validate()) return;
 
+    final loadingMethods = ref.read(loadingProvider.notifier);
+
+    loadingMethods.setLoadingStatus(true);
+
     try {
       final userCredentials = await authentication.signInWithEmailAndPassword(
         email: emailController.text,
@@ -53,6 +57,8 @@ class _LoginFormState extends State<LoginForm> {
       final userID = userCredentials.user!.uid;
 
       final userType = await getAuthenticatedUserType(context, userID);
+
+      loadingMethods.setLoadingStatus(false);
 
       if (!context.mounted) return;
 
@@ -74,12 +80,23 @@ class _LoginFormState extends State<LoginForm> {
     } on FirebaseAuthException catch (error) {
       final errorMessage = validateAuthentication(error);
 
+      loadingMethods.setLoadingStatus(false);
+
       if (!context.mounted) return;
       if (errorMessage == null) return;
 
       snackBar(
         context,
         content: Text(errorMessage),
+      );
+    } catch (error) {
+      loadingMethods.setLoadingStatus(false);
+
+      if (!context.mounted) return;
+
+      snackBar(
+        context,
+        content: const Text(defaultErrorMessage),
       );
     }
   }

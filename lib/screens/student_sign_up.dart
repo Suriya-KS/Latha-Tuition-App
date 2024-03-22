@@ -1,25 +1,32 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:latha_tuition_app/utilities/constants.dart';
+import 'package:latha_tuition_app/providers/loading_provider.dart';
+import 'package:latha_tuition_app/widgets/utilities/loading_overlay.dart';
 import 'package:latha_tuition_app/widgets/templates/scrollable_image_content.dart';
 import 'package:latha_tuition_app/widgets/student_sign_up/student_sign_up_form.dart';
 
-class StudentSignUpScreen extends StatelessWidget {
+class StudentSignUpScreen extends ConsumerWidget {
   const StudentSignUpScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isLoading = ref.watch(loadingProvider);
     final screenSize = MediaQuery.of(context);
 
-    return Scaffold(
-      body: SafeArea(
-        child: ScrollableImageContent(
-          title: 'Congratulations',
-          description:
-              'Admission approved, marking the final step! Create your password by signing up to complete enrollment',
-          imagePath: celebrateImage,
-          screenSize: screenSize,
-          child: const StudentSignUpForm(),
+    return LoadingOverlay(
+      isLoading: isLoading,
+      child: Scaffold(
+        body: SafeArea(
+          child: ScrollableImageContent(
+            title: 'Congratulations',
+            description:
+                'Admission approved, marking the final step! Create your password by signing up to complete enrollment',
+            imagePath: celebrateImage,
+            screenSize: screenSize,
+            child: const StudentSignUpForm(),
+          ),
         ),
       ),
     );

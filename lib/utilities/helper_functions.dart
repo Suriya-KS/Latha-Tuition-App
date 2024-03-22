@@ -9,6 +9,7 @@ import 'package:latha_tuition_app/screens/login.dart';
 import 'package:latha_tuition_app/screens/student_registration.dart';
 import 'package:latha_tuition_app/screens/student_approval.dart';
 import 'package:latha_tuition_app/screens/payment_approval.dart';
+import 'package:latha_tuition_app/utilities/snack_bar.dart';
 
 void navigateToLoginScreen(BuildContext context, Screen? screen) {
   if (screen == Screen.onboarding) {
@@ -96,17 +97,28 @@ Future<UserType?> getAuthenticatedUserType(
 ) async {
   final firestore = FirebaseFirestore.instance;
 
-  final studentDocumentSnapshot =
-      await firestore.collection('students').doc(userID).get();
+  try {
+    final studentDocumentSnapshot =
+        await firestore.collection('students').doc(userID).get();
 
-  if (studentDocumentSnapshot.exists) return UserType.student;
+    if (studentDocumentSnapshot.exists) return UserType.student;
 
-  final tutorDocumentSnapshot =
-      await firestore.collection('tutors').doc(userID).get();
+    final tutorDocumentSnapshot =
+        await firestore.collection('tutors').doc(userID).get();
 
-  if (tutorDocumentSnapshot.exists) return UserType.tutor;
+    if (tutorDocumentSnapshot.exists) return UserType.tutor;
 
-  return null;
+    return null;
+  } catch (error) {
+    if (!context.mounted) return null;
+
+    snackBar(
+      context,
+      content: const Text(defaultErrorMessage),
+    );
+
+    return null;
+  }
 }
 
 String formatName(String name) {

@@ -23,20 +23,30 @@ class FetchAdmissionStatusSheet extends ConsumerStatefulWidget {
 
 class _FetchAdmissionStatusSheetState
     extends ConsumerState<FetchAdmissionStatusSheet> {
-  final firestore = FirebaseFirestore.instance;
+  final studentAdmissionRequestsCollectionReference =
+      FirebaseFirestore.instance.collection('studentAdmissionRequests');
   final formKey = GlobalKey<FormState>();
+
+  bool isLoading = false;
 
   late TextEditingController emailController;
 
   void fetchAdmissionStatusHandler(BuildContext context) async {
     if (!formKey.currentState!.validate()) return;
 
+    setState(() {
+      isLoading = true;
+    });
+
     try {
-      final querySnapshot = await firestore
-          .collection('studentAdmissionRequests')
+      final querySnapshot = await studentAdmissionRequestsCollectionReference
           .where('emailAddress', isEqualTo: emailController.text)
           .limit(1)
           .get();
+
+      setState(() {
+        isLoading = false;
+      });
 
       if (querySnapshot.docs.isEmpty && context.mounted) {
         final parentContext = ref
@@ -60,8 +70,16 @@ class _FetchAdmissionStatusSheetState
       final authenticationMethods =
           ref.read(awaitingAdmissionProvider.notifier);
 
+      setState(() {
+        isLoading = true;
+      });
+
       await authenticationMethods.clearData();
       await authenticationMethods.setStudentID(querySnapshot.docs.first.id);
+
+      setState(() {
+        isLoading = false;
+      });
 
       if (!context.mounted) return;
 
@@ -76,12 +94,27 @@ class _FetchAdmissionStatusSheetState
     } on FirebaseAuthException catch (error) {
       final errorMessage = validateAuthentication(error);
 
+      setState(() {
+        isLoading = false;
+      });
+
       if (!context.mounted) return;
       if (errorMessage == null) return;
 
       snackBar(
         context,
         content: Text(errorMessage),
+      );
+    } catch (error) {
+      setState(() {
+        isLoading = false;
+      });
+
+      if (!context.mounted) return;
+
+      snackBar(
+        context,
+        content: const Text(defaultErrorMessage),
       );
     }
   }
@@ -114,12 +147,14 @@ class _FetchAdmissionStatusSheetState
                 labelText: 'Email Address',
                 prefixIcon: Icons.mail_outlined,
                 inputType: TextInputType.emailAddress,
+                readOnly: isLoading,
                 controller: emailController,
                 validator: validateEmail,
               ),
               const SizedBox(height: 50),
               PrimaryButton(
                 title: 'Check',
+                isLoading: isLoading,
                 onPressed: () => fetchAdmissionStatusHandler(context),
               ),
               const SizedBox(height: 10),
