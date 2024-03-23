@@ -4,12 +4,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
 import 'package:latha_tuition_app/utilities/constants.dart';
+import 'package:latha_tuition_app/utilities/snack_bar.dart';
+import 'package:latha_tuition_app/providers/loading_provider.dart';
 import 'package:latha_tuition_app/providers/attendance_provider.dart';
 import 'package:latha_tuition_app/screens/login.dart';
 import 'package:latha_tuition_app/screens/student_registration.dart';
 import 'package:latha_tuition_app/screens/student_approval.dart';
 import 'package:latha_tuition_app/screens/payment_approval.dart';
-import 'package:latha_tuition_app/utilities/snack_bar.dart';
 
 void navigateToLoginScreen(BuildContext context, Screen? screen) {
   if (screen == Screen.onboarding) {
@@ -53,9 +54,14 @@ void navigateToTrackScreen(
 }
 
 void navigateToStudentRegistrationScreen(
-  BuildContext context, {
+  BuildContext context,
+  WidgetRef ref, {
   Screen? screen,
 }) {
+  final loadingMethods = ref.read(loadingProvider.notifier);
+
+  loadingMethods.setLoadingStatus(true);
+
   if (screen == Screen.onboarding) {
     Navigator.push(
       context,
@@ -73,8 +79,8 @@ void navigateToStudentRegistrationScreen(
   }
 }
 
-void navigateToStudentApprovalScreen(BuildContext context) {
-  Navigator.push(
+Future<void> navigateToStudentApprovalScreen(BuildContext context) async {
+  await Navigator.push(
     context,
     MaterialPageRoute(
       builder: (context) => const StudentApprovalScreen(),

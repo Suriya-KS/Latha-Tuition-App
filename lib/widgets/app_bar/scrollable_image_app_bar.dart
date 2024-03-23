@@ -3,8 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:latha_tuition_app/utilities/constants.dart';
-import 'package:latha_tuition_app/utilities/dummy_data.dart';
-import 'package:latha_tuition_app/utilities/helper_functions.dart';
 import 'package:latha_tuition_app/providers/animated_drawer_provider.dart';
 import 'package:latha_tuition_app/widgets/buttons/icon_with_badge_button.dart';
 
@@ -12,11 +10,13 @@ class ScrollableImageAppBar extends ConsumerWidget {
   const ScrollableImageAppBar({
     required this.title,
     required this.screenHeight,
+    this.actions,
     super.key,
   });
 
   final String title;
   final double screenHeight;
+  final List<Widget>? actions;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -34,18 +34,7 @@ class ScrollableImageAppBar extends ConsumerWidget {
               ref.read(animatedDrawerProvider.notifier).toggleAnimatedDrawer,
         ),
         const Spacer(),
-        IconWithBadgeButton(
-          icon: Icons.person_outline,
-          badgeCount: dummyStudentApprovals.length,
-          onPressed: () => navigateToStudentApprovalScreen(context),
-        ),
-        const SizedBox(width: 10),
-        IconWithBadgeButton(
-          icon: Icons.currency_rupee,
-          badgeCount: dummyStudentPaymentHistory.length,
-          onPressed: () => navigateToPaymentApprovalScreen(context),
-        ),
-        const SizedBox(width: 20),
+        if (actions != null) ...actions!,
       ],
       flexibleSpace: FlexibleSpaceBar(
         title: Text(

@@ -49,15 +49,15 @@ class _FetchAdmissionStatusSheetState
       });
 
       if (querySnapshot.docs.isEmpty && context.mounted) {
-        final parentContext = ref
-            .read(awaitingAdmissionProvider)[AwaitingAdmission.parentContext];
+        final awaitingAdmissionData = ref.read(awaitingAdmissionProvider);
 
         snackBar(
           context,
           content: const Text('Email address is not registered'),
           actionLabel: 'Register Now',
           onPressed: () => navigateToStudentRegistrationScreen(
-            parentContext,
+            awaitingAdmissionData[AwaitingAdmission.parentContext],
+            awaitingAdmissionData[AwaitingAdmission.parentRef],
             screen: Screen.fetchAdmissionStatusSheet,
           ),
         );

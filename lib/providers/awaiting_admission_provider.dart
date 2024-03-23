@@ -5,11 +5,13 @@ import 'package:shared_preferences/shared_preferences.dart';
 enum AwaitingAdmission {
   studentID,
   parentContext,
+  parentRef,
 }
 
 final initialState = {
   AwaitingAdmission.studentID: null,
   AwaitingAdmission.parentContext: null,
+  AwaitingAdmission.parentRef: null,
 };
 
 class AwaitingAdmissionNotifier
@@ -47,6 +49,13 @@ class AwaitingAdmissionNotifier
     state = {
       ...state,
       AwaitingAdmission.parentContext: context,
+    };
+  }
+
+  void setParentRef(WidgetRef ref) {
+    state = {
+      ...state,
+      AwaitingAdmission.parentRef: ref,
     };
   }
 

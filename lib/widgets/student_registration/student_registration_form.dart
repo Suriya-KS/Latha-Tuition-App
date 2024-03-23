@@ -3,7 +3,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:latha_tuition_app/utilities/constants.dart';
-import 'package:latha_tuition_app/utilities/dummy_data.dart';
 import 'package:latha_tuition_app/utilities/form_validation_functions.dart';
 import 'package:latha_tuition_app/utilities/snack_bar.dart';
 import 'package:latha_tuition_app/providers/loading_provider.dart';
@@ -26,6 +25,9 @@ class _StudentRegistrationFormState
     extends ConsumerState<StudentRegistrationForm> {
   final studentAdmissionRequestsCollectionReference =
       FirebaseFirestore.instance.collection('studentAdmissionRequests');
+  final settingsDocumentReference = FirebaseFirestore.instance
+      .collection('settings')
+      .doc('studentRegistration');
   final formKey = GlobalKey<FormState>();
 
   String? gender;
@@ -33,6 +35,8 @@ class _StudentRegistrationFormState
   String? educationBoard;
   String? standard;
   String? parentalRole;
+  List<String> educationBoardsAllowed = [];
+  List<String> standardsAllowed = [];
 
   late TextEditingController nameController;
   late TextEditingController emailController;
@@ -66,6 +70,49 @@ class _StudentRegistrationFormState
     return academicYears;
   }
 
+  void loadEducationBoardsAndStandards(BuildContext context) async {
+    final loadingMethods = ref.read(loadingProvider.notifier);
+
+    try {
+      final settingsDocumentSnapshot = await settingsDocumentReference.get();
+
+      WidgetsBinding.instance.addPostFrameCallback(
+        (duration) => loadingMethods.setLoadingStatus(false),
+      );
+
+      if (!settingsDocumentSnapshot.exists) return;
+
+      final settings = settingsDocumentSnapshot.data()!;
+
+      if (settings.containsKey('educationBoards')) {
+        setState(() {
+          educationBoardsAllowed = List<String>.from(
+            settings['educationBoards'],
+          );
+        });
+      }
+
+      if (settings.containsKey('enabledStandards')) {
+        setState(() {
+          standardsAllowed = List<String>.from(
+            settings['enabledStandards'],
+          );
+        });
+      }
+    } catch (error) {
+      WidgetsBinding.instance.addPostFrameCallback(
+        (duration) => loadingMethods.setLoadingStatus(false),
+      );
+
+      if (!context.mounted) return;
+
+      snackBar(
+        context,
+        content: const Text(defaultErrorMessage),
+      );
+    }
+  }
+
   void studentRegistrationHandler(BuildContext context) async {
     if (!formKey.currentState!.validate()) return;
 
@@ -95,6 +142,7 @@ class _StudentRegistrationFormState
         'parentPhoneNumber': parentPhoneController.text,
         'parentEmailAddress': parentEmailController.text,
         'awaitingApproval': true,
+        'requestedAt': DateTime.now(),
       });
 
       await ref
@@ -142,6 +190,8 @@ class _StudentRegistrationFormState
     parentNameController = TextEditingController();
     parentPhoneController = TextEditingController();
     parentEmailController = TextEditingController();
+
+    loadEducationBoardsAndStandards(context);
   }
 
   @override
@@ -227,7 +277,7 @@ class _StudentRegistrationFormState
           DropdownInput(
             labelText: 'Education Board',
             prefixIcon: Icons.menu_book_outlined,
-            items: dummyEducationBoards,
+            items: educationBoardsAllowed,
             onChanged: (value) => educationBoard = value,
             validator: validateDropdownValue,
           ),
@@ -235,7 +285,7 @@ class _StudentRegistrationFormState
           DropdownInput(
             labelText: 'Standard',
             prefixIcon: Icons.class_outlined,
-            items: dummyStandards,
+            items: standardsAllowed,
             onChanged: (value) => standard = value,
             validator: validateDropdownValue,
           ),

@@ -24,7 +24,11 @@ class OnboardingPageList extends ConsumerWidget {
   final void Function(int) onPageChange;
 
   void showRegistrationSheet(BuildContext context, WidgetRef ref) {
-    ref.read(awaitingAdmissionProvider.notifier).setParentContext(context);
+    final awaitingAdmissionMethods =
+        ref.read(awaitingAdmissionProvider.notifier);
+
+    awaitingAdmissionMethods.setParentContext(context);
+    awaitingAdmissionMethods.setParentRef(ref);
 
     modalBottomSheet(
       context,

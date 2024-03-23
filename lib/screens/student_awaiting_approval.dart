@@ -32,12 +32,16 @@ class _StudentAwaitingApprovalScreenState
   String title = 'Application Under Review';
   String image = waitingImage;
 
-  late String studentName;
-  late String studentEmailAddress;
-  late String studentPhoneNumber;
+  String studentName = '';
+  String studentEmailAddress = '';
+  String studentPhoneNumber = '';
 
   void showFetchAdmissionStatusSheet() {
-    ref.read(awaitingAdmissionProvider.notifier).setParentContext(context);
+    final awaitingAdmissionMethods =
+        ref.read(awaitingAdmissionProvider.notifier);
+
+    awaitingAdmissionMethods.setParentContext(context);
+    awaitingAdmissionMethods.setParentRef(ref);
 
     modalBottomSheet(context, const FetchAdmissionStatusSheet());
   }
@@ -66,7 +70,11 @@ class _StudentAwaitingApprovalScreenState
           image = errorImage;
         });
 
-        ref.read(awaitingAdmissionProvider.notifier).setParentContext(context);
+        final awaitingAdmissionMethods =
+            ref.read(awaitingAdmissionProvider.notifier);
+
+        awaitingAdmissionMethods.setParentContext(context);
+        awaitingAdmissionMethods.setParentRef(ref);
 
         modalBottomSheet(context, const FetchAdmissionStatusSheet());
 

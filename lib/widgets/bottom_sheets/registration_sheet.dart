@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:latha_tuition_app/utilities/constants.dart';
 import 'package:latha_tuition_app/utilities/helper_functions.dart';
@@ -9,7 +10,7 @@ import 'package:latha_tuition_app/widgets/buttons/info_action_button.dart';
 import 'package:latha_tuition_app/widgets/texts/title_text.dart';
 import 'package:latha_tuition_app/widgets/bottom_sheets/fetch_admission_status_sheet.dart';
 
-class RegistrationSheet extends StatelessWidget {
+class RegistrationSheet extends ConsumerWidget {
   const RegistrationSheet({
     required this.screen,
     super.key,
@@ -47,7 +48,7 @@ class RegistrationSheet extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Column(
       children: [
         const TitleText(title: 'Start Your Journey!'),
@@ -56,6 +57,7 @@ class RegistrationSheet extends StatelessWidget {
           title: 'Apply for Admission',
           onPressed: () => navigateToStudentRegistrationScreen(
             context,
+            ref,
             screen: screen,
           ),
         ),
