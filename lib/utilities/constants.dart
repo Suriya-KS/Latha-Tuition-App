@@ -34,12 +34,12 @@ enum Screen {
   login,
   signUp,
   studentRegistration,
-  eventsView,
-  trackRecordSheet,
+  tutorEventsView,
+  tutorTrackRecordSheet,
   attendance,
   testMarks,
   studentAwaitingApproval,
-  fetchAdmissionStatusSheet,
+  studentFetchAdmissionStatusSheet,
 }
 
 enum UserType {

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:latha_tuition_app/utilities/helper_functions.dart';
 import 'package:latha_tuition_app/utilities/modal_bottom_sheet.dart';
-import 'package:latha_tuition_app/widgets/cards/title_icon_action_tile.dart';
+import 'package:latha_tuition_app/widgets/list_tiles/title_icon_action_tile.dart';
 import 'package:latha_tuition_app/widgets/bottom_sheets/text_edit_sheet.dart';
 
 class TitleIconList extends StatelessWidget {

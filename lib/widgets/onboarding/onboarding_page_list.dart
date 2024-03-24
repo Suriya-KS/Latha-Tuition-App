@@ -6,7 +6,7 @@ import 'package:latha_tuition_app/utilities/constants.dart';
 import 'package:latha_tuition_app/utilities/modal_bottom_sheet.dart';
 import 'package:latha_tuition_app/providers/awaiting_admission_provider.dart';
 import 'package:latha_tuition_app/widgets/buttons/primary_button.dart';
-import 'package:latha_tuition_app/widgets/bottom_sheets/registration_sheet.dart';
+import 'package:latha_tuition_app/widgets/bottom_sheets/get_started_sheet.dart';
 import 'package:latha_tuition_app/widgets/onboarding/onboarding_page.dart';
 
 class OnboardingPageList extends ConsumerWidget {
@@ -23,7 +23,7 @@ class OnboardingPageList extends ConsumerWidget {
   final int lastPageIndex;
   final void Function(int) onPageChange;
 
-  void showRegistrationSheet(BuildContext context, WidgetRef ref) {
+  void showGetStartedSheet(BuildContext context, WidgetRef ref) {
     final awaitingAdmissionMethods =
         ref.read(awaitingAdmissionProvider.notifier);
 
@@ -32,7 +32,7 @@ class OnboardingPageList extends ConsumerWidget {
 
     modalBottomSheet(
       context,
-      const RegistrationSheet(screen: Screen.onboarding),
+      const GetStartedSheet(screen: Screen.onboarding),
     );
   }
 
@@ -79,7 +79,7 @@ class OnboardingPageList extends ConsumerWidget {
               alignment: Alignment.centerRight,
               child: PrimaryButton(
                 iconData: Icons.arrow_right_alt,
-                onPressed: () => showRegistrationSheet(context, ref),
+                onPressed: () => showGetStartedSheet(context, ref),
               ),
             ),
           ],

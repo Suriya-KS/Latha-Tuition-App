@@ -7,7 +7,7 @@ import 'package:latha_tuition_app/utilities/form_validation_functions.dart';
 import 'package:latha_tuition_app/utilities/snack_bar.dart';
 import 'package:latha_tuition_app/providers/loading_provider.dart';
 import 'package:latha_tuition_app/providers/awaiting_admission_provider.dart';
-import 'package:latha_tuition_app/screens/student_awaiting_approval.dart';
+import 'package:latha_tuition_app/screens/student/student_awaiting_approval.dart';
 import 'package:latha_tuition_app/widgets/buttons/primary_button.dart';
 import 'package:latha_tuition_app/widgets/texts/subtitle_text.dart';
 import 'package:latha_tuition_app/widgets/form_inputs/text_input.dart';

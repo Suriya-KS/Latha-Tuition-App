@@ -10,8 +10,8 @@ import 'package:latha_tuition_app/utilities/app_theme.dart';
 import 'package:latha_tuition_app/utilities/snack_bar.dart';
 import 'package:latha_tuition_app/providers/awaiting_admission_provider.dart';
 import 'package:latha_tuition_app/screens/onboarding.dart';
-import 'package:latha_tuition_app/screens/student_awaiting_approval.dart';
-import 'package:latha_tuition_app/screens/tutor_dashboard.dart';
+import 'package:latha_tuition_app/screens/student/student_awaiting_approval.dart';
+import 'package:latha_tuition_app/screens/tutor/tutor_dashboard.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

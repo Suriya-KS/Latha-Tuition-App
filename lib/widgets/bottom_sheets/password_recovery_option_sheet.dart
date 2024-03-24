@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:latha_tuition_app/utilities/constants.dart';
 import 'package:latha_tuition_app/providers/forgot_password_provider.dart';
-import 'package:latha_tuition_app/screens/forgot_password.dart';
+import 'package:latha_tuition_app/screens/authentication/forgot_password.dart';
 import 'package:latha_tuition_app/widgets/buttons/icon_with_text_button.dart';
 import 'package:latha_tuition_app/widgets/texts/title_text.dart';
 

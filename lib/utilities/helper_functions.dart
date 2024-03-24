@@ -7,10 +7,10 @@ import 'package:latha_tuition_app/utilities/constants.dart';
 import 'package:latha_tuition_app/utilities/snack_bar.dart';
 import 'package:latha_tuition_app/providers/loading_provider.dart';
 import 'package:latha_tuition_app/providers/attendance_provider.dart';
-import 'package:latha_tuition_app/screens/login.dart';
-import 'package:latha_tuition_app/screens/student_registration.dart';
-import 'package:latha_tuition_app/screens/student_approval.dart';
-import 'package:latha_tuition_app/screens/payment_approval.dart';
+import 'package:latha_tuition_app/screens/authentication/login.dart';
+import 'package:latha_tuition_app/screens/student/student_registration.dart';
+import 'package:latha_tuition_app/screens/tutor/tutor_new_admissions.dart';
+import 'package:latha_tuition_app/screens/tutor/tutor_payment_approval.dart';
 
 void navigateToLoginScreen(BuildContext context, Screen? screen) {
   if (screen == Screen.onboarding) {
@@ -35,7 +35,7 @@ void navigateToTrackScreen(
   Screen screen,
   Widget destinationScreen,
 ) {
-  if (screen == Screen.trackRecordSheet) {
+  if (screen == Screen.tutorTrackRecordSheet) {
     Navigator.pop(context);
   }
 
@@ -79,20 +79,20 @@ void navigateToStudentRegistrationScreen(
   }
 }
 
-Future<void> navigateToStudentApprovalScreen(BuildContext context) async {
+Future<void> navigateToTutorNewAdmissionsScreen(BuildContext context) async {
   await Navigator.push(
     context,
     MaterialPageRoute(
-      builder: (context) => const StudentApprovalScreen(),
+      builder: (context) => const TutorNewAdmissionsScreen(),
     ),
   );
 }
 
-void navigateToPaymentApprovalScreen(BuildContext context) {
+void navigateToTutorPaymentApprovalScreen(BuildContext context) {
   Navigator.push(
     context,
     MaterialPageRoute(
-      builder: (context) => const PaymentApprovalScreen(),
+      builder: (context) => const TutorPaymentApprovalScreen(),
     ),
   );
 }

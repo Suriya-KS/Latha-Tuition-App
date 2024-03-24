@@ -2,19 +2,20 @@ import 'package:flutter/material.dart';
 
 import 'package:latha_tuition_app/utilities/constants.dart';
 import 'package:latha_tuition_app/utilities/form_validation_functions.dart';
-import 'package:latha_tuition_app/screens/student_information.dart';
 
 class SearchInput extends StatefulWidget {
   const SearchInput({
     required this.labelText,
     required this.prefixIcon,
     required this.items,
+    required this.onChanged,
     super.key,
   });
 
   final String labelText;
   final IconData prefixIcon;
   final List<String> items;
+  final void Function(BuildContext, String, void Function(Object)) onChanged;
 
   @override
   State<SearchInput> createState() => _SearchInputState();
@@ -49,20 +50,6 @@ class _SearchInputState extends State<SearchInput> {
     });
 
     return filteredOptions;
-  }
-
-  void optionSelectHandler(
-      BuildContext context, String option, Function onSelected) {
-    onSelected(option);
-
-    Navigator.pop(context);
-
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (BuildContext context) => const StudentInformationScreen(),
-      ),
-    );
   }
 
   @override
@@ -117,7 +104,7 @@ class _SearchInputState extends State<SearchInput> {
 
                         return InkWell(
                           onTap: () =>
-                              optionSelectHandler(context, option, onSelected),
+                              widget.onChanged(context, option, onSelected),
                           child: Builder(
                             builder: (BuildContext context) {
                               final highlight =
