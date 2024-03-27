@@ -16,7 +16,7 @@ import 'package:latha_tuition_app/widgets/buttons/primary_button.dart';
 import 'package:latha_tuition_app/widgets/texts/title_text.dart';
 import 'package:latha_tuition_app/widgets/form_inputs/text_input.dart';
 import 'package:latha_tuition_app/widgets/form_inputs/dropdown_input.dart';
-import 'package:latha_tuition_app/widgets/form_inputs/label_toggle_input.dart';
+import 'package:latha_tuition_app/widgets/form_inputs/toggle_input.dart';
 import 'package:latha_tuition_app/widgets/form_inputs/date_input.dart';
 import 'package:latha_tuition_app/widgets/form_inputs/time_input.dart';
 
@@ -204,13 +204,13 @@ class _TutorTrackRecordSheetState extends ConsumerState<TutorTrackRecordSheet> {
             children: [
               if (widget.screen != Screen.attendance &&
                   widget.screen != Screen.testMarks)
-                LabelToggleInput(
-                  labelTextLeft: 'Track \nAttendance',
-                  labelTextRight: 'Track \nTest Marks',
-                  iconLeft: Icons.groups_outlined,
-                  iconRight: Icons.assignment_outlined,
+                ToggleInput(
                   isSelected: isSelected,
                   onToggle: toggleTrackRecordHandler,
+                  children: const [
+                    Icon(Icons.groups_outlined),
+                    Icon(Icons.assignment_outlined),
+                  ],
                 ),
               if (trackSheetData[TrackSheet.activeToggle] ==
                   TrackSheetToggles.tests)

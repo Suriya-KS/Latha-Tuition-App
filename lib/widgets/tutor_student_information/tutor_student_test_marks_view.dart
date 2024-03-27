@@ -6,7 +6,7 @@ import 'package:latha_tuition_app/utilities/helper_functions.dart';
 import 'package:latha_tuition_app/utilities/form_validation_functions.dart';
 import 'package:latha_tuition_app/providers/test_marks_provider.dart';
 import 'package:latha_tuition_app/widgets/buttons/floating_circular_action_button.dart';
-import 'package:latha_tuition_app/widgets/cards/title_input_card.dart';
+import 'package:latha_tuition_app/widgets/cards/text_avatar_action_card.dart';
 import 'package:latha_tuition_app/widgets/form_inputs/month_input.dart';
 import 'package:latha_tuition_app/widgets/form_inputs/text_input.dart';
 
@@ -64,29 +64,9 @@ class _TutorStudentTestMarksViewState
                   child: ListView.builder(
                     itemCount: length + 1,
                     itemBuilder: (context, index) => index < length
-                        ? TitleInputCard(
+                        ? TextAvatarActionCard(
                             title: testMarksList[index]['name'],
-                            description: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    const Text('Total Marks: '),
-                                    Text(
-                                      '${testMarksList[index]['totalMarks']}',
-                                      style: const TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(height: 5),
-                                Text(formatDate(testMarksList[index]['date'])),
-                                Text(testMarksList[index]['time']),
-                              ],
-                            ),
-                            input: SizedBox(
+                            action: SizedBox(
                               width: 120,
                               child: TextInput(
                                 labelText: 'Marks',
@@ -101,6 +81,23 @@ class _TutorStudentTestMarksViewState
                                 ),
                               ),
                             ),
+                            children: [
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Text('Total Marks: '),
+                                  Text(
+                                    '${testMarksList[index]['totalMarks']}',
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 5),
+                              Text(formatDate(testMarksList[index]['date'])),
+                              Text(testMarksList[index]['time']),
+                            ],
                           )
                         : const SizedBox(height: 120),
                   ),

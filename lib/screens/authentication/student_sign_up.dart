@@ -43,9 +43,8 @@ class StudentSignUpScreen extends ConsumerWidget {
                     const SizedBox(height: 5),
                     TextWithIcon(
                       icon: Icons.currency_rupee_outlined,
-                      text: '${formatAmount(
-                        double.parse(admissionData['feesAmount']),
-                      )} per month',
+                      text:
+                          '${formatAmount(admissionData['feesAmount'])} per month',
                     ),
                   ],
                 ),

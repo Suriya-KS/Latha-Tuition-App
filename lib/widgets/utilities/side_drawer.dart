@@ -1,17 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:latha_tuition_app/screens/onboarding.dart';
 
 import 'package:latha_tuition_app/utilities/constants.dart';
-import 'package:latha_tuition_app/utilities/helper_functions.dart';
 import 'package:latha_tuition_app/utilities/snack_bar.dart';
 import 'package:latha_tuition_app/providers/loading_provider.dart';
 import 'package:latha_tuition_app/providers/animated_drawer_provider.dart';
+import 'package:latha_tuition_app/screens/onboarding.dart';
 import 'package:latha_tuition_app/widgets/texts/title_text.dart';
 
 class SideDrawer extends ConsumerWidget {
-  const SideDrawer({super.key});
+  const SideDrawer({
+    required this.title,
+    super.key,
+  });
+
+  final String title;
 
   void signOutHandler(BuildContext context, WidgetRef ref) async {
     final loadingMethods = ref.read(loadingProvider.notifier);
@@ -55,7 +59,7 @@ class SideDrawer extends ConsumerWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                TitleText(title: formatName('Tutor Name')),
+                TitleText(title: title),
                 const SizedBox(height: 50),
                 TextButton(
                   onPressed: () => signOutHandler(context, ref),

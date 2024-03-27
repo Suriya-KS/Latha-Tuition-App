@@ -10,7 +10,7 @@ import 'package:latha_tuition_app/providers/attendance_provider.dart';
 import 'package:latha_tuition_app/providers/test_marks_provider.dart';
 import 'package:latha_tuition_app/screens/tutor/tutor_track_attendance.dart';
 import 'package:latha_tuition_app/screens/tutor/tutor_track_test_marks.dart';
-import 'package:latha_tuition_app/widgets/cards/text_avatar_card.dart';
+import 'package:latha_tuition_app/widgets/cards/text_avatar_action_card.dart';
 
 class TutorEventsList extends ConsumerWidget {
   const TutorEventsList({
@@ -72,8 +72,11 @@ class TutorEventsList extends ConsumerWidget {
         ref.watch(calendarViewProvider)[CalendarView.activeToggle];
 
     Widget content = ListView.builder(
+      padding: EdgeInsets.zero,
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
       itemCount: items.length,
-      itemBuilder: (context, index) => TextAvatarCard(
+      itemBuilder: (context, index) => TextAvatarActionCard(
         title: items[index]['batchName'],
         avatarText: items[index]['standard'],
         onTap: () => attendanceCardTapHandler(
@@ -96,8 +99,11 @@ class TutorEventsList extends ConsumerWidget {
 
     if (activeToggle == CalendarViewToggles.tests) {
       content = ListView.builder(
+        padding: EdgeInsets.zero,
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
         itemCount: items.length,
-        itemBuilder: (context, index) => TextAvatarCard(
+        itemBuilder: (context, index) => TextAvatarActionCard(
           title: items[index]['testName'],
           avatarText: items[index]['standard'],
           onTap: () => testMarksCardTapHandler(
@@ -121,11 +127,9 @@ class TutorEventsList extends ConsumerWidget {
       );
     }
 
-    return Expanded(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: screenPadding),
-        child: content,
-      ),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: screenPadding),
+      child: content,
     );
   }
 }

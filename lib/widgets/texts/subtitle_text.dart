@@ -18,7 +18,7 @@ class SubtitleText extends StatelessWidget {
       alignment: alignment ?? Alignment.centerLeft,
       child: Text(
         subtitle,
-        textAlign: TextAlign.center,
+        textAlign: TextAlign.left,
         style: TextStyle(
           fontSize: 18,
           fontWeight: FontWeight.bold,

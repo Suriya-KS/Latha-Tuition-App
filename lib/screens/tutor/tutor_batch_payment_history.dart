@@ -4,7 +4,7 @@ import 'package:latha_tuition_app/utilities/constants.dart';
 import 'package:latha_tuition_app/utilities/dummy_data.dart';
 import 'package:latha_tuition_app/utilities/helper_functions.dart';
 import 'package:latha_tuition_app/widgets/app_bar/text_app_bar.dart';
-import 'package:latha_tuition_app/widgets/cards/text_status_card.dart';
+import 'package:latha_tuition_app/widgets/cards/text_avatar_action_card.dart';
 import 'package:latha_tuition_app/widgets/form_inputs/month_input.dart';
 
 class TutorBatchPaymentHistoryScreen extends StatefulWidget {
@@ -35,42 +35,53 @@ class _TutorBatchPaymentHistoryScreenState
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: TextAppBar(title: '${widget.batchName} Payment History'),
-      body: Expanded(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: screenPadding),
-          child: Column(
-            children: [
-              const SizedBox(height: 5),
-              MonthInput(
-                onChange: (date) {},
-              ),
-              const SizedBox(height: 10),
-              Expanded(
-                child: ListView.builder(
-                  itemCount: paymentHistoryList.length + 1,
-                  itemBuilder: (context, index) => index <
-                          paymentHistoryList.length
-                      ? TextStatusCard(
-                          title: paymentHistoryList[index]['name'],
-                          description: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const SizedBox(height: 5),
-                              Text(
-                                '₹ ${formatAmount(double.tryParse(paymentHistoryList[index]['amount'].toString()) ?? 0)}',
-                              ),
-                              Text(
-                                formatDate(paymentHistoryList[index]['date']),
-                              ),
-                            ],
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: screenPadding),
+        child: Column(
+          children: [
+            const SizedBox(height: 5),
+            MonthInput(
+              onChange: (date) {},
+            ),
+            const SizedBox(height: 10),
+            Expanded(
+              child: ListView.builder(
+                itemCount: paymentHistoryList.length + 1,
+                itemBuilder: (context, index) => index <
+                        paymentHistoryList.length
+                    ? TextAvatarActionCard(
+                        title: paymentHistoryList[index]['name'],
+                        action: Container(
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: paymentHistoryList[index]['status'] ==
+                                    'approved'
+                                ? Theme.of(context).colorScheme.primary
+                                : Theme.of(context).colorScheme.error,
                           ),
-                          status: paymentHistoryList[index]['status'],
-                        )
-                      : const SizedBox(height: screenPadding),
-                ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(10),
+                            child: Icon(
+                              paymentHistoryList[index]['status'] == 'approved'
+                                  ? Icons.check_outlined
+                                  : Icons.close_outlined,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                        children: [
+                          Text(
+                            formatAmount(paymentHistoryList[index]['amount']),
+                          ),
+                          Text(
+                            formatDate(paymentHistoryList[index]['date']),
+                          ),
+                        ],
+                      )
+                    : const SizedBox(height: screenPadding),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

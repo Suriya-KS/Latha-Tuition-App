@@ -9,6 +9,7 @@ import 'package:latha_tuition_app/utilities/modal_bottom_sheet.dart';
 import 'package:latha_tuition_app/utilities/snack_bar.dart';
 import 'package:latha_tuition_app/providers/loading_provider.dart';
 import 'package:latha_tuition_app/screens/tutor/tutor_dashboard.dart';
+import 'package:latha_tuition_app/screens/student/student_dashboard.dart';
 import 'package:latha_tuition_app/widgets/buttons/primary_button.dart';
 import 'package:latha_tuition_app/widgets/bottom_sheets/password_recovery_option_sheet.dart';
 import 'package:latha_tuition_app/widgets/form_inputs/text_input.dart';
@@ -65,7 +66,9 @@ class _LoginFormState extends ConsumerState<LoginForm> {
       if (userType == UserType.student) {
         Navigator.pushAndRemoveUntil(
           context,
-          MaterialPageRoute(builder: (context) => const Placeholder()),
+          MaterialPageRoute(
+            builder: (context) => const StudentDashboardScreen(),
+          ),
           (route) => false,
         );
       } else if (userType == UserType.tutor) {

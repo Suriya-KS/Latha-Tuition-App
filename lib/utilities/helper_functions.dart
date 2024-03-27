@@ -133,11 +133,13 @@ String formatName(String name) {
   if (firstName.length <= 7) return 'Hi, $firstName';
 
   String shortenedName = '${firstName.substring(0, 7)}...';
+
   return 'Hi, $shortenedName';
 }
 
 String formatDate(DateTime date) {
   final formatter = DateFormat('MMMM d, yyyy');
+
   return formatter.format(date);
 }
 
@@ -151,6 +153,12 @@ String formatDateDay(DateTime date) {
   final dayOfWeek = dayOfWeekFormatter.format(date);
 
   return '$month $day, $dayOfWeek';
+}
+
+String formatShortenDay(DateTime date) {
+  final dayOfWeekFormatter = DateFormat.E();
+
+  return dayOfWeekFormatter.format(date).substring(0, 2);
 }
 
 String formatTime(TimeOfDay time) {
@@ -185,10 +193,10 @@ String formatMarks(double marks) {
   return marks.toStringAsFixed(2);
 }
 
-String formatAmount(double amount) {
+String formatAmount(num amount) {
   final formatter = NumberFormat('#,##,###.00');
 
-  return formatter.format(amount);
+  return '₹ ${formatter.format(amount)}';
 }
 
 String capitalizeText(String text) {

@@ -5,8 +5,8 @@ import 'package:latha_tuition_app/utilities/dummy_data.dart';
 import 'package:latha_tuition_app/utilities/helper_functions.dart';
 import 'package:latha_tuition_app/widgets/cards/text_avatar_action_card.dart';
 
-class TutorHomeContents extends StatelessWidget {
-  const TutorHomeContents({super.key});
+class StudentHomeContents extends StatelessWidget {
+  const StudentHomeContents({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -18,10 +18,9 @@ class TutorHomeContents extends StatelessWidget {
           const SizedBox(height: 10),
           for (int i = 0; i < 2; i++)
             TextAvatarActionCard(
-              title: dummyUpcomingClasses[i]['batchName'],
-              avatarText: dummyUpcomingClasses[i]['standard'],
+              title: formatDate(dummyUpcomingClasses[i]['date']),
+              avatarText: formatShortenDay(dummyScheduledTests[i]['date']),
               children: [
-                Text(formatDateDay(dummyUpcomingClasses[i]['date'])),
                 Text(
                   formatTimeRange(
                     dummyUpcomingClasses[i]['startTime'],
@@ -36,13 +35,9 @@ class TutorHomeContents extends StatelessWidget {
           for (int i = 0; i < 2; i++)
             TextAvatarActionCard(
               title: dummyScheduledTests[i]['testName'],
-              avatarText: dummyScheduledTests[i]['standard'],
+              avatarText: formatShortenDay(dummyScheduledTests[i]['date']),
               children: [
-                Text(
-                  dummyScheduledTests[i]['batchName'],
-                  style: const TextStyle(fontWeight: FontWeight.bold),
-                ),
-                Text(formatDateDay(dummyScheduledTests[i]['date'])),
+                Text(formatDate(dummyScheduledTests[i]['date'])),
                 Text(
                   formatTimeRange(
                     dummyScheduledTests[i]['startTime'],

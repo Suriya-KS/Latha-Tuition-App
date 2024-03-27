@@ -5,7 +5,7 @@ import 'package:latha_tuition_app/utilities/dummy_data.dart';
 import 'package:latha_tuition_app/utilities/helper_functions.dart';
 import 'package:latha_tuition_app/utilities/snack_bar.dart';
 import 'package:latha_tuition_app/widgets/app_bar/text_app_bar.dart';
-import 'package:latha_tuition_app/widgets/cards/text_status_actions_card.dart';
+import 'package:latha_tuition_app/widgets/cards/text_avatar_action_card.dart';
 
 class TutorPaymentApprovalScreen extends StatefulWidget {
   const TutorPaymentApprovalScreen({super.key});
@@ -21,13 +21,12 @@ class _TutorPaymentApprovalScreenState
 
   void statusTapHandler(BuildContext context, int index, String status) {
     final paymentDetail = paymentDetails[index];
-    String amount =
-        formatAmount(double.tryParse(paymentDetail['amount'].toString()) ?? 0);
+    String amount = formatAmount(paymentDetail['amount']);
     Widget snackBarContent = RichText(
       text: TextSpan(
         children: [
           TextSpan(
-            text: "Payment of ₹$amount by ${paymentDetail['name']} has been ",
+            text: "Payment of $amount by ${paymentDetail['name']} has been ",
             style: Theme.of(context)
                 .textTheme
                 .bodySmall!
@@ -49,7 +48,7 @@ class _TutorPaymentApprovalScreenState
         text: TextSpan(
           children: [
             TextSpan(
-              text: "Payment of ₹$amount by ${paymentDetail['name']} has been ",
+              text: "Payment of $amount by ${paymentDetail['name']} has been ",
               style: Theme.of(context)
                   .textTheme
                   .bodySmall!
@@ -98,30 +97,48 @@ class _TutorPaymentApprovalScreenState
           child: ListView.builder(
             itemCount: paymentDetails.length + 1,
             itemBuilder: (context, index) => index < paymentDetails.length
-                ? TextStatusActionsCard(
+                ? TextAvatarActionCard(
                     title: paymentDetails[index]['name'],
-                    description: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                    action: Row(
                       children: [
-                        Text(paymentDetails[index]['batchName']),
-                        const SizedBox(height: 5),
-                        Text(
-                          '₹ ${formatAmount(double.tryParse(paymentDetails[index]['amount'].toString()) ?? 0)}',
-                          style: const TextStyle(fontWeight: FontWeight.bold),
+                        IconButton(
+                          onPressed: () => statusTapHandler(
+                            context,
+                            index,
+                            'approve',
+                          ),
+                          icon: const Icon(Icons.check_outlined),
+                          style: IconButton.styleFrom(
+                            foregroundColor: Colors.white,
+                            backgroundColor:
+                                Theme.of(context).colorScheme.primary,
+                          ),
                         ),
-                        Text(formatDate(paymentDetails[index]['date'])),
+                        const SizedBox(width: 5),
+                        IconButton(
+                          onPressed: () => statusTapHandler(
+                            context,
+                            index,
+                            'reject',
+                          ),
+                          icon: const Icon(Icons.close_outlined),
+                          style: IconButton.styleFrom(
+                            foregroundColor: Colors.white,
+                            backgroundColor:
+                                Theme.of(context).colorScheme.error,
+                          ),
+                        ),
                       ],
                     ),
-                    onApproveTap: () => statusTapHandler(
-                      context,
-                      index,
-                      'approve',
-                    ),
-                    onRejectTap: () => statusTapHandler(
-                      context,
-                      index,
-                      'reject',
-                    ),
+                    children: [
+                      Text(paymentDetails[index]['batchName']),
+                      const SizedBox(height: 5),
+                      Text(
+                        formatAmount(paymentDetails[index]['amount']),
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      Text(formatDate(paymentDetails[index]['date'])),
+                    ],
                   )
                 : const SizedBox(height: screenPadding),
           ),

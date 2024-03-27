@@ -12,6 +12,7 @@ import 'package:latha_tuition_app/providers/awaiting_admission_provider.dart';
 import 'package:latha_tuition_app/screens/onboarding.dart';
 import 'package:latha_tuition_app/screens/student/student_awaiting_approval.dart';
 import 'package:latha_tuition_app/screens/tutor/tutor_dashboard.dart';
+import 'package:latha_tuition_app/screens/student/student_dashboard.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -71,7 +72,7 @@ class _MyAppState extends ConsumerState<MyApp> {
 
       if (userType == UserType.student) {
         setState(() {
-          screen = const Placeholder();
+          screen = const StudentDashboardScreen();
         });
 
         return;

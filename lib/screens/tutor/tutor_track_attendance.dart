@@ -8,8 +8,8 @@ import 'package:latha_tuition_app/providers/track_sheet_provider.dart';
 import 'package:latha_tuition_app/providers/attendance_provider.dart';
 import 'package:latha_tuition_app/widgets/utilities/tutor_track_record_details.dart';
 import 'package:latha_tuition_app/widgets/templates/scrollable_details_list.dart';
-import 'package:latha_tuition_app/widgets/cards/title_input_card.dart';
-import 'package:latha_tuition_app/widgets/form_inputs/label_toggle_input.dart';
+import 'package:latha_tuition_app/widgets/cards/text_avatar_action_card.dart';
+import 'package:latha_tuition_app/widgets/form_inputs/toggle_input.dart';
 
 class TutorTrackAttendanceScreen extends ConsumerWidget {
   const TutorTrackAttendanceScreen({
@@ -46,11 +46,9 @@ class TutorTrackAttendanceScreen extends ConsumerWidget {
           child: ListView.builder(
             itemCount: attendanceList.length + 1,
             itemBuilder: (context, index) => index < attendanceList.length
-                ? TitleInputCard(
+                ? TextAvatarActionCard(
                     title: attendanceList[index]['name'],
-                    input: LabelToggleInput(
-                      iconLeft: Icons.check,
-                      iconRight: Icons.close,
+                    action: ToggleInput(
                       backgroundColors: [
                         Theme.of(context).colorScheme.primary,
                         Theme.of(context).colorScheme.error,
@@ -64,6 +62,10 @@ class TutorTrackAttendanceScreen extends ConsumerWidget {
                         index,
                         ref,
                       ),
+                      children: const [
+                        Icon(Icons.check),
+                        Icon(Icons.close),
+                      ],
                     ),
                   )
                 : const SizedBox(height: 120),

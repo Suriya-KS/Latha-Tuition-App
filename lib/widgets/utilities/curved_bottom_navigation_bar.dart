@@ -6,11 +6,13 @@ class CurvedBottomNavigationBar extends StatelessWidget {
   const CurvedBottomNavigationBar({
     required this.index,
     required this.onTap,
+    required this.items,
     super.key,
   });
 
   final int index;
   final void Function(int) onTap;
+  final List<Widget> items;
 
   @override
   Widget build(BuildContext context) {
@@ -21,23 +23,7 @@ class CurvedBottomNavigationBar extends StatelessWidget {
       animationDuration: const Duration(milliseconds: 300),
       animationCurve: Curves.easeInOut,
       onTap: onTap,
-      items: const [
-        Icon(
-          Icons.home_outlined,
-          color: Colors.white,
-          size: 30,
-        ),
-        Icon(
-          Icons.calendar_month_outlined,
-          color: Colors.white,
-          size: 30,
-        ),
-        Icon(
-          Icons.person_outline,
-          color: Colors.white,
-          size: 30,
-        ),
-      ],
+      items: items,
     );
   }
 }

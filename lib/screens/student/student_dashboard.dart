@@ -1,22 +1,22 @@
 import 'package:flutter/material.dart';
 
 import 'package:latha_tuition_app/widgets/utilities/curved_bottom_navigation_bar.dart';
-import 'package:latha_tuition_app/widgets/tutor_dashboard/tutor_home_view.dart';
-import 'package:latha_tuition_app/widgets/tutor_dashboard/tutor_events_view.dart';
-import 'package:latha_tuition_app/widgets/tutor_dashboard/tutor_student_administration_view.dart';
+import 'package:latha_tuition_app/widgets/student_dashboard/student_home_view.dart';
+import 'package:latha_tuition_app/widgets/student_dashboard/student_attendance_view.dart';
+import 'package:latha_tuition_app/widgets/student_dashboard/student_test_marks_view.dart';
 
-class TutorDashboardScreen extends StatefulWidget {
-  const TutorDashboardScreen({super.key});
+class StudentDashboardScreen extends StatefulWidget {
+  const StudentDashboardScreen({super.key});
 
   @override
-  State<TutorDashboardScreen> createState() => _TutorDashboardScreenState();
+  State<StudentDashboardScreen> createState() => _StudentDashboardScreenState();
 }
 
-class _TutorDashboardScreenState extends State<TutorDashboardScreen> {
+class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
   static const pages = [
-    TutorHomeView(),
-    TutorEventsView(),
-    TutorStudentAdministrationView(),
+    StudentHomeView(),
+    StudentAttendanceView(),
+    StudentTestMarksView(),
   ];
 
   int currentPageIndex = 0;
@@ -51,12 +51,12 @@ class _TutorDashboardScreenState extends State<TutorDashboardScreen> {
               size: 30,
             ),
             Icon(
-              Icons.calendar_month_outlined,
+              Icons.groups_outlined,
               color: Colors.white,
               size: 30,
             ),
             Icon(
-              Icons.person_outline,
+              Icons.assignment_outlined,
               color: Colors.white,
               size: 30,
             ),

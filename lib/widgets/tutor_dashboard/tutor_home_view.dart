@@ -78,12 +78,13 @@ class _TutorHomeViewState extends ConsumerState<TutorHomeView> {
     final isLoadingFromProvider = ref.watch(loadingProvider);
     final animatedDrawerData = ref.watch(animatedDrawerProvider);
     final screenHeight = MediaQuery.of(context).size.height;
+    final formattedName = formatName('Tutor Name');
 
     return LoadingOverlay(
       isLoading: isLoading || isLoadingFromProvider,
       child: Stack(
         children: [
-          const SideDrawer(),
+          SideDrawer(title: formattedName),
           AnimatedContainer(
             duration: const Duration(milliseconds: 200),
             decoration: BoxDecoration(
@@ -113,7 +114,7 @@ class _TutorHomeViewState extends ConsumerState<TutorHomeView> {
             child: CustomScrollView(
               slivers: [
                 ScrollableImageAppBar(
-                  title: formatName('Tutor Name'),
+                  title: formattedName,
                   screenHeight: screenHeight,
                   actions: [
                     IconWithBadgeButton(

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:latha_tuition_app/utilities/constants.dart';
 import 'package:latha_tuition_app/utilities/dummy_data.dart';
 import 'package:latha_tuition_app/utilities/helper_functions.dart';
-import 'package:latha_tuition_app/widgets/cards/text_status_card.dart';
+import 'package:latha_tuition_app/widgets/cards/text_avatar_action_card.dart';
 import 'package:latha_tuition_app/widgets/form_inputs/year_input.dart';
 
 class TutorStudentPaymentHistoryView extends StatefulWidget {
@@ -41,12 +41,31 @@ class _TutorStudentPaymentHistoryViewState
                 itemCount: paymentHistoryList.length + 1,
                 itemBuilder: (context, index) => index <
                         paymentHistoryList.length
-                    ? TextStatusCard(
+                    ? TextAvatarActionCard(
                         title: formatDate(paymentHistoryList[index]['date']),
-                        description: Text(
-                          '₹ ${formatAmount(double.tryParse(paymentHistoryList[index]['amount'].toString()) ?? 0)}',
+                        action: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(100),
+                            color: paymentHistoryList[index]['status'] ==
+                                    'approved'
+                                ? Theme.of(context).colorScheme.primary
+                                : Theme.of(context).colorScheme.error,
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(10),
+                            child: Icon(
+                              paymentHistoryList[index]['status'] == 'approved'
+                                  ? Icons.check_outlined
+                                  : Icons.close_outlined,
+                              color: Colors.white,
+                            ),
+                          ),
                         ),
-                        status: paymentHistoryList[index]['status'],
+                        children: [
+                          Text(
+                            formatAmount(paymentHistoryList[index]['amount']),
+                          ),
+                        ],
                       )
                     : const SizedBox(height: screenPadding),
               ),

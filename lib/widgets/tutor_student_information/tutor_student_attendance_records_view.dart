@@ -5,8 +5,8 @@ import 'package:latha_tuition_app/utilities/constants.dart';
 import 'package:latha_tuition_app/utilities/helper_functions.dart';
 import 'package:latha_tuition_app/providers/attendance_provider.dart';
 import 'package:latha_tuition_app/widgets/buttons/floating_circular_action_button.dart';
-import 'package:latha_tuition_app/widgets/cards/title_input_card.dart';
-import 'package:latha_tuition_app/widgets/form_inputs/label_toggle_input.dart';
+import 'package:latha_tuition_app/widgets/cards/text_avatar_action_card.dart';
+import 'package:latha_tuition_app/widgets/form_inputs/toggle_input.dart';
 import 'package:latha_tuition_app/widgets/form_inputs/month_input.dart';
 
 class TutorStudentAttendanceRecordsView extends ConsumerWidget {
@@ -32,12 +32,9 @@ class TutorStudentAttendanceRecordsView extends ConsumerWidget {
                     itemCount: attendanceList.length + 1,
                     itemBuilder: (context, index) => index <
                             attendanceList.length
-                        ? TitleInputCard(
+                        ? TextAvatarActionCard(
                             title: formatDate(attendanceList[index]['date']),
-                            description: Text(attendanceList[index]['time']),
-                            input: LabelToggleInput(
-                              iconLeft: Icons.check,
-                              iconRight: Icons.close,
+                            action: ToggleInput(
                               backgroundColors: [
                                 Theme.of(context).colorScheme.primary,
                                 Theme.of(context).colorScheme.error,
@@ -53,7 +50,12 @@ class TutorStudentAttendanceRecordsView extends ConsumerWidget {
                                 index,
                                 ref,
                               ),
+                              children: const [
+                                Icon(Icons.check),
+                                Icon(Icons.close),
+                              ],
                             ),
+                            children: [Text(attendanceList[index]['time'])],
                           )
                         : const SizedBox(height: 120),
                   ),
