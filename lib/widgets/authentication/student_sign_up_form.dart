@@ -7,6 +7,7 @@ import 'package:latha_tuition_app/utilities/constants.dart';
 import 'package:latha_tuition_app/utilities/form_validation_functions.dart';
 import 'package:latha_tuition_app/utilities/snack_bar.dart';
 import 'package:latha_tuition_app/providers/loading_provider.dart';
+import 'package:latha_tuition_app/providers/authentication_provider.dart';
 import 'package:latha_tuition_app/providers/awaiting_admission_provider.dart';
 import 'package:latha_tuition_app/providers/admission_provider.dart';
 import 'package:latha_tuition_app/screens/student/student_dashboard.dart';
@@ -49,6 +50,7 @@ class _StudentSignUpFormState extends ConsumerState<StudentSignUpForm> {
     if (!formKey.currentState!.validate()) return;
 
     final loadingMethods = ref.read(loadingProvider.notifier);
+    final authenticationMethods = ref.read(authenticationProvider.notifier);
 
     loadingMethods.setLoadingStatus(true);
 
@@ -65,6 +67,7 @@ class _StudentSignUpFormState extends ConsumerState<StudentSignUpForm> {
           ref.read(admissionProvider)[Admission.studentDetails];
 
       studentDetails.remove('awaitingApproval');
+      studentDetails.remove('requestedAt');
 
       await firestore.collection('students').doc(studentID).set({
         ...studentDetails,
@@ -80,6 +83,7 @@ class _StudentSignUpFormState extends ConsumerState<StudentSignUpForm> {
 
       await ref.read(awaitingAdmissionProvider.notifier).clearData();
 
+      authenticationMethods.setStudentID(studentID);
       loadingMethods.setLoadingStatus(false);
 
       if (!context.mounted) return;

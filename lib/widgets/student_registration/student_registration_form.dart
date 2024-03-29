@@ -121,7 +121,7 @@ class _StudentRegistrationFormState
     loadingMethods.setLoadingStatus(true);
 
     try {
-      final documentReference =
+      final studentAdmissionRequestsDocumentReference =
           await studentAdmissionRequestsCollectionReference.add({
         'name': nameController.text,
         'emailAddress': emailController.text,
@@ -147,7 +147,7 @@ class _StudentRegistrationFormState
 
       await ref
           .read(awaitingAdmissionProvider.notifier)
-          .setStudentID(documentReference.id);
+          .setStudentID(studentAdmissionRequestsDocumentReference.id);
 
       loadingMethods.setLoadingStatus(false);
 

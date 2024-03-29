@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:latha_tuition_app/utilities/constants.dart';
-import 'package:latha_tuition_app/utilities/dummy_data.dart';
 import 'package:latha_tuition_app/utilities/helper_functions.dart';
 import 'package:latha_tuition_app/utilities/snack_bar.dart';
+import 'package:latha_tuition_app/widgets/utilities/loading_overlay.dart';
 import 'package:latha_tuition_app/widgets/app_bar/text_app_bar.dart';
 import 'package:latha_tuition_app/widgets/cards/text_avatar_action_card.dart';
 
@@ -17,23 +18,91 @@ class TutorPaymentApprovalScreen extends StatefulWidget {
 
 class _TutorPaymentApprovalScreenState
     extends State<TutorPaymentApprovalScreen> {
-  late List<Map<String, dynamic>> paymentDetails;
+  final firestore = FirebaseFirestore.instance;
 
-  void statusTapHandler(BuildContext context, int index, String status) {
-    final paymentDetail = paymentDetails[index];
-    String amount = formatAmount(paymentDetail['amount']);
-    Widget snackBarContent = RichText(
+  bool isLoading = false;
+  bool isProcessing = false;
+  List<Map<String, dynamic>> studentsPaymentDetails = [];
+
+  void loadStudentsPaymentRequests(BuildContext context) async {
+    setState(() {
+      isLoading = true;
+    });
+
+    try {
+      final studentPaymentRequestsQuerySnapshot = await firestore
+          .collection('payments')
+          .where('status', isEqualTo: 'pending approval')
+          .orderBy('date')
+          .get();
+
+      List<Map<String, dynamic>> paymentDetails = [];
+
+      for (final studentPaymentRequestQueryDocumentSnapshot
+          in studentPaymentRequestsQuerySnapshot.docs) {
+        final studentDocumentSnapshot = await firestore
+            .collection('students')
+            .doc(studentPaymentRequestQueryDocumentSnapshot['studentID'])
+            .get();
+
+        if (!studentDocumentSnapshot.exists) continue;
+        if (!studentPaymentRequestQueryDocumentSnapshot.exists) continue;
+
+        final studentDetails = studentDocumentSnapshot.data()!;
+        final studentPaymentDetails =
+            studentPaymentRequestQueryDocumentSnapshot.data();
+
+        paymentDetails.add({
+          'studentName': studentDetails['name'],
+          'batch': studentDetails['batch'],
+          'date': (studentPaymentDetails['date'] as Timestamp).toDate(),
+          'amount': studentPaymentDetails['amount'],
+          'id': studentPaymentRequestQueryDocumentSnapshot.id,
+        });
+      }
+
+      setState(() {
+        isLoading = false;
+        studentsPaymentDetails = paymentDetails;
+      });
+    } catch (error) {
+      setState(() {
+        isLoading = false;
+      });
+
+      if (!context.mounted) return;
+
+      snackBar(
+        context,
+        content: const Text(defaultErrorMessage),
+      );
+    }
+  }
+
+  void statusTapHandler(
+    BuildContext context, {
+    required int index,
+    required bool isApproved,
+  }) async {
+    setState(() {
+      isProcessing = true;
+    });
+
+    final studentPaymentDetails = {...studentsPaymentDetails[index]};
+    final amount = formatAmount(studentPaymentDetails['amount']);
+    final snackBarContent = RichText(
       text: TextSpan(
         children: [
           TextSpan(
-            text: "Payment of $amount by ${paymentDetail['name']} has been ",
+            text:
+                "Payment of $amount by ${studentPaymentDetails['studentName']} has been ",
             style: Theme.of(context)
                 .textTheme
                 .bodySmall!
                 .copyWith(color: Colors.white),
           ),
           TextSpan(
-            text: 'rejected',
+            text: isApproved ? 'approved' : 'rejected',
             style: Theme.of(context).textTheme.bodySmall!.copyWith(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
@@ -43,104 +112,134 @@ class _TutorPaymentApprovalScreenState
       ),
     );
 
-    if (status == 'approve') {
-      snackBarContent = RichText(
-        text: TextSpan(
-          children: [
-            TextSpan(
-              text: "Payment of $amount by ${paymentDetail['name']} has been ",
-              style: Theme.of(context)
-                  .textTheme
-                  .bodySmall!
-                  .copyWith(color: Colors.white),
-            ),
-            TextSpan(
-              text: 'approved',
-              style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
-            ),
-          ],
-        ),
+    setState(() {
+      studentsPaymentDetails.removeAt(index);
+    });
+
+    try {
+      await snackBar(
+        context,
+        content: snackBarContent,
+        actionLabel: 'Undo',
+        onPressed: () => setState(() {
+          studentsPaymentDetails.insert(index, studentPaymentDetails);
+        }),
+      );
+
+      if (studentsPaymentDetails.contains(studentPaymentDetails)) {
+        setState(() {
+          isProcessing = false;
+        });
+
+        return;
+      }
+
+      setState(() {
+        isLoading = true;
+      });
+
+      await firestore
+          .collection('payments')
+          .doc(studentPaymentDetails['id'])
+          .update({
+        'status': isApproved ? 'approved' : 'rejected',
+        'notifyStudent': true,
+      });
+
+      setState(() {
+        isLoading = false;
+        isProcessing = false;
+      });
+    } catch (error) {
+      setState(() {
+        isLoading = false;
+        isProcessing = false;
+      });
+
+      if (!context.mounted) return;
+
+      snackBar(
+        context,
+        content: const Text(defaultErrorMessage),
       );
     }
-
-    snackBar(
-      context,
-      content: snackBarContent,
-      actionLabel: 'Undo',
-      onPressed: () => setState(() {
-        paymentDetails.insert(index, paymentDetail);
-      }),
-    );
-
-    setState(() {
-      paymentDetails.removeAt(index);
-    });
   }
 
   @override
   void initState() {
     super.initState();
 
-    paymentDetails = dummyBatchPaymentApproval;
+    loadStudentsPaymentRequests(context);
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: const TextAppBar(title: 'Payment Approval'),
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: screenPadding),
-          child: ListView.builder(
-            itemCount: paymentDetails.length + 1,
-            itemBuilder: (context, index) => index < paymentDetails.length
-                ? TextAvatarActionCard(
-                    title: paymentDetails[index]['name'],
-                    action: Row(
-                      children: [
-                        IconButton(
-                          onPressed: () => statusTapHandler(
-                            context,
-                            index,
-                            'approve',
-                          ),
-                          icon: const Icon(Icons.check_outlined),
-                          style: IconButton.styleFrom(
-                            foregroundColor: Colors.white,
-                            backgroundColor:
-                                Theme.of(context).colorScheme.primary,
-                          ),
+    return PopScope(
+      canPop: !isProcessing,
+      child: LoadingOverlay(
+        isLoading: isLoading,
+        child: Scaffold(
+          appBar: const TextAppBar(title: 'Payment Approval'),
+          body: SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: screenPadding),
+              child: ListView.builder(
+                itemCount: studentsPaymentDetails.length + 1,
+                itemBuilder: (context, index) => index <
+                        studentsPaymentDetails.length
+                    ? TextAvatarActionCard(
+                        title: studentsPaymentDetails[index]['studentName'],
+                        action: Column(
+                          children: [
+                            IconButton(
+                              onPressed: !isProcessing
+                                  ? () => statusTapHandler(
+                                        context,
+                                        index: index,
+                                        isApproved: true,
+                                      )
+                                  : null,
+                              icon: const Icon(Icons.check_outlined),
+                              style: IconButton.styleFrom(
+                                foregroundColor: Colors.white,
+                                backgroundColor:
+                                    Theme.of(context).colorScheme.primary,
+                              ),
+                            ),
+                            const SizedBox(width: 5),
+                            IconButton(
+                              onPressed: !isProcessing
+                                  ? () => statusTapHandler(
+                                        context,
+                                        index: index,
+                                        isApproved: false,
+                                      )
+                                  : null,
+                              icon: const Icon(Icons.close_outlined),
+                              style: IconButton.styleFrom(
+                                foregroundColor: Colors.white,
+                                backgroundColor:
+                                    Theme.of(context).colorScheme.error,
+                              ),
+                            ),
+                          ],
                         ),
-                        const SizedBox(width: 5),
-                        IconButton(
-                          onPressed: () => statusTapHandler(
-                            context,
-                            index,
-                            'reject',
+                        children: [
+                          Text(studentsPaymentDetails[index]['batch']),
+                          const SizedBox(height: 5),
+                          Text(
+                            formatAmount(
+                                studentsPaymentDetails[index]['amount']),
+                            style: const TextStyle(fontWeight: FontWeight.bold),
                           ),
-                          icon: const Icon(Icons.close_outlined),
-                          style: IconButton.styleFrom(
-                            foregroundColor: Colors.white,
-                            backgroundColor:
-                                Theme.of(context).colorScheme.error,
+                          Text(
+                            formatDate(studentsPaymentDetails[index]['date']),
                           ),
-                        ),
-                      ],
-                    ),
-                    children: [
-                      Text(paymentDetails[index]['batchName']),
-                      const SizedBox(height: 5),
-                      Text(
-                        formatAmount(paymentDetails[index]['amount']),
-                        style: const TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      Text(formatDate(paymentDetails[index]['date'])),
-                    ],
-                  )
-                : const SizedBox(height: screenPadding),
+                        ],
+                      )
+                    : const SizedBox(height: screenPadding),
+              ),
+            ),
           ),
         ),
       ),

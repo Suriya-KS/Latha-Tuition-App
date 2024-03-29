@@ -6,8 +6,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:latha_tuition_app/utilities/constants.dart';
 import 'package:latha_tuition_app/utilities/form_validation_functions.dart';
 import 'package:latha_tuition_app/utilities/snack_bar.dart';
-import 'package:latha_tuition_app/screens/tutor/tutor_dashboard.dart';
 import 'package:latha_tuition_app/providers/loading_provider.dart';
+import 'package:latha_tuition_app/providers/authentication_provider.dart';
+import 'package:latha_tuition_app/screens/tutor/tutor_dashboard.dart';
 import 'package:latha_tuition_app/widgets/buttons/primary_button.dart';
 import 'package:latha_tuition_app/widgets/form_inputs/text_input.dart';
 
@@ -49,6 +50,7 @@ class _TutorSignUpFormState extends ConsumerState<TutorSignUpForm> {
     if (!formKey.currentState!.validate()) return;
 
     final loadingMethods = ref.read(loadingProvider.notifier);
+    final authenticationMethods = ref.read(authenticationProvider.notifier);
 
     loadingMethods.setLoadingStatus(true);
 
@@ -59,12 +61,15 @@ class _TutorSignUpFormState extends ConsumerState<TutorSignUpForm> {
         password: passwordController.text,
       );
 
-      await tutorsCollectionReference.doc(userCredentials.user!.uid).set({
+      final tutorID = userCredentials.user!.uid;
+
+      await tutorsCollectionReference.doc(tutorID).set({
         'name': nameController.text,
         'emailAddress': emailController.text,
         'phoneNumber': phoneController.text,
       });
 
+      authenticationMethods.setStudentID(tutorID);
       loadingMethods.setLoadingStatus(false);
 
       if (!context.mounted) return;

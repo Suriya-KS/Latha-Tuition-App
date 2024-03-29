@@ -88,8 +88,8 @@ Future<void> navigateToTutorNewAdmissionsScreen(BuildContext context) async {
   );
 }
 
-void navigateToTutorPaymentApprovalScreen(BuildContext context) {
-  Navigator.push(
+Future<void> navigateToTutorPaymentApprovalScreen(BuildContext context) async {
+  await Navigator.push(
     context,
     MaterialPageRoute(
       builder: (context) => const TutorPaymentApprovalScreen(),

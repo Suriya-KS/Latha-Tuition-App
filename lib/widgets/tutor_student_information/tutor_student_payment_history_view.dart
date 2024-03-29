@@ -32,9 +32,7 @@ class _TutorStudentPaymentHistoryViewState
         padding: const EdgeInsets.symmetric(horizontal: screenPadding),
         child: Column(
           children: [
-            YearInput(
-              onChange: (date) {},
-            ),
+            YearInput(onChange: (year) {}),
             const SizedBox(height: 10),
             Expanded(
               child: ListView.builder(

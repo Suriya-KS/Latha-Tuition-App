@@ -8,6 +8,7 @@ import 'package:latha_tuition_app/utilities/constants.dart';
 import 'package:latha_tuition_app/utilities/helper_functions.dart';
 import 'package:latha_tuition_app/utilities/app_theme.dart';
 import 'package:latha_tuition_app/utilities/snack_bar.dart';
+import 'package:latha_tuition_app/providers/authentication_provider.dart';
 import 'package:latha_tuition_app/providers/awaiting_admission_provider.dart';
 import 'package:latha_tuition_app/screens/onboarding.dart';
 import 'package:latha_tuition_app/screens/student/student_awaiting_approval.dart';
@@ -65,10 +66,16 @@ class _MyAppState extends ConsumerState<MyApp> {
 
       if (!context.mounted) return;
 
+      final userID = authenticatedUser!.uid;
+
       final userType = await getAuthenticatedUserType(
         context,
-        authenticatedUser!.uid,
+        userID,
       );
+
+      final authenticationMethods = ref.read(authenticationProvider.notifier);
+
+      authenticationMethods.setStudentID(userID);
 
       if (userType == UserType.student) {
         setState(() {
@@ -85,6 +92,8 @@ class _MyAppState extends ConsumerState<MyApp> {
 
         return;
       }
+
+      authenticationMethods.clearStudentID();
 
       setState(() {
         screen = const Placeholder();

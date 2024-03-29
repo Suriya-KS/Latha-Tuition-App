@@ -6,6 +6,7 @@ import 'package:latha_tuition_app/utilities/constants.dart';
 import 'package:latha_tuition_app/utilities/snack_bar.dart';
 import 'package:latha_tuition_app/providers/loading_provider.dart';
 import 'package:latha_tuition_app/providers/animated_drawer_provider.dart';
+import 'package:latha_tuition_app/providers/authentication_provider.dart';
 import 'package:latha_tuition_app/screens/onboarding.dart';
 import 'package:latha_tuition_app/widgets/texts/title_text.dart';
 
@@ -19,8 +20,10 @@ class SideDrawer extends ConsumerWidget {
 
   void signOutHandler(BuildContext context, WidgetRef ref) async {
     final loadingMethods = ref.read(loadingProvider.notifier);
+    final authenticationMethods = ref.read(authenticationProvider.notifier);
 
     loadingMethods.setLoadingStatus(true);
+    authenticationMethods.clearStudentID();
 
     try {
       await FirebaseAuth.instance.signOut();

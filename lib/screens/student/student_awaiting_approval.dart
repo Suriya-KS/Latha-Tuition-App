@@ -56,11 +56,12 @@ class _StudentAwaitingApprovalScreenState
         ref.read(awaitingAdmissionProvider)[AwaitingAdmission.studentID];
 
     try {
-      final documentSnapshot = await studentAdmissionRequestsCollectionReference
-          .doc(awaitingAdmissionStudentID)
-          .get();
+      final studentAdmissionRequestsDocumentSnapshot =
+          await studentAdmissionRequestsCollectionReference
+              .doc(awaitingAdmissionStudentID)
+              .get();
 
-      final studentDetails = documentSnapshot.data();
+      final studentDetails = studentAdmissionRequestsDocumentSnapshot.data();
 
       if (studentDetails == null && context.mounted) {
         setState(() {

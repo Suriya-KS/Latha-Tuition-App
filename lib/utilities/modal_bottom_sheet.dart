@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 
 import 'package:latha_tuition_app/utilities/constants.dart';
 
-void modalBottomSheet(BuildContext context, Widget content) {
+Future<dynamic> modalBottomSheet(BuildContext context, Widget content) async {
   final screenWidth = MediaQuery.of(context).size.width;
 
-  showModalBottomSheet(
+  return await showModalBottomSheet(
     context: context,
     isScrollControlled: true,
     builder: (BuildContext context) => SingleChildScrollView(

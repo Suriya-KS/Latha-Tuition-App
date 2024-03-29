@@ -8,6 +8,7 @@ import 'package:latha_tuition_app/utilities/form_validation_functions.dart';
 import 'package:latha_tuition_app/utilities/modal_bottom_sheet.dart';
 import 'package:latha_tuition_app/utilities/snack_bar.dart';
 import 'package:latha_tuition_app/providers/loading_provider.dart';
+import 'package:latha_tuition_app/providers/authentication_provider.dart';
 import 'package:latha_tuition_app/screens/tutor/tutor_dashboard.dart';
 import 'package:latha_tuition_app/screens/student/student_dashboard.dart';
 import 'package:latha_tuition_app/widgets/buttons/primary_button.dart';
@@ -40,6 +41,7 @@ class _LoginFormState extends ConsumerState<LoginForm> {
     if (!formKey.currentState!.validate()) return;
 
     final loadingMethods = ref.read(loadingProvider.notifier);
+    final authenticationMethods = ref.read(authenticationProvider.notifier);
 
     loadingMethods.setLoadingStatus(true);
 
@@ -59,6 +61,7 @@ class _LoginFormState extends ConsumerState<LoginForm> {
 
       final userType = await getAuthenticatedUserType(context, userID);
 
+      authenticationMethods.setStudentID(userID);
       loadingMethods.setLoadingStatus(false);
 
       if (!context.mounted) return;

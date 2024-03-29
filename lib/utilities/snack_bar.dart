@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
-void snackBar(
+Future<void> snackBar(
   BuildContext context, {
   required Widget content,
   String? actionLabel,
   void Function()? onPressed,
-}) {
-  ScaffoldMessenger.of(context).removeCurrentSnackBar();
+}) async {
+  ScaffoldMessenger.of(context).hideCurrentSnackBar();
 
   SnackBar snackBar = SnackBar(
     content: content,
@@ -18,5 +18,5 @@ void snackBar(
         : null,
   );
 
-  ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  await ScaffoldMessenger.of(context).showSnackBar(snackBar).closed;
 }

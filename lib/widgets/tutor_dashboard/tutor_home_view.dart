@@ -3,7 +3,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:latha_tuition_app/utilities/constants.dart';
-import 'package:latha_tuition_app/utilities/dummy_data.dart';
 import 'package:latha_tuition_app/utilities/helper_functions.dart';
 import 'package:latha_tuition_app/utilities/snack_bar.dart';
 import 'package:latha_tuition_app/providers/loading_provider.dart';
@@ -26,6 +25,7 @@ class _TutorHomeViewState extends ConsumerState<TutorHomeView> {
 
   bool isLoading = false;
   int studentAdmissionRequestCount = 0;
+  int studentPaymentRequestCount = 0;
 
   void loadStudentAdmissionRequestCount(BuildContext context) async {
     setState(() {
@@ -58,6 +58,37 @@ class _TutorHomeViewState extends ConsumerState<TutorHomeView> {
     }
   }
 
+  void loadStudentPaymentRequestsCount(BuildContext context) async {
+    setState(() {
+      isLoading = true;
+    });
+
+    try {
+      final studentPaymentRequestsAggregateQuerySnapshot = await firestore
+          .collection('payments')
+          .where('status', isEqualTo: 'pending approval')
+          .count()
+          .get();
+
+      setState(() {
+        isLoading = false;
+        studentPaymentRequestCount =
+            studentPaymentRequestsAggregateQuerySnapshot.count ?? 0;
+      });
+    } catch (error) {
+      setState(() {
+        isLoading = false;
+      });
+
+      if (!context.mounted) return;
+
+      snackBar(
+        context,
+        content: const Text(defaultErrorMessage),
+      );
+    }
+  }
+
   void studentAdmissionRequestsHandler(BuildContext context) async {
     await navigateToTutorNewAdmissionsScreen(context);
 
@@ -66,11 +97,20 @@ class _TutorHomeViewState extends ConsumerState<TutorHomeView> {
     loadStudentAdmissionRequestCount(context);
   }
 
+  void studentPaymentRequestsHandler(BuildContext context) async {
+    await navigateToTutorPaymentApprovalScreen(context);
+
+    if (!context.mounted) return;
+
+    loadStudentPaymentRequestsCount(context);
+  }
+
   @override
   void initState() {
     super.initState();
 
     loadStudentAdmissionRequestCount(context);
+    loadStudentPaymentRequestsCount(context);
   }
 
   @override
@@ -127,8 +167,8 @@ class _TutorHomeViewState extends ConsumerState<TutorHomeView> {
                     const SizedBox(width: 10),
                     IconWithBadgeButton(
                       icon: Icons.currency_rupee,
-                      badgeCount: dummyStudentPaymentHistory.length,
-                      onPressed: () => navigateToTutorPaymentApprovalScreen(
+                      badgeCount: studentPaymentRequestCount,
+                      onPressed: () => studentPaymentRequestsHandler(
                         context,
                       ),
                     ),
