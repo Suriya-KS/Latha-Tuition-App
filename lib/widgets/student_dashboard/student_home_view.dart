@@ -6,6 +6,7 @@ import 'package:latha_tuition_app/utilities/constants.dart';
 import 'package:latha_tuition_app/utilities/helper_functions.dart';
 import 'package:latha_tuition_app/utilities/snack_bar.dart';
 import 'package:latha_tuition_app/providers/animated_drawer_provider.dart';
+import 'package:latha_tuition_app/providers/authentication_provider.dart';
 import 'package:latha_tuition_app/widgets/utilities/loading_overlay.dart';
 import 'package:latha_tuition_app/widgets/utilities/side_drawer.dart';
 import 'package:latha_tuition_app/widgets/app_bar/scrollable_image_app_bar.dart';
@@ -28,6 +29,8 @@ class _StudentHomeViewState extends ConsumerState<StudentHomeView> {
   bool showBadgeMark = false;
 
   void loadPaymentHistoryNotification(BuildContext context) async {
+    final studentID =
+        ref.read(authenticationProvider)[Authentication.studentID];
     setState(() {
       isLoading = true;
     });
@@ -35,6 +38,7 @@ class _StudentHomeViewState extends ConsumerState<StudentHomeView> {
     try {
       final paymentHistoryNotificationAggregateQuerySnapshot =
           await paymentsCollectionReference
+              .where('studentID', isEqualTo: studentID)
               .where('notifyStudent', isEqualTo: true)
               .count()
               .get();

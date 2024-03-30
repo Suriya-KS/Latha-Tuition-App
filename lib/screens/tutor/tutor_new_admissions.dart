@@ -56,9 +56,9 @@ class _TutorNewAdmissionsScreenState extends State<TutorNewAdmissionsScreen> {
       setState(() {
         isLoading = false;
         studentAdmissionRequests = studentAdmissionRequestsQuerySnapshot.docs
-            .map((admissionRequestedStudent) => {
-                  ...admissionRequestedStudent.data(),
-                  'id': admissionRequestedStudent.id,
+            .map((admissionRequestedStudentQueryDocumentSnapshot) => {
+                  ...admissionRequestedStudentQueryDocumentSnapshot.data(),
+                  'id': admissionRequestedStudentQueryDocumentSnapshot.id,
                 })
             .toList();
       });

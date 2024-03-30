@@ -3,8 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:latha_tuition_app/utilities/constants.dart';
 import 'package:latha_tuition_app/utilities/dummy_data.dart';
+import 'package:latha_tuition_app/providers/loading_provider.dart';
 import 'package:latha_tuition_app/providers/attendance_provider.dart';
 import 'package:latha_tuition_app/providers/test_marks_provider.dart';
+import 'package:latha_tuition_app/widgets/utilities/loading_overlay.dart';
 import 'package:latha_tuition_app/widgets/app_bar/text_app_bar.dart';
 import 'package:latha_tuition_app/widgets/texts/subtitle_text.dart';
 import 'package:latha_tuition_app/widgets/form_inputs/toggle_input.dart';
@@ -40,9 +42,11 @@ class _TutorStudentInformationScreenState
     'Feedbacks'
   ];
 
-  late int index;
+  int index = 0;
 
   void studentInformationViewToggleHandler(int selectedIndex) {
+    if (index == selectedIndex) return;
+
     setState(() {
       index = selectedIndex;
     });
@@ -59,47 +63,45 @@ class _TutorStudentInformationScreenState
   }
 
   @override
-  void initState() {
-    super.initState();
-
-    index = 0;
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: TextAppBar(title: screenTitles[index]),
-      body: SafeArea(
-        child: Column(
-          children: [
-            const SizedBox(height: 10),
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: screenPadding),
-              child: SubtitleText(
-                subtitle: 'Student Name',
-                alignment: Alignment.center,
-              ),
-            ),
-            const SizedBox(height: 20),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: screenPadding),
-              child: Align(
-                alignment: Alignment.center,
-                child: ToggleInput(
-                  onToggle: studentInformationViewToggleHandler,
-                  children: const [
-                    Icon(Icons.person_outline),
-                    Icon(Icons.groups_outlined),
-                    Icon(Icons.assignment_outlined),
-                    Icon(Icons.currency_rupee_outlined),
-                    Icon(Icons.message_outlined),
-                  ],
+    final isLoading = ref.watch(loadingProvider);
+
+    return LoadingOverlay(
+      isLoading: isLoading,
+      child: Scaffold(
+        appBar: TextAppBar(title: screenTitles[index]),
+        body: SafeArea(
+          child: Column(
+            children: [
+              const SizedBox(height: 10),
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: screenPadding),
+                child: SubtitleText(
+                  subtitle: 'Student Name',
+                  alignment: Alignment.center,
                 ),
               ),
-            ),
-            const SizedBox(height: 20),
-            views[index],
-          ],
+              const SizedBox(height: 20),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: screenPadding),
+                child: Align(
+                  alignment: Alignment.center,
+                  child: ToggleInput(
+                    onToggle: studentInformationViewToggleHandler,
+                    children: const [
+                      Icon(Icons.person_outline),
+                      Icon(Icons.groups_outlined),
+                      Icon(Icons.assignment_outlined),
+                      Icon(Icons.currency_rupee_outlined),
+                      Icon(Icons.message_outlined),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 20),
+              views[index],
+            ],
+          ),
         ),
       ),
     );

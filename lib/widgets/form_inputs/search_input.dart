@@ -14,8 +14,9 @@ class SearchInput extends StatefulWidget {
 
   final String labelText;
   final IconData prefixIcon;
-  final List<String> items;
-  final void Function(BuildContext, String, void Function(Object)) onChanged;
+  final List<List<String>> items;
+  final void Function(BuildContext, List<String>, void Function(List<String>))
+      onChanged;
 
   @override
   State<SearchInput> createState() => _SearchInputState();
@@ -24,7 +25,9 @@ class SearchInput extends StatefulWidget {
 class _SearchInputState extends State<SearchInput> {
   int itemLength = 0;
 
-  Iterable<Object> optionsBuilder(TextEditingValue textEditingValue) {
+  Iterable<List<String>> optionsBuilder(
+    TextEditingValue textEditingValue,
+  ) {
     final value = textEditingValue.text;
 
     if (value.isEmpty) {
@@ -32,11 +35,11 @@ class _SearchInputState extends State<SearchInput> {
         itemLength = 0;
       });
 
-      return const Iterable<String>.empty();
+      return const Iterable.empty();
     }
 
     final filteredOptions = widget.items.where(
-      (String option) => option.toLowerCase().contains(
+      (option) => option[1].toLowerCase().contains(
             value.toLowerCase(),
           ),
     );
@@ -74,8 +77,11 @@ class _SearchInputState extends State<SearchInput> {
               focusNode: focusNode,
               autovalidateMode: AutovalidateMode.onUserInteraction,
               controller: controller,
-              validator: (value) =>
-                  validateRequiredInput(value, 'the', 'student name'),
+              validator: (value) => validateRequiredInput(
+                value,
+                'the',
+                'student name',
+              ),
             );
           },
           optionsViewBuilder: (context, onSelected, options) {
@@ -99,12 +105,14 @@ class _SearchInputState extends State<SearchInput> {
                       shrinkWrap: true,
                       itemCount: options.length,
                       itemBuilder: (BuildContext context, int index) {
-                        final String option =
-                            options.elementAt(index).toString();
+                        final List<String> option = options.elementAt(index);
 
                         return InkWell(
-                          onTap: () =>
-                              widget.onChanged(context, option, onSelected),
+                          onTap: () => widget.onChanged(
+                            context,
+                            option,
+                            onSelected,
+                          ),
                           child: Builder(
                             builder: (BuildContext context) {
                               final highlight =
@@ -118,7 +126,8 @@ class _SearchInputState extends State<SearchInput> {
                                 padding: const EdgeInsets.all(16),
                                 child: Text(
                                   RawAutocomplete.defaultStringForOption(
-                                      option),
+                                    option[1],
+                                  ),
                                 ),
                               );
                             },
