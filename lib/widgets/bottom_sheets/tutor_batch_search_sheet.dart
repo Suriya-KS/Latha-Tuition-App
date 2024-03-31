@@ -1,16 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:latha_tuition_app/utilities/constants.dart';
-import 'package:latha_tuition_app/utilities/dummy_data.dart';
 import 'package:latha_tuition_app/utilities/form_validation_functions.dart';
+import 'package:latha_tuition_app/providers/tutor_search_provider.dart';
 import 'package:latha_tuition_app/screens/tutor/tutor_batch_payment_history.dart';
 import 'package:latha_tuition_app/widgets/texts/title_text.dart';
 import 'package:latha_tuition_app/widgets/form_inputs/dropdown_input.dart';
 
-class TutorBatchSearchSheet extends StatelessWidget {
+class TutorBatchSearchSheet extends ConsumerWidget {
   const TutorBatchSearchSheet({super.key});
 
-  void changeBatchHandler(BuildContext context, String? batchName) {
+  void changeBatchHandler(
+    BuildContext context,
+    WidgetRef ref, {
+    String? batchName,
+  }) {
     if (batchName == null) return;
 
     Navigator.pop(context);
@@ -18,14 +23,17 @@ class TutorBatchSearchSheet extends StatelessWidget {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) =>
-            TutorBatchPaymentHistoryScreen(batchName: batchName),
+        builder: (context) => TutorBatchPaymentHistoryScreen(
+          batchName: batchName,
+        ),
       ),
     );
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final tutorSearchData = ref.watch(tutorSearchProvider);
+
     return Column(
       children: [
         const TitleText(title: 'Select Batch'),
@@ -35,8 +43,12 @@ class TutorBatchSearchSheet extends StatelessWidget {
             DropdownInput(
               labelText: 'Batch Name',
               prefixIcon: Icons.groups_outlined,
-              items: dummyBatchNames,
-              onChanged: (value) => changeBatchHandler(context, value),
+              items: tutorSearchData[TutorSearch.batchNames],
+              onChanged: (value) => changeBatchHandler(
+                context,
+                ref,
+                batchName: value,
+              ),
               validator: (value) =>
                   validateRequiredInput(value, 'a', 'batch name'),
             ),

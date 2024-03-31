@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:latha_tuition_app/utilities/constants.dart';
 import 'package:latha_tuition_app/utilities/form_validation_functions.dart';
-import 'package:latha_tuition_app/providers/student_search_provider.dart';
+import 'package:latha_tuition_app/providers/tutor_search_provider.dart';
 import 'package:latha_tuition_app/screens/tutor/tutor_student_information.dart';
 import 'package:latha_tuition_app/widgets/texts/title_text.dart';
 import 'package:latha_tuition_app/widgets/form_inputs/dropdown_input.dart';
@@ -37,7 +37,7 @@ class _TutorStudentSearchSheetState
     if (batchName == null) return;
 
     final studentsDetails =
-        ref.read(studentSearchProvider)[StudentSearch.studentsDetails];
+        ref.read(tutorSearchProvider)[TutorSearch.studentsDetails];
 
     final filteredStudentsDetails = studentsDetails
         .where((studentDetails) => studentDetails['batch'] == batchName)
@@ -57,7 +57,7 @@ class _TutorStudentSearchSheetState
   ) {
     onSelected(option);
 
-    ref.read(studentSearchProvider.notifier).setSelectedStudentID(option[0]);
+    ref.read(tutorSearchProvider.notifier).setSelectedStudentID(option[0]);
 
     Navigator.pop(context);
 
@@ -75,14 +75,14 @@ class _TutorStudentSearchSheetState
     super.initState();
 
     final studentsDetails =
-        ref.read(studentSearchProvider)[StudentSearch.studentsDetails];
+        ref.read(tutorSearchProvider)[TutorSearch.studentsDetails];
 
     studentIDsAndNamesList = getStudentIDsAndNamesList(studentsDetails);
   }
 
   @override
   Widget build(BuildContext context) {
-    final studentSearchData = ref.watch(studentSearchProvider);
+    final tutorSearchData = ref.watch(tutorSearchProvider);
 
     return Column(
       children: [
@@ -93,7 +93,7 @@ class _TutorStudentSearchSheetState
             DropdownInput(
               labelText: 'Batch Name',
               prefixIcon: Icons.groups_outlined,
-              items: studentSearchData[StudentSearch.batchNames],
+              items: tutorSearchData[TutorSearch.batchNames],
               onChanged: batchChangeHandler,
               validator: (value) => validateRequiredInput(
                 value,

@@ -7,7 +7,7 @@ import 'package:latha_tuition_app/utilities/helper_functions.dart';
 import 'package:latha_tuition_app/utilities/snack_bar.dart';
 import 'package:latha_tuition_app/utilities/modal_bottom_sheet.dart';
 import 'package:latha_tuition_app/providers/loading_provider.dart';
-import 'package:latha_tuition_app/providers/student_search_provider.dart';
+import 'package:latha_tuition_app/providers/tutor_search_provider.dart';
 import 'package:latha_tuition_app/widgets/cards/box_card.dart';
 import 'package:latha_tuition_app/widgets/bottom_sheets/tutor_student_search_sheet.dart';
 import 'package:latha_tuition_app/widgets/bottom_sheets/tutor_batch_search_sheet.dart';
@@ -79,7 +79,7 @@ class _TutorStudentAdministrationActionListState
           .toList();
 
       ref
-          .read(studentSearchProvider.notifier)
+          .read(tutorSearchProvider.notifier)
           .setFullStudentDetails(fullStudentDetails);
 
       final studentsDetails = studentsQuerySnapshot.docs
@@ -119,10 +119,10 @@ class _TutorStudentAdministrationActionListState
 
       final studentsDetails = await loadStudentsDetails(context);
 
-      final studentSearchMethods = ref.read(studentSearchProvider.notifier);
+      final tutorSearchMethods = ref.read(tutorSearchProvider.notifier);
 
-      studentSearchMethods.setBatchNames(batchNames);
-      studentSearchMethods.setStudentsDetails(studentsDetails);
+      tutorSearchMethods.setBatchNames(batchNames);
+      tutorSearchMethods.setStudentsDetails(studentsDetails);
       loadingMethods.setLoadingStatus(false);
 
       if (!context.mounted) return;
@@ -130,6 +130,38 @@ class _TutorStudentAdministrationActionListState
       modalBottomSheet(
         context,
         const TutorStudentSearchSheet(),
+      );
+    } catch (error) {
+      loadingMethods.setLoadingStatus(false);
+
+      if (!context.mounted) return;
+
+      snackBar(
+        context,
+        content: const Text(defaultErrorMessage),
+      );
+    }
+  }
+
+  void showTutorBatchSearchSheet(BuildContext context) async {
+    final loadingMethods = ref.read(loadingProvider.notifier);
+
+    loadingMethods.setLoadingStatus(true);
+
+    try {
+      final batchNames = await loadBatches(context);
+
+      if (!context.mounted) return;
+
+      ref.read(tutorSearchProvider.notifier).setBatchNames(batchNames);
+
+      loadingMethods.setLoadingStatus(false);
+
+      if (!context.mounted) return;
+
+      modalBottomSheet(
+        context,
+        const TutorBatchSearchSheet(),
       );
     } catch (error) {
       loadingMethods.setLoadingStatus(false);
@@ -165,10 +197,7 @@ class _TutorStudentAdministrationActionListState
                   child: BoxCard(
                     title: 'Batch wise Payments',
                     image: groupPaymentImage,
-                    onTap: () => modalBottomSheet(
-                      context,
-                      const TutorBatchSearchSheet(),
-                    ),
+                    onTap: () => showTutorBatchSearchSheet(context),
                   ),
                 ),
               ],

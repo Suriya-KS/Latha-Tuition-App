@@ -7,7 +7,7 @@ import 'package:latha_tuition_app/utilities/helper_functions.dart';
 import 'package:latha_tuition_app/utilities/modal_bottom_sheet.dart';
 import 'package:latha_tuition_app/utilities/snack_bar.dart';
 import 'package:latha_tuition_app/providers/loading_provider.dart';
-import 'package:latha_tuition_app/providers/student_search_provider.dart';
+import 'package:latha_tuition_app/providers/tutor_search_provider.dart';
 import 'package:latha_tuition_app/widgets/buttons/primary_button.dart';
 import 'package:latha_tuition_app/widgets/buttons/floating_circular_action_button.dart';
 import 'package:latha_tuition_app/widgets/cards/info_card.dart';
@@ -32,7 +32,7 @@ class _TutorStudentFeedbacksViewState
     final loadingMethods = ref.read(loadingProvider.notifier);
 
     final studentID =
-        ref.read(studentSearchProvider)[StudentSearch.selectedStudentID];
+        ref.read(tutorSearchProvider)[TutorSearch.selectedStudentID];
 
     try {
       final studentFeedbacksQuerySnapshot = await feedbacksCollectionReference
@@ -75,7 +75,7 @@ class _TutorStudentFeedbacksViewState
     loadingMethods.setLoadingStatus(true);
 
     final studentID =
-        ref.read(studentSearchProvider)[StudentSearch.selectedStudentID];
+        ref.read(tutorSearchProvider)[TutorSearch.selectedStudentID];
 
     try {
       if (id == null) {

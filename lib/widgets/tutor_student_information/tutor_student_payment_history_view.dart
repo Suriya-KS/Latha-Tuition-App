@@ -6,7 +6,7 @@ import 'package:latha_tuition_app/utilities/constants.dart';
 import 'package:latha_tuition_app/utilities/helper_functions.dart';
 import 'package:latha_tuition_app/utilities/snack_bar.dart';
 import 'package:latha_tuition_app/providers/loading_provider.dart';
-import 'package:latha_tuition_app/providers/student_search_provider.dart';
+import 'package:latha_tuition_app/providers/tutor_search_provider.dart';
 import 'package:latha_tuition_app/widgets/cards/text_avatar_action_card.dart';
 import 'package:latha_tuition_app/widgets/form_inputs/year_input.dart';
 
@@ -30,11 +30,11 @@ class _TutorStudentPaymentHistoryViewState
     final loadingMethods = ref.read(loadingProvider.notifier);
 
     final studentID =
-        ref.read(studentSearchProvider)[StudentSearch.selectedStudentID];
+        ref.read(tutorSearchProvider)[TutorSearch.selectedStudentID];
 
     try {
-      final currentYearStart = DateTime(currentYear, 1, 1);
-      final nextYearStart = DateTime(currentYear + 1, 1, 1);
+      final currentYearStart = DateTime(currentYear);
+      final nextYearStart = DateTime(currentYear + 1);
 
       final studentPaymentHistoryQuerySnapshot =
           await paymentsCollectionReference

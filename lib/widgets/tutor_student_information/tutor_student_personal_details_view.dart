@@ -7,7 +7,7 @@ import 'package:latha_tuition_app/utilities/helper_functions.dart';
 import 'package:latha_tuition_app/utilities/form_validation_functions.dart';
 import 'package:latha_tuition_app/utilities/snack_bar.dart';
 import 'package:latha_tuition_app/providers/loading_provider.dart';
-import 'package:latha_tuition_app/providers/student_search_provider.dart';
+import 'package:latha_tuition_app/providers/tutor_search_provider.dart';
 import 'package:latha_tuition_app/widgets/buttons/primary_button.dart';
 import 'package:latha_tuition_app/widgets/texts/text_with_icon.dart';
 import 'package:latha_tuition_app/widgets/cards/info_card.dart';
@@ -59,7 +59,7 @@ class _TutorStudentPersonalDetailsViewState
     if (!formKey.currentState!.validate()) return;
 
     final studentID =
-        ref.read(studentSearchProvider)[StudentSearch.selectedStudentID];
+        ref.read(tutorSearchProvider)[TutorSearch.selectedStudentID];
     final loadingMethods = ref.read(loadingProvider.notifier);
 
     loadingMethods.setLoadingStatus(true);
@@ -96,7 +96,7 @@ class _TutorStudentPersonalDetailsViewState
     super.initState();
 
     studentDetails = getStudentDetails(ref);
-    batchNames = ref.read(studentSearchProvider)[StudentSearch.batchNames];
+    batchNames = ref.read(tutorSearchProvider)[TutorSearch.batchNames];
 
     selectedBatch = studentDetails['batch'];
     feesAmountController = TextEditingController();
