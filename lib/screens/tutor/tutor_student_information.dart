@@ -62,6 +62,8 @@ class _TutorStudentInformationScreenState
       ref
           .read(testMarksProvider.notifier)
           .setInitialState(dummyStudentTestMarks);
+    } else if (selectedIndex == 3) {
+      ref.read(loadingProvider.notifier).setLoadingStatus(true);
     }
   }
 
