@@ -71,6 +71,17 @@ class _TutorStudentAdministrationActionListState
       final studentsQuerySnapshot =
           await firestore.collection('students').orderBy('name').get();
 
+      final fullStudentDetails = studentsQuerySnapshot.docs
+          .map((studentsQueryDocumentSnapshot) => {
+                'id': studentsQueryDocumentSnapshot.id,
+                ...studentsQueryDocumentSnapshot.data(),
+              })
+          .toList();
+
+      ref
+          .read(studentSearchProvider.notifier)
+          .setFullStudentDetails(fullStudentDetails);
+
       final studentsDetails = studentsQuerySnapshot.docs
           .map((studentsQueryDocumentSnapshot) => {
                 'id': studentsQueryDocumentSnapshot.id,

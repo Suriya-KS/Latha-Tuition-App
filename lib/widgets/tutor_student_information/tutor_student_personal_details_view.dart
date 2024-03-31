@@ -1,20 +1,121 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:latha_tuition_app/utilities/constants.dart';
-import 'package:latha_tuition_app/utilities/dummy_data.dart';
+import 'package:latha_tuition_app/utilities/helper_functions.dart';
+import 'package:latha_tuition_app/utilities/form_validation_functions.dart';
+import 'package:latha_tuition_app/utilities/snack_bar.dart';
+import 'package:latha_tuition_app/providers/loading_provider.dart';
+import 'package:latha_tuition_app/providers/student_search_provider.dart';
+import 'package:latha_tuition_app/widgets/buttons/primary_button.dart';
 import 'package:latha_tuition_app/widgets/texts/text_with_icon.dart';
 import 'package:latha_tuition_app/widgets/cards/info_card.dart';
+import 'package:latha_tuition_app/widgets/form_inputs/dropdown_input.dart';
+import 'package:latha_tuition_app/widgets/form_inputs/text_input.dart';
 
-class TutorStudentPersonalDetailsView extends StatelessWidget {
+class TutorStudentPersonalDetailsView extends ConsumerStatefulWidget {
   const TutorStudentPersonalDetailsView({super.key});
+
+  @override
+  ConsumerState<TutorStudentPersonalDetailsView> createState() =>
+      _TutorStudentPersonalDetailsViewState();
+}
+
+class _TutorStudentPersonalDetailsViewState
+    extends ConsumerState<TutorStudentPersonalDetailsView> {
+  final firestore = FirebaseFirestore.instance;
+  final formKey = GlobalKey<FormState>();
+
+  bool hasChanged = false;
+  List<String> batchNames = [];
+  Map<String, dynamic> studentDetails = {
+    'name': '',
+    'emailAddress': '',
+    'phoneNumber': '',
+    'gender': '',
+    'batch': '',
+    'feesAmount': '',
+    'schoolName': '',
+    'academicYear': '',
+    'educationBoard': '',
+    'standard': '',
+    'addressLine1': '',
+    'addressLine2': '',
+    'pincode': '',
+    'city': '',
+    'state': '',
+    'country': '',
+    'parentName': '',
+    'parentalRole': '',
+    'parentPhoneNumber': '',
+    'parentEmailAddress': '',
+  };
+
+  late String? selectedBatch;
+  late TextEditingController feesAmountController;
+
+  void updateBatchAndFeesAmount(BuildContext context) async {
+    if (!formKey.currentState!.validate()) return;
+
+    final studentID =
+        ref.read(studentSearchProvider)[StudentSearch.selectedStudentID];
+    final loadingMethods = ref.read(loadingProvider.notifier);
+
+    loadingMethods.setLoadingStatus(true);
+
+    try {
+      await firestore.collection('students').doc(studentID).update({
+        'batch': selectedBatch,
+        'feesAmount': num.parse(feesAmountController.text),
+      });
+
+      setState(() {
+        hasChanged = false;
+      });
+
+      loadingMethods.setLoadingStatus(false);
+    } catch (error) {
+      setState(() {
+        hasChanged = false;
+      });
+
+      loadingMethods.setLoadingStatus(false);
+
+      if (!context.mounted) return;
+
+      snackBar(
+        context,
+        content: const Text(defaultErrorMessage),
+      );
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    studentDetails = getStudentDetails(ref);
+    batchNames = ref.read(studentSearchProvider)[StudentSearch.batchNames];
+
+    selectedBatch = studentDetails['batch'];
+    feesAmountController = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    feesAmountController.dispose();
+
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     IconData genderIcon;
 
-    if (dummyStudentDetails['gender'] == 'Male') {
+    if (studentDetails['gender'] == 'Male') {
       genderIcon = Icons.male_outlined;
-    } else if (dummyStudentDetails['gender'] == 'Female') {
+    } else if (studentDetails['gender'] == 'Female') {
       genderIcon = Icons.female_outlined;
     } else {
       genderIcon = Icons.transgender_outlined;
@@ -31,17 +132,17 @@ class TutorStudentPersonalDetailsView extends StatelessWidget {
                 children: [
                   TextWithIcon(
                     icon: Icons.phone_outlined,
-                    text: dummyStudentDetails['phoneNumber'],
+                    text: studentDetails['phoneNumber'],
                   ),
                   const SizedBox(height: 5),
                   TextWithIcon(
                     icon: Icons.mail_outline,
-                    text: dummyStudentDetails['emailAddress'],
+                    text: studentDetails['emailAddress'],
                   ),
                   const SizedBox(height: 5),
                   TextWithIcon(
                     icon: genderIcon,
-                    text: dummyStudentDetails['gender'],
+                    text: studentDetails['gender'],
                   ),
                 ],
               ),
@@ -51,22 +152,22 @@ class TutorStudentPersonalDetailsView extends StatelessWidget {
                 children: [
                   TextWithIcon(
                     icon: Icons.apartment_outlined,
-                    text: dummyStudentDetails['schoolName'],
+                    text: studentDetails['schoolName'],
                   ),
                   const SizedBox(height: 5),
                   TextWithIcon(
                     icon: Icons.calendar_month_outlined,
-                    text: dummyStudentDetails['academicYear'],
+                    text: studentDetails['academicYear'],
                   ),
                   const SizedBox(height: 5),
                   TextWithIcon(
                     icon: Icons.menu_book_outlined,
-                    text: dummyStudentDetails['educationBoard'],
+                    text: studentDetails['educationBoard'],
                   ),
                   const SizedBox(height: 5),
                   TextWithIcon(
                     icon: Icons.class_outlined,
-                    text: dummyStudentDetails['standard'],
+                    text: studentDetails['standard'],
                   ),
                 ],
               ),
@@ -75,7 +176,7 @@ class TutorStudentPersonalDetailsView extends StatelessWidget {
                 icon: Icons.location_on_outlined,
                 children: [
                   Text(
-                    '${dummyStudentDetails['addressLine1']}, ${dummyStudentDetails['addressLine2']}, \n${dummyStudentDetails['city']} - ${dummyStudentDetails['pincode']}, \n${dummyStudentDetails['state']}, ${dummyStudentDetails['country']}.',
+                    '${studentDetails['addressLine1']}, ${studentDetails['addressLine2']}, \n${studentDetails['city']} - ${studentDetails['pincode']}, \n${studentDetails['state']}, ${studentDetails['country']}.',
                   ),
                 ],
               ),
@@ -85,24 +186,62 @@ class TutorStudentPersonalDetailsView extends StatelessWidget {
                 children: [
                   TextWithIcon(
                     icon: Icons.person_outline,
-                    text: dummyStudentDetails['parentsName'],
+                    text: studentDetails['parentName'],
                   ),
                   const SizedBox(height: 5),
                   TextWithIcon(
                     icon: Icons.group_outlined,
-                    text: dummyStudentDetails['parentalRole'],
+                    text: studentDetails['parentalRole'],
                   ),
                   const SizedBox(height: 5),
                   TextWithIcon(
                     icon: Icons.phone_outlined,
-                    text: dummyStudentDetails['parentsPhoneNumber'],
+                    text: studentDetails['parentPhoneNumber'],
                   ),
                   const SizedBox(height: 5),
                   TextWithIcon(
                     icon: Icons.mail_outline,
-                    text: dummyStudentDetails['parentsEmailAddress'],
+                    text: studentDetails['parentEmailAddress'],
                   ),
                 ],
+              ),
+              const SizedBox(height: 20),
+              Form(
+                key: formKey,
+                child: Column(
+                  children: [
+                    DropdownInput(
+                      labelText: 'Batch',
+                      prefixIcon: Icons.groups_outlined,
+                      items: batchNames,
+                      initialValue: studentDetails['batch'],
+                      onChanged: (value) => setState(() {
+                        hasChanged = true;
+                        selectedBatch = value;
+                      }),
+                      validator: validateDropdownValue,
+                    ),
+                    const SizedBox(height: 10),
+                    TextInput(
+                      labelText: 'Fees Amount',
+                      prefixIcon: Icons.currency_rupee,
+                      inputType: TextInputType.number,
+                      initialValue: studentDetails['feesAmount'].toString(),
+                      onChanged: (value) => setState(() {
+                        hasChanged = true;
+                      }),
+                      controller: feesAmountController,
+                      validator: validateFeesAmount,
+                    ),
+                    if (hasChanged) const SizedBox(height: 50),
+                    if (hasChanged)
+                      PrimaryButton(
+                        title: 'Update',
+                        onPressed: () => updateBatchAndFeesAmount(context),
+                      ),
+                    const SizedBox(height: screenPadding),
+                  ],
+                ),
               ),
             ],
           ),

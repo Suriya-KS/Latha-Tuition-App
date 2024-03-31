@@ -7,6 +7,7 @@ import 'package:latha_tuition_app/utilities/constants.dart';
 import 'package:latha_tuition_app/utilities/snack_bar.dart';
 import 'package:latha_tuition_app/providers/loading_provider.dart';
 import 'package:latha_tuition_app/providers/attendance_provider.dart';
+import 'package:latha_tuition_app/providers/student_search_provider.dart';
 import 'package:latha_tuition_app/screens/authentication/login.dart';
 import 'package:latha_tuition_app/screens/student/student_registration.dart';
 import 'package:latha_tuition_app/screens/tutor/tutor_new_admissions.dart';
@@ -225,4 +226,20 @@ void attendanceStatusToggleHandler(
   if (toggleIndex == 1) {
     attendanceMethods.trackAttendance(listIndex, 'absent');
   }
+}
+
+Map<String, dynamic> getStudentDetails(WidgetRef ref) {
+  final studentSearchData = ref.read(studentSearchProvider);
+
+  final studentID = studentSearchData[StudentSearch.selectedStudentID];
+  final List<Map<String, dynamic>> studentsDetails =
+      studentSearchData[StudentSearch.fullStudentDetails];
+
+  final studentDetails = studentsDetails
+      .where(
+        (studentDetails) => studentDetails['id'] == studentID,
+      )
+      .first;
+
+  return studentDetails;
 }

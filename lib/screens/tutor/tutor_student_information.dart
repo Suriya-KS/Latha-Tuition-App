@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:latha_tuition_app/utilities/constants.dart';
 import 'package:latha_tuition_app/utilities/dummy_data.dart';
+import 'package:latha_tuition_app/utilities/helper_functions.dart';
 import 'package:latha_tuition_app/providers/loading_provider.dart';
 import 'package:latha_tuition_app/providers/attendance_provider.dart';
 import 'package:latha_tuition_app/providers/test_marks_provider.dart';
@@ -44,6 +45,8 @@ class _TutorStudentInformationScreenState
 
   int index = 0;
 
+  late String studentName;
+
   void studentInformationViewToggleHandler(int selectedIndex) {
     if (index == selectedIndex) return;
 
@@ -63,6 +66,13 @@ class _TutorStudentInformationScreenState
   }
 
   @override
+  void initState() {
+    super.initState();
+
+    studentName = getStudentDetails(ref)['name'];
+  }
+
+  @override
   Widget build(BuildContext context) {
     final isLoading = ref.watch(loadingProvider);
 
@@ -74,10 +84,10 @@ class _TutorStudentInformationScreenState
           child: Column(
             children: [
               const SizedBox(height: 10),
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: screenPadding),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: screenPadding),
                 child: SubtitleText(
-                  subtitle: 'Student Name',
+                  subtitle: studentName,
                   alignment: Alignment.center,
                 ),
               ),

@@ -2,12 +2,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 enum StudentSearch {
   batchNames,
+  fullStudentDetails,
   studentsDetails,
   selectedStudentID,
 }
 
 final initialState = {
   StudentSearch.batchNames: [],
+  StudentSearch.fullStudentDetails: [],
   StudentSearch.studentsDetails: [],
   StudentSearch.selectedStudentID: null,
 };
@@ -19,6 +21,13 @@ class StudentSearchNotifier extends StateNotifier<Map<StudentSearch, dynamic>> {
     state = {
       ...state,
       StudentSearch.batchNames: batchNames,
+    };
+  }
+
+  void setFullStudentDetails(List<Map<String, dynamic>> fullStudentDetails) {
+    state = {
+      ...state,
+      StudentSearch.fullStudentDetails: fullStudentDetails,
     };
   }
 

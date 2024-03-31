@@ -11,6 +11,7 @@ class TextInput extends StatefulWidget {
     this.initialValue,
     this.obscureText = false,
     this.readOnly = false,
+    this.onChanged,
     this.controller,
     this.validator,
     super.key,
@@ -25,6 +26,7 @@ class TextInput extends StatefulWidget {
   final String? initialValue;
   final bool obscureText;
   final bool readOnly;
+  final void Function(String)? onChanged;
   final TextEditingController? controller;
   final String? Function(String?)? validator;
 
@@ -64,6 +66,7 @@ class _TextInputState extends State<TextInput> {
       maxLines: widget.inputType == TextInputType.multiline ? 5 : 1,
       autovalidateMode: AutovalidateMode.onUserInteraction,
       readOnly: widget.readOnly,
+      onChanged: widget.onChanged,
       controller: widget.controller,
       validator: widget.validator,
     );
