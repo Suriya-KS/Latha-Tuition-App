@@ -50,10 +50,6 @@ class _TutorStudentInformationScreenState
   void studentInformationViewToggleHandler(int selectedIndex) {
     if (index == selectedIndex) return;
 
-    setState(() {
-      index = selectedIndex;
-    });
-
     if (selectedIndex == 1) {
       ref
           .read(attendanceProvider.notifier)
@@ -62,9 +58,13 @@ class _TutorStudentInformationScreenState
       ref
           .read(testMarksProvider.notifier)
           .setInitialState(dummyStudentTestMarks);
-    } else if (selectedIndex == 3) {
+    } else if (selectedIndex == 3 || selectedIndex == 4) {
       ref.read(loadingProvider.notifier).setLoadingStatus(true);
     }
+
+    setState(() {
+      index = selectedIndex;
+    });
   }
 
   @override

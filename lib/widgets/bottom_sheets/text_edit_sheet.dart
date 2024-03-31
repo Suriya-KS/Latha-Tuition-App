@@ -12,6 +12,7 @@ class TextEditSheet extends StatefulWidget {
     required this.fieldName,
     required this.buttonText,
     required this.onPressed,
+    this.secondaryButton,
     this.inputType,
     this.initialValue,
     super.key,
@@ -21,6 +22,7 @@ class TextEditSheet extends StatefulWidget {
   final String fieldName;
   final String buttonText;
   final void Function(String) onPressed;
+  final Widget? secondaryButton;
   final TextInputType? inputType;
   final String? initialValue;
 
@@ -79,10 +81,21 @@ class _TextEditSheetState extends State<TextEditSheet> {
                 ),
               ),
               const SizedBox(height: 50),
-              PrimaryButton(
-                title: widget.buttonText,
-                onPressed: submitHandler,
-              ),
+              widget.secondaryButton == null
+                  ? PrimaryButton(
+                      title: widget.buttonText,
+                      onPressed: submitHandler,
+                    )
+                  : Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        widget.secondaryButton!,
+                        PrimaryButton(
+                          title: widget.buttonText,
+                          onPressed: submitHandler,
+                        ),
+                      ],
+                    ),
               const SizedBox(height: 20),
             ],
           ),
