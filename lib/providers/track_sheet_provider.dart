@@ -8,6 +8,9 @@ enum TrackSheet {
   startTime,
   endTime,
   activeToggle,
+  batchNames,
+  selectedAttendanceID,
+  isBatchNameEditable,
 }
 
 enum TrackSheetToggles {
@@ -22,10 +25,20 @@ final initialState = {
   TrackSheet.startTime: null,
   TrackSheet.endTime: null,
   TrackSheet.activeToggle: TrackSheetToggles.attendance,
+  TrackSheet.batchNames: <String>[],
+  TrackSheet.selectedAttendanceID: null,
+  TrackSheet.isBatchNameEditable: true,
 };
 
 class TrackSheetNotifier extends StateNotifier<Map<TrackSheet, dynamic>> {
   TrackSheetNotifier() : super(initialState);
+
+  void loadBatches(List<String> batchNames) {
+    state = {
+      ...state,
+      TrackSheet.batchNames: batchNames,
+    };
+  }
 
   void setBatchName(String batchName) {
     state = {
@@ -72,6 +85,20 @@ class TrackSheetNotifier extends StateNotifier<Map<TrackSheet, dynamic>> {
         TrackSheet.activeToggle: TrackSheetToggles.tests,
       };
     }
+  }
+
+  void setSelectedAttendanceID(String? selectedAttendanceID) {
+    state = {
+      ...state,
+      TrackSheet.selectedAttendanceID: selectedAttendanceID,
+    };
+  }
+
+  void setIsBatchNameEditable(bool isBatchNameEditable) {
+    state = {
+      ...state,
+      TrackSheet.isBatchNameEditable: isBatchNameEditable,
+    };
   }
 }
 

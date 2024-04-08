@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
 import 'package:latha_tuition_app/utilities/constants.dart';
-import 'package:latha_tuition_app/utilities/dummy_data.dart';
 import 'package:latha_tuition_app/utilities/helper_functions.dart';
 import 'package:latha_tuition_app/utilities/form_validation_functions.dart';
+import 'package:latha_tuition_app/utilities/snack_bar.dart';
+import 'package:latha_tuition_app/providers/loading_provider.dart';
 import 'package:latha_tuition_app/providers/calendar_view_provider.dart';
 import 'package:latha_tuition_app/providers/track_sheet_provider.dart';
-import 'package:latha_tuition_app/providers/attendance_provider.dart';
-import 'package:latha_tuition_app/providers/test_marks_provider.dart';
 import 'package:latha_tuition_app/screens/tutor/tutor_track_attendance.dart';
 import 'package:latha_tuition_app/screens/tutor/tutor_track_test_marks.dart';
 import 'package:latha_tuition_app/widgets/buttons/primary_button.dart';
@@ -23,10 +23,12 @@ import 'package:latha_tuition_app/widgets/form_inputs/time_input.dart';
 class TutorTrackRecordSheet extends ConsumerStatefulWidget {
   const TutorTrackRecordSheet({
     this.screen,
+    this.onUpdate,
     super.key,
   });
 
   final Screen? screen;
+  final void Function()? onUpdate;
 
   @override
   ConsumerState<TutorTrackRecordSheet> createState() =>
@@ -34,6 +36,8 @@ class TutorTrackRecordSheet extends ConsumerStatefulWidget {
 }
 
 class _TutorTrackRecordSheetState extends ConsumerState<TutorTrackRecordSheet> {
+  final attendanceCollectionReference =
+      FirebaseFirestore.instance.collection('attendance');
   final formKey = GlobalKey<FormState>();
 
   late String title;
@@ -63,9 +67,7 @@ class _TutorTrackRecordSheetState extends ConsumerState<TutorTrackRecordSheet> {
     setState(() {
       if (index == 0) {
         title = 'Track Attendance';
-        destinationScreen = const TutorTrackAttendanceScreen(
-          screen: Screen.tutorTrackRecordSheet,
-        );
+        destinationScreen = const TutorTrackAttendanceScreen();
       }
 
       if (index == 1) {
@@ -81,7 +83,7 @@ class _TutorTrackRecordSheetState extends ConsumerState<TutorTrackRecordSheet> {
     ref.read(trackSheetProvider.notifier).setBatchName(value);
   }
 
-  void trackRecordHandler() {
+  void trackRecordHandler() async {
     if (!formKey.currentState!.validate()) return;
 
     String testName = testNameController.text;
@@ -89,32 +91,6 @@ class _TutorTrackRecordSheetState extends ConsumerState<TutorTrackRecordSheet> {
     TimeOfDay startTime = stringToTimeOfDay(startTimeController.text);
     TimeOfDay endTime = stringToTimeOfDay(endTimeController.text);
     DateTime date = DateFormat("MMMM d, yyyy").parse(dateController.text);
-
-    if (widget.screen != Screen.attendance &&
-        widget.screen != Screen.testMarks) {
-      final attendanceMethods = ref.read(attendanceProvider.notifier);
-      final testMarksMethods = ref.read(testMarksProvider.notifier);
-
-      List attendanceList = [];
-      List testMarksList = [];
-
-      for (int i = 0; i < dummyStudentNames.length; i++) {
-        attendanceList.add({
-          'name': dummyStudentNames[i],
-          'attendanceStatus': 'present',
-        });
-      }
-
-      for (int i = 0; i < dummyStudentNames.length; i++) {
-        testMarksList.add({
-          'name': dummyStudentNames[i],
-          'marks': '',
-        });
-      }
-
-      attendanceMethods.setInitialState(attendanceList);
-      testMarksMethods.setInitialState(testMarksList);
-    }
 
     final calendarViewMethods = ref.read(calendarViewProvider.notifier);
     final trackSheetMethods = ref.read(trackSheetProvider.notifier);
@@ -124,11 +100,57 @@ class _TutorTrackRecordSheetState extends ConsumerState<TutorTrackRecordSheet> {
     calendarViewMethods.setSelectedDate(date);
     trackSheetMethods.setTime(startTime, endTime);
 
-    navigateToTrackScreen(
+    if (widget.screen != Screen.attendance &&
+        widget.screen != Screen.testMarks) {
+      trackSheetMethods.setSelectedAttendanceID(null);
+    }
+
+    await navigateToTrackScreen(
       context,
       widget.screen ?? Screen.tutorTrackRecordSheet,
       destinationScreen,
     );
+
+    if (widget.onUpdate != null) widget.onUpdate!();
+  }
+
+  void deleteTrackRecordHandler(BuildContext context) async {
+    final loadingMethods = ref.read(loadingProvider.notifier);
+
+    loadingMethods.setLoadingStatus(true);
+
+    Navigator.pop(context);
+
+    try {
+      if (ref.read(trackSheetProvider)[TrackSheet.isBatchNameEditable]) {
+        Navigator.pop(context);
+
+        loadingMethods.setLoadingStatus(false);
+
+        return;
+      }
+
+      final attendanceID =
+          ref.read(trackSheetProvider)[TrackSheet.selectedAttendanceID];
+
+      await attendanceCollectionReference.doc(attendanceID).delete();
+
+      ref.read(trackSheetProvider.notifier).setSelectedAttendanceID(null);
+      loadingMethods.setLoadingStatus(false);
+
+      if (!context.mounted) return;
+
+      Navigator.pop(context);
+    } catch (error) {
+      loadingMethods.setLoadingStatus(false);
+
+      if (!context.mounted) return;
+
+      snackBar(
+        context,
+        content: const Text(defaultErrorMessage),
+      );
+    }
   }
 
   @override
@@ -146,9 +168,7 @@ class _TutorTrackRecordSheetState extends ConsumerState<TutorTrackRecordSheet> {
     if (trackSheetData[TrackSheet.activeToggle] ==
         TrackSheetToggles.attendance) {
       title = 'Track Attendance';
-      destinationScreen = const TutorTrackAttendanceScreen(
-        screen: Screen.tutorTrackRecordSheet,
-      );
+      destinationScreen = const TutorTrackAttendanceScreen();
       isSelected = [true, false];
     }
 
@@ -156,6 +176,27 @@ class _TutorTrackRecordSheetState extends ConsumerState<TutorTrackRecordSheet> {
       title = 'Track Test Marks';
       destinationScreen = const TutorTrackTestMarksScreen();
       isSelected = [false, true];
+    }
+
+    if (widget.screen == Screen.attendance) {
+      title = 'Attendance Details';
+      startTimeController.text = formatTime(
+        trackSheetData[TrackSheet.startTime],
+      );
+      endTimeController.text = formatTime(trackSheetData[TrackSheet.endTime]);
+    }
+
+    if (widget.screen == Screen.testMarks) {
+      title = 'Test Marks Details';
+      testNameController.text = trackSheetData[TrackSheet.testName];
+      totalMarksController.text = formatMarks(
+        trackSheetData[TrackSheet.totalMarks],
+      );
+      startTimeController.text =
+          formatTime(trackSheetData[TrackSheet.startTime]);
+      endTimeController.text = formatTime(
+        trackSheetData[TrackSheet.endTime],
+      );
     }
   }
 
@@ -174,36 +215,18 @@ class _TutorTrackRecordSheetState extends ConsumerState<TutorTrackRecordSheet> {
   Widget build(BuildContext context) {
     final calendarViewData = ref.watch(calendarViewProvider);
     final trackSheetData = ref.watch(trackSheetProvider);
-
-    if (widget.screen == Screen.attendance) {
-      title = 'Attendance Details';
-      startTimeController.text =
-          formatTime(trackSheetData[TrackSheet.startTime]);
-      endTimeController.text = formatTime(trackSheetData[TrackSheet.endTime]);
-    }
-
-    if (widget.screen == Screen.testMarks) {
-      title = 'Test Marks Details';
-      testNameController.text = trackSheetData[TrackSheet.testName];
-      totalMarksController.text =
-          formatMarks(trackSheetData[TrackSheet.totalMarks]);
-      startTimeController.text =
-          formatTime(trackSheetData[TrackSheet.startTime]);
-      endTimeController.text = formatTime(trackSheetData[TrackSheet.endTime]);
-    }
+    final isEditMode =
+        widget.screen == Screen.attendance || widget.screen == Screen.testMarks;
 
     return Column(
       children: [
         TitleText(title: title),
-        if (widget.screen != Screen.attendance &&
-            widget.screen != Screen.testMarks)
-          const SizedBox(height: 50),
+        if (!isEditMode) const SizedBox(height: 50),
         Form(
           key: formKey,
           child: Column(
             children: [
-              if (widget.screen != Screen.attendance &&
-                  widget.screen != Screen.testMarks)
+              if (!isEditMode)
                 ToggleInput(
                   isSelected: isSelected,
                   onToggle: toggleTrackRecordHandler,
@@ -223,19 +246,23 @@ class _TutorTrackRecordSheetState extends ConsumerState<TutorTrackRecordSheet> {
                   inputType: TextInputType.text,
                   initialValue: testNameController.text,
                   controller: testNameController,
-                  validator: (value) =>
-                      validateRequiredInput(value, 'the', 'test name'),
+                  validator: (value) => validateRequiredInput(
+                    value,
+                    'the',
+                    'test name',
+                  ),
                 ),
               const SizedBox(height: 10),
               if (trackSheetData[TrackSheet.activeToggle] ==
-                  TrackSheetToggles.attendance)
+                      TrackSheetToggles.attendance &&
+                  trackSheetData[TrackSheet.isBatchNameEditable])
                 DropdownInput(
                   initialValue: widget.screen == Screen.attendance
                       ? trackSheetData[TrackSheet.batchName]
                       : null,
                   labelText: 'Batch',
                   prefixIcon: Icons.groups_outlined,
-                  items: dummyBatchNames,
+                  items: trackSheetData[TrackSheet.batchNames],
                   onChanged: changeBatchHandler,
                   validator: validateDropdownValue,
                 ),
@@ -250,8 +277,9 @@ class _TutorTrackRecordSheetState extends ConsumerState<TutorTrackRecordSheet> {
                         inputType: TextInputType.number,
                         initialValue: totalMarksController.text,
                         controller: totalMarksController,
-                        validator: (value) =>
-                            validateTotalMarks(totalMarksController.text),
+                        validator: (value) => validateTotalMarks(
+                          totalMarksController.text,
+                        ),
                       ),
                     ),
                     const SizedBox(width: 30),
@@ -262,7 +290,7 @@ class _TutorTrackRecordSheetState extends ConsumerState<TutorTrackRecordSheet> {
                             : null,
                         labelText: 'Batch',
                         prefixIcon: Icons.groups_outlined,
-                        items: dummyBatchNames,
+                        items: trackSheetData[TrackSheet.batchNames],
                         onChanged: changeBatchHandler,
                         validator: validateDropdownValue,
                       ),
@@ -289,8 +317,11 @@ class _TutorTrackRecordSheetState extends ConsumerState<TutorTrackRecordSheet> {
                       prefixIcon: Icons.alarm_outlined,
                       initialTime: trackSheetData[TrackSheet.startTime],
                       controller: startTimeController,
-                      validator: (value) =>
-                          validateRequiredInput(value, 'a', 'start time'),
+                      validator: (value) => validateRequiredInput(
+                        value,
+                        'a',
+                        'start time',
+                      ),
                     ),
                   ),
                   const SizedBox(width: 30),
@@ -300,19 +331,32 @@ class _TutorTrackRecordSheetState extends ConsumerState<TutorTrackRecordSheet> {
                       prefixIcon: Icons.alarm_outlined,
                       initialTime: trackSheetData[TrackSheet.endTime],
                       controller: endTimeController,
-                      validator: (value) =>
-                          validateTimeRange(startTimeController.text, value),
+                      validator: (value) => validateRequiredInput(
+                        value,
+                        'an',
+                        'end time',
+                      ),
                     ),
                   ),
                 ],
               ),
               const SizedBox(height: 50),
-              PrimaryButton(
-                title: widget.screen == Screen.attendance ||
-                        widget.screen == Screen.testMarks
-                    ? 'Update'
-                    : 'Track',
-                onPressed: trackRecordHandler,
+              Row(
+                mainAxisAlignment: isEditMode
+                    ? MainAxisAlignment.spaceBetween
+                    : MainAxisAlignment.center,
+                children: [
+                  if (isEditMode)
+                    PrimaryButton(
+                      title: 'Delete',
+                      isOutlined: true,
+                      onPressed: () => deleteTrackRecordHandler(context),
+                    ),
+                  PrimaryButton(
+                    title: isEditMode ? 'Update' : 'Track',
+                    onPressed: trackRecordHandler,
+                  ),
+                ],
               ),
             ],
           ),

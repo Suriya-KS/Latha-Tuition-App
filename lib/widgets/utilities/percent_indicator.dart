@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 
-class StudentTestMarksText extends StatelessWidget {
-  const StudentTestMarksText({
-    required this.marks,
-    required this.totalMarks,
+class PercentIndicator extends StatelessWidget {
+  const PercentIndicator({
+    required this.currentValue,
+    required this.totalValue,
     super.key,
   });
 
-  final num marks;
-  final num totalMarks;
+  final num currentValue;
+  final num totalValue;
 
   @override
   Widget build(BuildContext context) {
@@ -19,15 +19,15 @@ class StudentTestMarksText extends StatelessWidget {
           radius: 30,
           lineWidth: 8,
           circularStrokeCap: CircularStrokeCap.round,
-          progressColor: marks / totalMarks > 0.5
+          progressColor: currentValue / totalValue > 0.5
               ? Theme.of(context).colorScheme.primary
               : Theme.of(context).colorScheme.error,
           animation: true,
-          percent: marks / totalMarks,
+          percent: currentValue / totalValue,
           center: Text(
-            marks.toString(),
+            currentValue.toString(),
             style: TextStyle(
-              color: marks / totalMarks > 0.5
+              color: currentValue / totalValue > 0.5
                   ? Theme.of(context).colorScheme.primary
                   : Theme.of(context).colorScheme.error,
               fontSize: 18,
@@ -36,7 +36,7 @@ class StudentTestMarksText extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 5),
-        Text('of ${totalMarks.toString()}'),
+        Text('of ${totalValue.toString()}'),
       ],
     );
   }

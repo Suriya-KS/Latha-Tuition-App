@@ -31,11 +31,11 @@ void navigateToLoginScreen(BuildContext context, Screen? screen) {
   }
 }
 
-void navigateToTrackScreen(
+Future<void> navigateToTrackScreen(
   BuildContext context,
   Screen screen,
   Widget destinationScreen,
-) {
+) async {
   if (screen == Screen.tutorTrackRecordSheet) {
     Navigator.pop(context);
   }
@@ -46,7 +46,7 @@ void navigateToTrackScreen(
     return;
   }
 
-  Navigator.push(
+  await Navigator.push(
     context,
     MaterialPageRoute(
       builder: (BuildContext context) => destinationScreen,

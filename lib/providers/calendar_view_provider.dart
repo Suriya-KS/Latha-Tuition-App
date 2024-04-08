@@ -14,11 +14,20 @@ enum CalendarViewToggles {
   tests,
 }
 
+final currentDate = DateTime(
+  DateTime.now().year,
+  DateTime.now().month,
+  DateTime.now().day,
+);
+
 final initialState = {
-  CalendarView.selectedDate: DateTime.now(),
-  CalendarView.firstDate:
-      DateTime.now().subtract(const Duration(days: 365 * 2)),
-  CalendarView.lastDate: DateTime.now().add(const Duration(days: 365 * 2)),
+  CalendarView.selectedDate: currentDate,
+  CalendarView.firstDate: currentDate.subtract(
+    const Duration(days: 365 * 2),
+  ),
+  CalendarView.lastDate: currentDate.add(
+    const Duration(days: 365 * 2),
+  ),
   CalendarView.activeToggle: CalendarViewToggles.attendance
 };
 

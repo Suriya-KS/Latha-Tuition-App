@@ -5,7 +5,12 @@ import 'package:latha_tuition_app/providers/calendar_view_provider.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class Calendar extends ConsumerStatefulWidget {
-  const Calendar({super.key});
+  const Calendar({
+    super.key,
+    this.onDateChange,
+  });
+
+  final void Function()? onDateChange;
 
   @override
   ConsumerState<Calendar> createState() => _CalendarState();
@@ -17,11 +22,17 @@ class _CalendarState extends ConsumerState<Calendar> {
 
   void daySelectHandler(DateTime selected, DateTime focused) {
     setState(() {
-      selectedDay = selected;
-      focusedDay = focused;
+      selectedDay = DateTime(selected.year, selected.month, selected.day);
+      focusedDay = DateTime(focused.year, focused.month, focused.day);
     });
 
-    ref.read(calendarViewProvider.notifier).setSelectedDate(selected);
+    ref.read(calendarViewProvider.notifier).setSelectedDate(DateTime(
+          selected.year,
+          selected.month,
+          selected.day,
+        ));
+
+    if (widget.onDateChange != null) widget.onDateChange!();
   }
 
   @override

@@ -6,57 +6,75 @@ import 'package:latha_tuition_app/utilities/dummy_data.dart';
 import 'package:latha_tuition_app/utilities/helper_functions.dart';
 import 'package:latha_tuition_app/providers/calendar_view_provider.dart';
 import 'package:latha_tuition_app/providers/track_sheet_provider.dart';
-import 'package:latha_tuition_app/providers/attendance_provider.dart';
 import 'package:latha_tuition_app/providers/test_marks_provider.dart';
 import 'package:latha_tuition_app/screens/tutor/tutor_track_attendance.dart';
 import 'package:latha_tuition_app/screens/tutor/tutor_track_test_marks.dart';
+import 'package:latha_tuition_app/widgets/utilities/percent_indicator.dart';
 import 'package:latha_tuition_app/widgets/cards/text_avatar_action_card.dart';
 
 class TutorEventsList extends ConsumerWidget {
   const TutorEventsList({
     required this.items,
+    this.onUpdate,
     super.key,
   });
 
   final List<Map<String, dynamic>> items;
+  final void Function()? onUpdate;
+
+  int countPresentStudents(List<dynamic> studentList) {
+    int presentCount = 0;
+
+    for (var student in studentList) {
+      if (student['status'] == 'present') {
+        presentCount++;
+      }
+    }
+
+    return presentCount;
+  }
 
   void attendanceCardTapHandler(
-    String batchName,
-    TimeOfDay startTime,
-    TimeOfDay endTime,
     BuildContext context,
-    WidgetRef ref,
-  ) {
+    WidgetRef ref, {
+    required String id,
+    required String batchName,
+    required TimeOfDay startTime,
+    required TimeOfDay endTime,
+    required List<dynamic> attendance,
+  }) async {
     final trackSheetMethods = ref.read(trackSheetProvider.notifier);
-    final attendanceMethods = ref.read(attendanceProvider.notifier);
 
+    trackSheetMethods.setIsBatchNameEditable(false);
     trackSheetMethods.setBatchName(batchName);
     trackSheetMethods.setTime(startTime, endTime);
-    attendanceMethods.setInitialState(dummyBatchAttendance);
+    trackSheetMethods.setSelectedAttendanceID(id);
 
-    navigateToTrackScreen(
+    await navigateToTrackScreen(
       context,
       Screen.tutorEventsView,
-      const TutorTrackAttendanceScreen(screen: Screen.tutorEventsView),
+      TutorTrackAttendanceScreen(
+        attendanceList: attendance,
+      ),
     );
+
+    if (onUpdate != null) onUpdate!();
   }
 
   void testMarksCardTapHandler(
-    String testName,
-    String batchName,
-    TimeOfDay startTime,
-    TimeOfDay endTime,
     BuildContext context,
-    WidgetRef ref,
-  ) {
+    WidgetRef ref, {
+    required String testName,
+    required String batchName,
+    required TimeOfDay startTime,
+    required TimeOfDay endTime,
+  }) {
     final trackSheetMethods = ref.read(trackSheetProvider.notifier);
-    final attendanceMethods = ref.read(attendanceProvider.notifier);
     final testMarksMethods = ref.read(testMarksProvider.notifier);
 
     trackSheetMethods.setTestName(testName);
     trackSheetMethods.setBatchName(batchName);
     trackSheetMethods.setTime(startTime, endTime);
-    attendanceMethods.setInitialState(dummyBatchAttendance);
     testMarksMethods.setInitialState(dummyBatchTestMarks);
 
     navigateToTrackScreen(
@@ -75,26 +93,34 @@ class TutorEventsList extends ConsumerWidget {
       padding: EdgeInsets.zero,
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
-      itemCount: items.length,
-      itemBuilder: (context, index) => TextAvatarActionCard(
-        title: items[index]['batchName'],
-        avatarText: items[index]['standard'],
-        onTap: () => attendanceCardTapHandler(
-          items[index]['batchName'],
-          items[index]['startTime'],
-          items[index]['endTime'],
-          context,
-          ref,
-        ),
-        children: [
-          Text(
-            formatTimeRange(
-              items[index]['startTime'],
-              items[index]['endTime'],
-            ),
-          ),
-        ],
-      ),
+      itemCount: items.length + 1,
+      itemBuilder: (context, index) => index < items.length
+          ? TextAvatarActionCard(
+              title: items[index]['batchName'],
+              onTap: () => attendanceCardTapHandler(
+                context,
+                ref,
+                id: items[index]['id'],
+                batchName: items[index]['batchName'],
+                startTime: items[index]['startTime'],
+                endTime: items[index]['endTime'],
+                attendance: items[index]['attendance'],
+              ),
+              action: PercentIndicator(
+                currentValue: countPresentStudents(items[index]['attendance']),
+                totalValue: items[index]['attendance'].length,
+              ),
+              children: [
+                Text(formatDate(items[index]['date'])),
+                Text(
+                  formatTimeRange(
+                    items[index]['startTime'],
+                    items[index]['endTime'],
+                  ),
+                ),
+              ],
+            )
+          : const SizedBox(height: 120),
     );
 
     if (activeToggle == CalendarViewToggles.tests) {
@@ -107,12 +133,12 @@ class TutorEventsList extends ConsumerWidget {
           title: items[index]['testName'],
           avatarText: items[index]['standard'],
           onTap: () => testMarksCardTapHandler(
-            items[index]['testName'],
-            items[index]['batchName'],
-            items[index]['startTime'],
-            items[index]['endTime'],
             context,
             ref,
+            testName: items[index]['testName'],
+            batchName: items[index]['batchName'],
+            startTime: items[index]['startTime'],
+            endTime: items[index]['endTime'],
           ),
           children: [
             Text(items[index]['batchName']),

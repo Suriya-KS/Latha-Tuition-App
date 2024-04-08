@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:latha_tuition_app/utilities/constants.dart';
 import 'package:latha_tuition_app/utilities/helper_functions.dart';
 import 'package:latha_tuition_app/utilities/modal_bottom_sheet.dart';
+import 'package:latha_tuition_app/utilities/snack_bar.dart';
+import 'package:latha_tuition_app/providers/loading_provider.dart';
 import 'package:latha_tuition_app/providers/track_sheet_provider.dart';
 import 'package:latha_tuition_app/widgets/texts/subtitle_text.dart';
 import 'package:latha_tuition_app/widgets/texts/text_with_icon.dart';
@@ -18,6 +21,7 @@ class TutorTrackRecordDetails extends ConsumerWidget {
     required this.screen,
     this.description,
     this.totalMarks,
+    this.onEdit,
     super.key,
   });
 
@@ -28,6 +32,7 @@ class TutorTrackRecordDetails extends ConsumerWidget {
   final Screen screen;
   final String? description;
   final double? totalMarks;
+  final void Function()? onEdit;
 
   String? get formattedTotalMarks {
     if (totalMarks != null) {
@@ -39,7 +44,46 @@ class TutorTrackRecordDetails extends ConsumerWidget {
     }
   }
 
-  void editTrackRecordHandler(BuildContext context, WidgetRef ref) {
+  Future<void> loadBatches(BuildContext context, WidgetRef ref) async {
+    final firestore = FirebaseFirestore.instance;
+    final loadingMethods = ref.read(loadingProvider.notifier);
+
+    loadingMethods.setLoadingStatus(true);
+
+    try {
+      final settingsDocumentSnapshot = await firestore
+          .collection('settings')
+          .doc('studentRegistration')
+          .get();
+
+      loadingMethods.setLoadingStatus(false);
+
+      if (!settingsDocumentSnapshot.exists) return;
+
+      final settings = settingsDocumentSnapshot.data()!;
+
+      if (!settings.containsKey('batchNames')) return;
+
+      ref.read(trackSheetProvider.notifier).loadBatches(
+            List<String>.from(settings['batchNames']),
+          );
+    } catch (error) {
+      loadingMethods.setLoadingStatus(false);
+
+      if (!context.mounted) return;
+
+      snackBar(
+        context,
+        content: const Text(defaultErrorMessage),
+      );
+    }
+  }
+
+  void editTrackRecordHandler(BuildContext context, WidgetRef ref) async {
+    final batchNames = ref.read(trackSheetProvider)[TrackSheet.batchNames];
+
+    if (batchNames.length == 0) await loadBatches(context, ref);
+
     if (screen == Screen.attendance) {
       ref.read(trackSheetProvider.notifier).changeActiveToggle(0);
     }
@@ -48,12 +92,16 @@ class TutorTrackRecordDetails extends ConsumerWidget {
       ref.read(trackSheetProvider.notifier).changeActiveToggle(1);
     }
 
-    modalBottomSheet(
+    if (!context.mounted) return;
+
+    await modalBottomSheet(
       context,
       TutorTrackRecordSheet(
         screen: screen,
       ),
     );
+
+    if (onEdit != null) onEdit!();
   }
 
   @override

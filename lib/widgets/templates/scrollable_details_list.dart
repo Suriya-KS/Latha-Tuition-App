@@ -13,7 +13,7 @@ class ScrollableDetailsList extends StatelessWidget {
   });
 
   final String title;
-  final void Function() onPressed;
+  final void Function()? onPressed;
   final List<Widget> children;
 
   @override
@@ -31,11 +31,12 @@ class ScrollableDetailsList extends StatelessWidget {
                   ...children,
                 ],
               ),
-              FloatingCircularActionButton(
-                icon: Icons.check,
-                padding: 20,
-                onPressed: onPressed,
-              ),
+              if (onPressed != null)
+                FloatingCircularActionButton(
+                  icon: Icons.check,
+                  padding: 20,
+                  onPressed: onPressed!,
+                ),
             ],
           ),
         ),

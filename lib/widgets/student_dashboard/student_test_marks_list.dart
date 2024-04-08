@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:latha_tuition_app/utilities/constants.dart';
 import 'package:latha_tuition_app/utilities/dummy_data.dart';
 import 'package:latha_tuition_app/utilities/helper_functions.dart';
-import 'package:latha_tuition_app/widgets/utilities/student_test_marks_text.dart';
+import 'package:latha_tuition_app/widgets/utilities/percent_indicator.dart';
 import 'package:latha_tuition_app/widgets/cards/text_avatar_action_card.dart';
 
 class StudentTestMarksList extends StatelessWidget {
@@ -28,9 +28,9 @@ class StudentTestMarksList extends StatelessWidget {
         itemBuilder: (context, index) => view == ViewMode.calendar
             ? TextAvatarActionCard(
                 title: items[index]['name'],
-                action: StudentTestMarksText(
-                  marks: items[index]['marks'],
-                  totalMarks: items[index]['totalMarks'],
+                action: PercentIndicator(
+                  currentValue: items[index]['marks'],
+                  totalValue: items[index]['totalMarks'],
                 ),
                 children: [
                   Text(items[index]['time']),
@@ -38,9 +38,9 @@ class StudentTestMarksList extends StatelessWidget {
               )
             : TextAvatarActionCard(
                 title: items[index]['name'],
-                action: StudentTestMarksText(
-                  marks: items[index]['marks'],
-                  totalMarks: items[index]['totalMarks'],
+                action: PercentIndicator(
+                  currentValue: items[index]['marks'],
+                  totalValue: items[index]['totalMarks'],
                 ),
                 children: [
                   Text(formatDateDay(items[index]['date'])),
