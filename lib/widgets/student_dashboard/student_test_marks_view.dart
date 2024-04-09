@@ -3,7 +3,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:latha_tuition_app/utilities/constants.dart';
 import 'package:latha_tuition_app/utilities/dummy_data.dart';
-import 'package:latha_tuition_app/widgets/utilities/calendar.dart';
 import 'package:latha_tuition_app/widgets/app_bar/text_app_bar.dart';
 import 'package:latha_tuition_app/widgets/form_inputs/month_input.dart';
 import 'package:latha_tuition_app/widgets/student_dashboard/student_test_marks_list.dart';
@@ -34,29 +33,12 @@ class _StudentTestViewState extends State<StudentTestMarksView> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        TextAppBar(
-          title: 'Test Marks Records',
-          actions: [
-            IconButton(
-              style: IconButton.styleFrom(
-                foregroundColor: Colors.white,
-                backgroundColor: Theme.of(context).colorScheme.primary,
-              ),
-              onPressed: changeTestMarksView,
-              icon: currentView == ViewMode.calendar
-                  ? const Icon(Icons.format_list_bulleted_outlined)
-                  : const Icon(Icons.calendar_month_outlined),
-            ),
-            const SizedBox(width: 10),
-          ],
-        ),
+        const TextAppBar(title: 'Test Marks Records'),
         Expanded(
           child: SingleChildScrollView(
             child: Column(
               children: [
-                if (currentView == ViewMode.calendar) const Calendar(),
-                if (currentView == ViewMode.list)
-                  MonthInput(onChange: (date) {}),
+                MonthInput(onChange: (date) {}),
                 const SizedBox(height: 20),
                 items.isEmpty
                     ? Column(
