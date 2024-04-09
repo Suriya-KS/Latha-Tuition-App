@@ -194,10 +194,16 @@ String formatMarks(double marks) {
   return marks.toStringAsFixed(2);
 }
 
-String formatAmount(num amount) {
+String formatAmount(
+  num amount, {
+  bool includeCurrencySymbol = true,
+}) {
   final formatter = NumberFormat('#,##,###.00');
+  final formattedAmount = formatter.format(amount);
 
-  return '₹ ${formatter.format(amount)}';
+  if (!includeCurrencySymbol) return formattedAmount;
+
+  return '₹ $formattedAmount';
 }
 
 String capitalizeText(String text) {
@@ -242,4 +248,18 @@ Map<String, dynamic> getStudentDetails(WidgetRef ref) {
       .first;
 
   return studentDetails;
+}
+
+Color getPaymentContainerColor(BuildContext context, String status) {
+  if (status == 'approved') return Theme.of(context).colorScheme.primary;
+  if (status == 'rejected') return Theme.of(context).colorScheme.error;
+
+  return Theme.of(context).colorScheme.primary.withOpacity(0.2);
+}
+
+IconData getPaymentStatusIcon(String status) {
+  if (status == 'approved') return Icons.check;
+  if (status == 'rejected') return Icons.close;
+
+  return Icons.timer_outlined;
 }

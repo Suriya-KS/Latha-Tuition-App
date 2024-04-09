@@ -20,15 +20,15 @@ class SideDrawer extends ConsumerWidget {
 
   void signOutHandler(BuildContext context, WidgetRef ref) async {
     final loadingMethods = ref.read(loadingProvider.notifier);
-    final authenticationMethods = ref.read(authenticationProvider.notifier);
 
     loadingMethods.setLoadingStatus(true);
-    authenticationMethods.clearStudentID();
+    ref.read(authenticationProvider.notifier).clearStudentID();
 
     try {
       await FirebaseAuth.instance.signOut();
 
       loadingMethods.setLoadingStatus(false);
+      ref.read(animatedDrawerProvider.notifier).closeAnimatedDrawer();
 
       if (!context.mounted) return;
 
@@ -53,8 +53,10 @@ class SideDrawer extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final animatedDrawerMethods = ref.read(animatedDrawerProvider.notifier);
+
     return GestureDetector(
-      onTap: ref.read(animatedDrawerProvider.notifier).toggleAnimatedDrawer,
+      onTap: animatedDrawerMethods.toggleAnimatedDrawer,
       child: Scaffold(
         body: SafeArea(
           child: Padding(

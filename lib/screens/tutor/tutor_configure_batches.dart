@@ -34,16 +34,15 @@ class _TutorConfigureBatchesScreenState
         isLoading = false;
       });
 
-      if (!settingsDocumentSnapshot.exists ||
-          !settingsDocumentSnapshot.data()!.containsKey('batchNames')) {
-        return;
-      }
+      if (!settingsDocumentSnapshot.exists) return;
+
+      final settings = settingsDocumentSnapshot.data()!;
+
+      if (!settings.containsKey('batchNames')) return;
 
       setState(() {
         isChanged = false;
-        batchNames = List<String>.from(
-          settingsDocumentSnapshot.data()!['batchNames'],
-        );
+        batchNames = List<String>.from(settings['batchNames']);
       });
     } catch (error) {
       setState(() {

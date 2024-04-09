@@ -40,13 +40,14 @@ class _TutorPaymentApprovalScreenState
 
       for (final studentPaymentRequestQueryDocumentSnapshot
           in studentPaymentRequestsQuerySnapshot.docs) {
+        if (!studentPaymentRequestQueryDocumentSnapshot.exists) continue;
+
         final studentDocumentSnapshot = await firestore
             .collection('students')
             .doc(studentPaymentRequestQueryDocumentSnapshot['studentID'])
             .get();
 
         if (!studentDocumentSnapshot.exists) continue;
-        if (!studentPaymentRequestQueryDocumentSnapshot.exists) continue;
 
         final studentDetails = studentDocumentSnapshot.data()!;
         final studentPaymentDetails =

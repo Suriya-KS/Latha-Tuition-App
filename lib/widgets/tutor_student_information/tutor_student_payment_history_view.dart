@@ -48,9 +48,11 @@ class _TutorStudentPaymentHistoryViewState
 
       setState(() {
         studentPaymentHistory = studentPaymentHistoryQuerySnapshot.docs
-            .map((studentPayment) => {
-                  ...studentPayment.data(),
-                  'date': (studentPayment['date'] as Timestamp).toDate(),
+            .map((studentPaymentQueryDocumentSnapshot) => {
+                  ...studentPaymentQueryDocumentSnapshot.data(),
+                  'date':
+                      (studentPaymentQueryDocumentSnapshot['date'] as Timestamp)
+                          .toDate(),
                 })
             .toList();
       });
@@ -102,19 +104,21 @@ class _TutorStudentPaymentHistoryViewState
                         action: Container(
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(100),
-                            color: studentPaymentHistory[index]['status'] ==
-                                    'approved'
-                                ? Theme.of(context).colorScheme.primary
-                                : Theme.of(context).colorScheme.error,
+                            color: getPaymentContainerColor(
+                              context,
+                              studentPaymentHistory[index]['status'],
+                            ),
                           ),
                           child: Padding(
                             padding: const EdgeInsets.all(10),
                             child: Icon(
-                              studentPaymentHistory[index]['status'] ==
-                                      'approved'
-                                  ? Icons.check_outlined
-                                  : Icons.close_outlined,
-                              color: Colors.white,
+                              getPaymentStatusIcon(
+                                studentPaymentHistory[index]['status'],
+                              ),
+                              color: studentPaymentHistory[index]['status'] ==
+                                      'pending approval'
+                                  ? Theme.of(context).colorScheme.primary
+                                  : Colors.white,
                             ),
                           ),
                         ),

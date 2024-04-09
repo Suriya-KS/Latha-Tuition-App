@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 
-class CurvedBottomNavigationBar extends StatelessWidget {
+import 'package:latha_tuition_app/providers/animated_drawer_provider.dart';
+
+class CurvedBottomNavigationBar extends ConsumerWidget {
   const CurvedBottomNavigationBar({
     required this.index,
     required this.onTap,
@@ -14,15 +16,24 @@ class CurvedBottomNavigationBar extends StatelessWidget {
   final void Function(int) onTap;
   final List<Widget> items;
 
+  void navigationItemTapHandler(WidgetRef ref, int index) {
+    ref.read(animatedDrawerProvider.notifier).closeAnimatedDrawer();
+
+    onTap(index);
+  }
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return CurvedNavigationBar(
       index: index,
       color: Theme.of(context).colorScheme.primary,
       backgroundColor: Colors.white,
       animationDuration: const Duration(milliseconds: 300),
       animationCurve: Curves.easeInOut,
-      onTap: onTap,
+      onTap: (index) => navigationItemTapHandler(
+        ref,
+        index,
+      ),
       items: items,
     );
   }

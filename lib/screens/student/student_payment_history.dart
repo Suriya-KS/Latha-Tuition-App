@@ -61,8 +61,8 @@ class _StudentPaymentRequestsScreenState
     try {
       await updateNotifyStudentToFalse(studentID);
 
-      final currentYearStart = DateTime(currentYear, 1, 1);
-      final nextYearStart = DateTime(currentYear + 1, 1, 1);
+      final currentYearStart = DateTime(currentYear);
+      final nextYearStart = DateTime(currentYear + 1);
 
       final studentPaymentHistoryQuerySnapshot = await firestore
           .collection('payments')
@@ -75,9 +75,11 @@ class _StudentPaymentRequestsScreenState
       setState(() {
         isLoading = false;
         studentPaymentHistory = studentPaymentHistoryQuerySnapshot.docs
-            .map((studentPayment) => {
-                  ...studentPayment.data(),
-                  'date': (studentPayment['date'] as Timestamp).toDate(),
+            .map((studentPaymentQueryDocumentSnapshot) => {
+                  ...studentPaymentQueryDocumentSnapshot.data(),
+                  'date':
+                      (studentPaymentQueryDocumentSnapshot['date'] as Timestamp)
+                          .toDate(),
                 })
             .toList();
       });
@@ -96,9 +98,7 @@ class _StudentPaymentRequestsScreenState
   }
 
   void yearChangeHandler(int year) {
-    setState(() {
-      currentYear = year;
-    });
+    currentYear = year;
 
     loadPaymentHistory(context);
   }
@@ -147,20 +147,6 @@ class _StudentPaymentRequestsScreenState
     }
   }
 
-  Color getActionContainerColor(String status) {
-    if (status == 'approved') return Theme.of(context).colorScheme.primary;
-    if (status == 'rejected') return Theme.of(context).colorScheme.error;
-
-    return Theme.of(context).colorScheme.primary.withOpacity(0.2);
-  }
-
-  IconData getStatusIcon(String status) {
-    if (status == 'approved') return Icons.check;
-    if (status == 'rejected') return Icons.close;
-
-    return Icons.timer_outlined;
-  }
-
   @override
   void initState() {
     super.initState();
@@ -195,14 +181,15 @@ class _StudentPaymentRequestsScreenState
                                 action: Container(
                                   padding: const EdgeInsets.all(12),
                                   decoration: BoxDecoration(
-                                    color: getActionContainerColor(
+                                    color: getPaymentContainerColor(
+                                      context,
                                       studentPaymentHistory[index]['status'],
                                     ),
                                     shape: BoxShape.circle,
                                   ),
                                   child: Center(
                                     child: Icon(
-                                      getStatusIcon(
+                                      getPaymentStatusIcon(
                                         studentPaymentHistory[index]['status'],
                                       ),
                                       color: studentPaymentHistory[index]

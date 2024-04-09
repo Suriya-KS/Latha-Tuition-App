@@ -36,6 +36,10 @@ class AnimatedDrawerNotifier
       AnimatedDrawer.rotateZ: -50.0,
     };
   }
+
+  void closeAnimatedDrawer() {
+    state = initialState;
+  }
 }
 
 final animatedDrawerProvider =

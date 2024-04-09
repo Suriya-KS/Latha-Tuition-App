@@ -24,8 +24,9 @@ Future<dynamic> modalBottomSheet(BuildContext context, Widget content) async {
               width: screenWidth * 0.12,
               height: 6,
               decoration: BoxDecoration(
-                color:
-                    Theme.of(context).colorScheme.onBackground.withOpacity(0.3),
+                color: Theme.of(context).colorScheme.onBackground.withOpacity(
+                      0.3,
+                    ),
                 borderRadius: const BorderRadius.all(
                   Radius.circular(8),
                 ),

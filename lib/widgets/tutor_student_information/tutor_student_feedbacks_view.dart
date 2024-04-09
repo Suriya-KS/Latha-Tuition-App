@@ -44,10 +44,12 @@ class _TutorStudentFeedbacksViewState
 
       setState(() {
         studentFeedbacks = studentFeedbacksQuerySnapshot.docs
-            .map((studentPayment) => {
-                  ...studentPayment.data(),
-                  'date': (studentPayment['date'] as Timestamp).toDate(),
-                  'id': studentPayment.id,
+            .map((studentPaymentQueryDocumentSnapshot) => {
+                  ...studentPaymentQueryDocumentSnapshot.data(),
+                  'date':
+                      (studentPaymentQueryDocumentSnapshot['date'] as Timestamp)
+                          .toDate(),
+                  'id': studentPaymentQueryDocumentSnapshot.id,
                 })
             .toList();
       });

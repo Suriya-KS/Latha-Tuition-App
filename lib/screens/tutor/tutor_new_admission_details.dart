@@ -85,7 +85,7 @@ class _TutorNewAdmissionDetailsScreenState
     studentDetails.remove('id');
     studentDetails['awaitingApproval'] = false;
     studentDetails['batch'] = selectedBatch;
-    studentDetails['feesAmount'] = feesAmountController.text;
+    studentDetails['feesAmount'] = num.tryParse(feesAmountController.text);
 
     try {
       await firestore

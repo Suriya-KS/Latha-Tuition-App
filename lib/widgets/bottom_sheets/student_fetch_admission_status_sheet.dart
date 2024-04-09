@@ -39,16 +39,18 @@ class _StudentFetchAdmissionStatusSheetState
     });
 
     try {
-      final querySnapshot = await studentAdmissionRequestsCollectionReference
-          .where('emailAddress', isEqualTo: emailController.text)
-          .limit(1)
-          .get();
+      final studentAdmissionRequestsQuerySnapshot =
+          await studentAdmissionRequestsCollectionReference
+              .where('emailAddress', isEqualTo: emailController.text)
+              .limit(1)
+              .get();
 
       setState(() {
         isLoading = false;
       });
 
-      if (querySnapshot.docs.isEmpty && context.mounted) {
+      if (studentAdmissionRequestsQuerySnapshot.docs.isEmpty &&
+          context.mounted) {
         final awaitingAdmissionData = ref.read(awaitingAdmissionProvider);
 
         snackBar(
@@ -75,7 +77,9 @@ class _StudentFetchAdmissionStatusSheetState
       });
 
       await authenticationMethods.clearData();
-      await authenticationMethods.setStudentID(querySnapshot.docs.first.id);
+      await authenticationMethods.setStudentID(
+        studentAdmissionRequestsQuerySnapshot.docs.first.id,
+      );
 
       setState(() {
         isLoading = false;
