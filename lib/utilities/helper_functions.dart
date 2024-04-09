@@ -6,7 +6,6 @@ import 'package:intl/intl.dart';
 import 'package:latha_tuition_app/utilities/constants.dart';
 import 'package:latha_tuition_app/utilities/snack_bar.dart';
 import 'package:latha_tuition_app/providers/loading_provider.dart';
-import 'package:latha_tuition_app/providers/attendance_provider.dart';
 import 'package:latha_tuition_app/providers/tutor_search_provider.dart';
 import 'package:latha_tuition_app/screens/authentication/login.dart';
 import 'package:latha_tuition_app/screens/student/student_registration.dart';
@@ -218,20 +217,10 @@ String capitalizeText(String text) {
   return words.join(' ');
 }
 
-void attendanceStatusToggleHandler(
-  int toggleIndex,
-  int listIndex,
-  WidgetRef ref,
-) {
-  final attendanceMethods = ref.read(attendanceProvider.notifier);
+TimeOfDay timestampToTimeOfDay(Timestamp timestamp) {
+  DateTime dateTime = timestamp.toDate();
 
-  if (toggleIndex == 0) {
-    attendanceMethods.trackAttendance(listIndex, 'present');
-  }
-
-  if (toggleIndex == 1) {
-    attendanceMethods.trackAttendance(listIndex, 'absent');
-  }
+  return TimeOfDay(hour: dateTime.hour, minute: dateTime.minute);
 }
 
 Map<String, dynamic> getStudentDetails(WidgetRef ref) {

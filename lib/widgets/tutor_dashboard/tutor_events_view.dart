@@ -5,6 +5,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:latha_tuition_app/utilities/constants.dart';
 import 'package:latha_tuition_app/utilities/dummy_data.dart';
+import 'package:latha_tuition_app/utilities/helper_functions.dart';
 import 'package:latha_tuition_app/utilities/modal_bottom_sheet.dart';
 import 'package:latha_tuition_app/utilities/snack_bar.dart';
 import 'package:latha_tuition_app/providers/calendar_view_provider.dart';
@@ -31,12 +32,6 @@ class _TutorEventsViewState extends ConsumerState<TutorEventsView> {
   List<Map<String, dynamic>> items = [];
 
   late List<bool> isSelected;
-
-  TimeOfDay timestampToTimeOfDay(Timestamp timestamp) {
-    DateTime dateTime = timestamp.toDate();
-
-    return TimeOfDay(hour: dateTime.hour, minute: dateTime.minute);
-  }
 
   void loadAttendanceSummary(BuildContext context) async {
     setState(() {

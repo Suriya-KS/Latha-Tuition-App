@@ -5,7 +5,6 @@ import 'package:latha_tuition_app/utilities/constants.dart';
 import 'package:latha_tuition_app/utilities/dummy_data.dart';
 import 'package:latha_tuition_app/utilities/helper_functions.dart';
 import 'package:latha_tuition_app/providers/loading_provider.dart';
-import 'package:latha_tuition_app/providers/attendance_provider.dart';
 import 'package:latha_tuition_app/providers/test_marks_provider.dart';
 import 'package:latha_tuition_app/widgets/utilities/loading_overlay.dart';
 import 'package:latha_tuition_app/widgets/app_bar/text_app_bar.dart';
@@ -50,16 +49,12 @@ class _TutorStudentInformationScreenState
   void studentInformationViewToggleHandler(int selectedIndex) {
     if (index == selectedIndex) return;
 
-    if (selectedIndex == 1) {
-      ref
-          .read(attendanceProvider.notifier)
-          .setInitialState(dummyStudentAttendance);
+    if (selectedIndex == 1 || selectedIndex == 3 || selectedIndex == 4) {
+      ref.read(loadingProvider.notifier).setLoadingStatus(true);
     } else if (selectedIndex == 2) {
       ref
           .read(testMarksProvider.notifier)
           .setInitialState(dummyStudentTestMarks);
-    } else if (selectedIndex == 3 || selectedIndex == 4) {
-      ref.read(loadingProvider.notifier).setLoadingStatus(true);
     }
 
     setState(() {

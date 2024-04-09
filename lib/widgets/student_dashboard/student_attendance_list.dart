@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:latha_tuition_app/utilities/constants.dart';
 import 'package:latha_tuition_app/utilities/dummy_data.dart';
 import 'package:latha_tuition_app/utilities/helper_functions.dart';
-import 'package:latha_tuition_app/widgets/utilities/student_attendance_status_text.dart';
+import 'package:latha_tuition_app/widgets/utilities/avatar_text.dart';
 import 'package:latha_tuition_app/widgets/cards/text_avatar_action_card.dart';
 
 class StudentAttendanceList extends StatelessWidget {
@@ -29,11 +29,11 @@ class StudentAttendanceList extends StatelessWidget {
             ? TextAvatarActionCard(
                 title: items[index]['time'],
                 action: items[index]['attendanceStatus'] == 'present'
-                    ? StudentAttendanceStatusText(
+                    ? AvatarText(
                         'P',
                         backgroundColor: Theme.of(context).colorScheme.primary,
                       )
-                    : StudentAttendanceStatusText(
+                    : AvatarText(
                         'A',
                         backgroundColor: Theme.of(context).colorScheme.error,
                       ),
@@ -42,11 +42,11 @@ class StudentAttendanceList extends StatelessWidget {
                 title: formatDate(items[index]['date']),
                 avatarText: formatShortenDay(items[index]['date']),
                 action: items[index]['attendanceStatus'] == 'present'
-                    ? StudentAttendanceStatusText(
+                    ? AvatarText(
                         'P',
                         backgroundColor: Theme.of(context).colorScheme.primary,
                       )
-                    : StudentAttendanceStatusText(
+                    : AvatarText(
                         'A',
                         backgroundColor: Theme.of(context).colorScheme.error,
                       ),

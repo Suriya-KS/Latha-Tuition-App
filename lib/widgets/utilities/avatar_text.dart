@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class StudentAttendanceStatusText extends StatelessWidget {
-  const StudentAttendanceStatusText(
+class AvatarText extends StatelessWidget {
+  const AvatarText(
     this.text, {
     required this.backgroundColor,
     super.key,
