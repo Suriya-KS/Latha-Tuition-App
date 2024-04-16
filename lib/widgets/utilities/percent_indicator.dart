@@ -5,29 +5,33 @@ class PercentIndicator extends StatelessWidget {
   const PercentIndicator({
     required this.currentValue,
     required this.totalValue,
+    this.description,
     super.key,
   });
 
   final num currentValue;
   final num totalValue;
+  final String? description;
 
   @override
   Widget build(BuildContext context) {
+    final percentage = currentValue / totalValue;
+
     return Column(
       children: [
         CircularPercentIndicator(
-          radius: 30,
+          radius: 35,
           lineWidth: 8,
           circularStrokeCap: CircularStrokeCap.round,
-          progressColor: currentValue / totalValue > 0.5
+          progressColor: percentage > 0.5
               ? Theme.of(context).colorScheme.primary
               : Theme.of(context).colorScheme.error,
           animation: true,
-          percent: currentValue / totalValue,
+          percent: percentage,
           center: Text(
-            currentValue.toString(),
+            '${(percentage * 100).round().toString()}%',
             style: TextStyle(
-              color: currentValue / totalValue > 0.5
+              color: percentage > 0.5
                   ? Theme.of(context).colorScheme.primary
                   : Theme.of(context).colorScheme.error,
               fontSize: 18,
@@ -35,8 +39,8 @@ class PercentIndicator extends StatelessWidget {
             ),
           ),
         ),
-        const SizedBox(height: 5),
-        Text('of ${totalValue.toString()}'),
+        if (description != null) const SizedBox(height: 5),
+        if (description != null) Text(description!),
       ],
     );
   }

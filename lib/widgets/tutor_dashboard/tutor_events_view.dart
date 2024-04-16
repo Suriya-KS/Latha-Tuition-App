@@ -4,7 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:latha_tuition_app/utilities/constants.dart';
-import 'package:latha_tuition_app/utilities/dummy_data.dart';
 import 'package:latha_tuition_app/utilities/helper_functions.dart';
 import 'package:latha_tuition_app/utilities/modal_bottom_sheet.dart';
 import 'package:latha_tuition_app/utilities/snack_bar.dart';
@@ -83,12 +82,64 @@ class _TutorEventsViewState extends ConsumerState<TutorEventsView> {
     }
   }
 
+  void loadTestMarksSummary(BuildContext context) async {
+    setState(() {
+      isLoading = true;
+      items = [];
+    });
+
+    final selectedDate =
+        ref.read(calendarViewProvider)[CalendarView.selectedDate];
+
+    try {
+      final testMarksQuerySnapshot = await firestore
+          .collection('testMarks')
+          .where('date', isEqualTo: selectedDate)
+          .orderBy('startTime')
+          .get();
+
+      final testMarksSummary = testMarksQuerySnapshot.docs
+          .map((testMarksQueryDocumentSnapshot) => {
+                'id': testMarksQueryDocumentSnapshot.id,
+                'batchName': testMarksQueryDocumentSnapshot.data()['batch'],
+                'date': testMarksQueryDocumentSnapshot.data()['date'].toDate(),
+                'startTime': timestampToTimeOfDay(
+                  testMarksQueryDocumentSnapshot.data()['startTime'],
+                ),
+                'endTime': timestampToTimeOfDay(
+                  testMarksQueryDocumentSnapshot.data()['endTime'],
+                ),
+                'name': testMarksQueryDocumentSnapshot.data()['name'],
+                'marks': testMarksQueryDocumentSnapshot.data()['marks'],
+                'totalMarks':
+                    testMarksQueryDocumentSnapshot.data()['totalMarks'],
+              })
+          .toList();
+
+      setState(() {
+        isLoading = false;
+        items = testMarksSummary;
+      });
+    } catch (error) {
+      setState(() {
+        isLoading = false;
+      });
+
+      if (!context.mounted) return;
+
+      snackBar(
+        context,
+        content: const Text(defaultErrorMessage),
+      );
+    }
+  }
+
   void toggleTrackedRecordsHandler(int index) {
     ref.read(calendarViewProvider.notifier).changeActiveToggle(index);
 
     setState(() {
       if (index == 0) loadAttendanceSummary(context);
-      if (index == 1) items = dummyTestMarksData;
+      if (index == 1) loadTestMarksSummary(context);
     });
   }
 
@@ -121,10 +172,15 @@ class _TutorEventsViewState extends ConsumerState<TutorEventsView> {
 
       if (!context.mounted) return;
 
+      final activeToggle =
+          ref.read(calendarViewProvider)[CalendarView.activeToggle];
+
       modalBottomSheet(
         context,
         TutorTrackRecordSheet(
-          onUpdate: () => loadAttendanceSummary(context),
+          onUpdate: () => activeToggle == CalendarViewToggles.attendance
+              ? loadAttendanceSummary(context)
+              : loadTestMarksSummary(context),
         ),
       );
     } catch (error) {
@@ -155,8 +211,9 @@ class _TutorEventsViewState extends ConsumerState<TutorEventsView> {
     }
 
     if (activeToggle == CalendarViewToggles.tests) {
-      items = dummyTestMarksData;
       isSelected = [false, true];
+
+      loadTestMarksSummary(context);
     }
   }
 
@@ -181,7 +238,10 @@ class _TutorEventsViewState extends ConsumerState<TutorEventsView> {
                   child: Column(
                     children: [
                       Calendar(
-                        onDateChange: () => loadAttendanceSummary(context),
+                        onDateChange:
+                            activeToggle == CalendarViewToggles.attendance
+                                ? () => loadAttendanceSummary(context)
+                                : () => loadTestMarksSummary(context),
                       ),
                       const SizedBox(height: 20),
                       ToggleInput(
@@ -207,7 +267,10 @@ class _TutorEventsViewState extends ConsumerState<TutorEventsView> {
                             )
                           : TutorEventsList(
                               items: items,
-                              onUpdate: () => loadAttendanceSummary(context),
+                              onUpdate:
+                                  activeToggle == CalendarViewToggles.attendance
+                                      ? () => loadAttendanceSummary(context)
+                                      : () => loadTestMarksSummary(context),
                             ),
                       const SizedBox(height: 20),
                     ],

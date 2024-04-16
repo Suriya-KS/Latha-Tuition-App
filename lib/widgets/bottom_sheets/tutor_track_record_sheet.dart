@@ -36,8 +36,7 @@ class TutorTrackRecordSheet extends ConsumerStatefulWidget {
 }
 
 class _TutorTrackRecordSheetState extends ConsumerState<TutorTrackRecordSheet> {
-  final attendanceCollectionReference =
-      FirebaseFirestore.instance.collection('attendance');
+  final firestore = FirebaseFirestore.instance;
   final formKey = GlobalKey<FormState>();
 
   late String title;
@@ -107,6 +106,7 @@ class _TutorTrackRecordSheetState extends ConsumerState<TutorTrackRecordSheet> {
     if (widget.screen != Screen.attendance &&
         widget.screen != Screen.testMarks) {
       trackSheetMethods.setSelectedAttendanceID(null);
+      trackSheetMethods.setSelectedTestMarksID(null);
     }
 
     await navigateToTrackScreen(
@@ -134,12 +134,27 @@ class _TutorTrackRecordSheetState extends ConsumerState<TutorTrackRecordSheet> {
         return;
       }
 
-      final attendanceID =
-          ref.read(trackSheetProvider)[TrackSheet.selectedAttendanceID];
+      final activeToggle =
+          ref.read(trackSheetProvider)[TrackSheet.activeToggle];
 
-      await attendanceCollectionReference.doc(attendanceID).delete();
+      if (activeToggle == TrackSheetToggles.attendance) {
+        final attendanceID =
+            ref.read(trackSheetProvider)[TrackSheet.selectedAttendanceID];
 
-      ref.read(trackSheetProvider.notifier).setSelectedAttendanceID(null);
+        await firestore.collection('attendance').doc(attendanceID).delete();
+
+        ref.read(trackSheetProvider.notifier).setSelectedAttendanceID(null);
+      }
+
+      if (activeToggle == TrackSheetToggles.tests) {
+        final testMarkID =
+            ref.read(trackSheetProvider)[TrackSheet.selectedTestMarksID];
+
+        await firestore.collection('testMarks').doc(testMarkID).delete();
+
+        ref.read(trackSheetProvider.notifier).setSelectedTestMarksID(null);
+      }
+
       loadingMethods.setLoadingStatus(false);
 
       if (!context.mounted) return;
@@ -286,19 +301,21 @@ class _TutorTrackRecordSheetState extends ConsumerState<TutorTrackRecordSheet> {
                         ),
                       ),
                     ),
-                    const SizedBox(width: 30),
-                    Expanded(
-                      child: DropdownInput(
-                        initialValue: widget.screen == Screen.testMarks
-                            ? trackSheetData[TrackSheet.batchName]
-                            : null,
-                        labelText: 'Batch',
-                        prefixIcon: Icons.groups_outlined,
-                        items: trackSheetData[TrackSheet.batchNames],
-                        onChanged: changeBatchHandler,
-                        validator: validateDropdownValue,
+                    if (trackSheetData[TrackSheet.isBatchNameEditable])
+                      const SizedBox(width: 30),
+                    if (trackSheetData[TrackSheet.isBatchNameEditable])
+                      Expanded(
+                        child: DropdownInput(
+                          initialValue: widget.screen == Screen.testMarks
+                              ? trackSheetData[TrackSheet.batchName]
+                              : null,
+                          labelText: 'Batch',
+                          prefixIcon: Icons.groups_outlined,
+                          items: trackSheetData[TrackSheet.batchNames],
+                          onChanged: changeBatchHandler,
+                          validator: validateDropdownValue,
+                        ),
                       ),
-                    ),
                   ],
                 ),
               const SizedBox(height: 10),

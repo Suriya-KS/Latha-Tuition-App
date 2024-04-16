@@ -2,11 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:latha_tuition_app/utilities/constants.dart';
-import 'package:latha_tuition_app/utilities/dummy_data.dart';
 import 'package:latha_tuition_app/utilities/helper_functions.dart';
 import 'package:latha_tuition_app/providers/calendar_view_provider.dart';
 import 'package:latha_tuition_app/providers/track_sheet_provider.dart';
-import 'package:latha_tuition_app/providers/test_marks_provider.dart';
 import 'package:latha_tuition_app/screens/tutor/tutor_track_attendance.dart';
 import 'package:latha_tuition_app/screens/tutor/tutor_track_test_marks.dart';
 import 'package:latha_tuition_app/widgets/utilities/percent_indicator.dart';
@@ -32,6 +30,16 @@ class TutorEventsList extends ConsumerWidget {
     }
 
     return presentCount;
+  }
+
+  num countStudentsAverageMarks(List<dynamic> studentList) {
+    num studentsMarks = 0;
+
+    for (var student in studentList) {
+      studentsMarks += student['marks'];
+    }
+
+    return studentsMarks / studentList.length;
   }
 
   void attendanceCardTapHandler(
@@ -64,24 +72,32 @@ class TutorEventsList extends ConsumerWidget {
   void testMarksCardTapHandler(
     BuildContext context,
     WidgetRef ref, {
+    required String id,
     required String testName,
     required String batchName,
     required TimeOfDay startTime,
     required TimeOfDay endTime,
-  }) {
+    required List<dynamic> testMarks,
+    required num totalMarks,
+  }) async {
     final trackSheetMethods = ref.read(trackSheetProvider.notifier);
-    final testMarksMethods = ref.read(testMarksProvider.notifier);
 
+    trackSheetMethods.setIsBatchNameEditable(false);
     trackSheetMethods.setTestName(testName);
     trackSheetMethods.setBatchName(batchName);
     trackSheetMethods.setTime(startTime, endTime);
-    testMarksMethods.setInitialState(dummyBatchTestMarks);
+    trackSheetMethods.setTotalMarks(totalMarks);
+    trackSheetMethods.setSelectedTestMarksID(id);
 
-    navigateToTrackScreen(
+    await navigateToTrackScreen(
       context,
       Screen.tutorEventsView,
-      const TutorTrackTestMarksScreen(),
+      TutorTrackTestMarksScreen(
+        testMarks: testMarks,
+      ),
     );
+
+    if (onUpdate != null) onUpdate!();
   }
 
   @override
@@ -111,7 +127,7 @@ class TutorEventsList extends ConsumerWidget {
                 totalValue: items[index]['attendance'].length,
               ),
               children: [
-                Text(formatDate(items[index]['date'])),
+                Text(formatDateDay(items[index]['date'])),
                 Text(
                   formatTimeRange(
                     items[index]['startTime'],
@@ -129,27 +145,39 @@ class TutorEventsList extends ConsumerWidget {
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
         itemCount: items.length,
-        itemBuilder: (context, index) => TextAvatarActionCard(
-          title: items[index]['testName'],
-          avatarText: items[index]['standard'],
-          onTap: () => testMarksCardTapHandler(
-            context,
-            ref,
-            testName: items[index]['testName'],
-            batchName: items[index]['batchName'],
-            startTime: items[index]['startTime'],
-            endTime: items[index]['endTime'],
-          ),
-          children: [
-            Text(items[index]['batchName']),
-            Text(
-              formatTimeRange(
-                items[index]['startTime'],
-                items[index]['endTime'],
-              ),
-            ),
-          ],
-        ),
+        itemBuilder: (context, index) => index < items.length
+            ? TextAvatarActionCard(
+                title: items[index]['name'],
+                onTap: () => testMarksCardTapHandler(
+                  context,
+                  ref,
+                  id: items[index]['id'],
+                  testName: items[index]['name'],
+                  batchName: items[index]['batchName'],
+                  startTime: items[index]['startTime'],
+                  endTime: items[index]['endTime'],
+                  testMarks: items[index]['marks'],
+                  totalMarks: items[index]['totalMarks'],
+                ),
+                action: PercentIndicator(
+                  currentValue:
+                      countStudentsAverageMarks(items[index]['marks']),
+                  totalValue: items[index]['totalMarks'],
+                  description: 'On average',
+                ),
+                children: [
+                  Text(items[index]['batchName']),
+                  const SizedBox(height: 5),
+                  Text(formatDateDay(items[index]['date'])),
+                  Text(
+                    formatTimeRange(
+                      items[index]['startTime'],
+                      items[index]['endTime'],
+                    ),
+                  ),
+                ],
+              )
+            : const SizedBox(height: 120),
       );
     }
 

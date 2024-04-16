@@ -10,6 +10,7 @@ enum TrackSheet {
   activeToggle,
   batchNames,
   selectedAttendanceID,
+  selectedTestMarksID,
   isBatchNameEditable,
 }
 
@@ -27,6 +28,7 @@ final initialState = {
   TrackSheet.activeToggle: TrackSheetToggles.attendance,
   TrackSheet.batchNames: <String>[],
   TrackSheet.selectedAttendanceID: null,
+  TrackSheet.selectedTestMarksID: null,
   TrackSheet.isBatchNameEditable: true,
 };
 
@@ -62,7 +64,7 @@ class TrackSheetNotifier extends StateNotifier<Map<TrackSheet, dynamic>> {
     };
   }
 
-  void setTotalMarks(double? totalMarks) {
+  void setTotalMarks(num? totalMarks) {
     if (totalMarks == null) return;
 
     state = {
@@ -91,6 +93,13 @@ class TrackSheetNotifier extends StateNotifier<Map<TrackSheet, dynamic>> {
     state = {
       ...state,
       TrackSheet.selectedAttendanceID: selectedAttendanceID,
+    };
+  }
+
+  void setSelectedTestMarksID(String? selectedTestMarksID) {
+    state = {
+      ...state,
+      TrackSheet.selectedTestMarksID: selectedTestMarksID,
     };
   }
 

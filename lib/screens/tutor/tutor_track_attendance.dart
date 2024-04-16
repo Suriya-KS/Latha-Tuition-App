@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:latha_tuition_app/utilities/constants.dart';
+import 'package:latha_tuition_app/utilities/helper_functions.dart';
 import 'package:latha_tuition_app/utilities/snack_bar.dart';
 import 'package:latha_tuition_app/providers/calendar_view_provider.dart';
 import 'package:latha_tuition_app/providers/track_sheet_provider.dart';
@@ -32,18 +33,6 @@ class _TutorTrackAttendanceScreenState
   bool isLoading = false;
   bool isChanged = false;
   List<dynamic> attendanceList = [];
-
-  Timestamp timeOfDayToTimestamp(DateTime selectedDate, TimeOfDay timeOfDay) {
-    final date = DateTime(
-      selectedDate.year,
-      selectedDate.month,
-      selectedDate.day,
-      timeOfDay.hour,
-      timeOfDay.minute,
-    );
-
-    return Timestamp.fromDate(date);
-  }
 
   void loadBatchStudents(
     BuildContext context, {
@@ -142,8 +131,10 @@ class _TutorTrackAttendanceScreenState
     final attendanceRecord = {
       'batch': trackSheetData[TrackSheet.batchName],
       'date': date,
-      'startTime':
-          timeOfDayToTimestamp(date, trackSheetData[TrackSheet.startTime]),
+      'startTime': timeOfDayToTimestamp(
+        date,
+        trackSheetData[TrackSheet.startTime],
+      ),
       'endTime': timeOfDayToTimestamp(date, trackSheetData[TrackSheet.endTime]),
       'attendance': attendanceList.map((attendance) => {
             'studentID': attendance['studentID'],

@@ -223,6 +223,18 @@ TimeOfDay timestampToTimeOfDay(Timestamp timestamp) {
   return TimeOfDay(hour: dateTime.hour, minute: dateTime.minute);
 }
 
+Timestamp timeOfDayToTimestamp(DateTime selectedDate, TimeOfDay timeOfDay) {
+  final date = DateTime(
+    selectedDate.year,
+    selectedDate.month,
+    selectedDate.day,
+    timeOfDay.hour,
+    timeOfDay.minute,
+  );
+
+  return Timestamp.fromDate(date);
+}
+
 Map<String, dynamic> getStudentDetails(WidgetRef ref) {
   final tutorSearchData = ref.read(tutorSearchProvider);
 
