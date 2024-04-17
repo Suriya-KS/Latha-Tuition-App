@@ -133,9 +133,7 @@ class _StudentAttendanceViewState extends ConsumerState<StudentAttendanceView> {
                             const Text('No Records Found!'),
                           ],
                         )
-                      : StudentAttendanceList(
-                          items: attendanceList,
-                        ),
+                      : StudentAttendanceList(items: attendanceList),
                   const SizedBox(height: 20),
                 ],
               ),

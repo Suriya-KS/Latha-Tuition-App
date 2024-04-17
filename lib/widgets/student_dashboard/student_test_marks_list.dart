@@ -1,23 +1,20 @@
 import 'package:flutter/material.dart';
 
 import 'package:latha_tuition_app/utilities/constants.dart';
-import 'package:latha_tuition_app/utilities/dummy_data.dart';
 import 'package:latha_tuition_app/utilities/helper_functions.dart';
 import 'package:latha_tuition_app/widgets/utilities/percent_indicator.dart';
 import 'package:latha_tuition_app/widgets/cards/text_avatar_action_card.dart';
 
 class StudentTestMarksList extends StatelessWidget {
   const StudentTestMarksList({
-    required this.view,
+    required this.items,
     super.key,
   });
 
-  final ViewMode view;
+  final List<Map<String, dynamic>> items;
 
   @override
   Widget build(BuildContext context) {
-    final items = dummyStudentTestMarks;
-
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: screenPadding),
       child: ListView.builder(
@@ -25,28 +22,20 @@ class StudentTestMarksList extends StatelessWidget {
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
         itemCount: items.length,
-        itemBuilder: (context, index) => view == ViewMode.calendar
-            ? TextAvatarActionCard(
-                title: items[index]['name'],
-                action: PercentIndicator(
-                  currentValue: items[index]['marks'],
-                  totalValue: items[index]['totalMarks'],
-                ),
-                children: [
-                  Text(items[index]['time']),
-                ],
-              )
-            : TextAvatarActionCard(
-                title: items[index]['name'],
-                action: PercentIndicator(
-                  currentValue: items[index]['marks'],
-                  totalValue: items[index]['totalMarks'],
-                ),
-                children: [
-                  Text(formatDateDay(items[index]['date'])),
-                  Text(items[index]['time']),
-                ],
-              ),
+        itemBuilder: (context, index) => TextAvatarActionCard(
+          title: items[index]['name'],
+          action: PercentIndicator(
+            currentValue: items[index]['marks'],
+            totalValue: items[index]['totalMarks'],
+          ),
+          children: [
+            Text(formatDateDay(items[index]['date'])),
+            Text(formatTimeRange(
+              items[index]['startTime'],
+              items[index]['endTime'],
+            )),
+          ],
+        ),
       ),
     );
   }

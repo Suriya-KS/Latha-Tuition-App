@@ -46,8 +46,3 @@ enum UserType {
   student,
   tutor,
 }
-
-enum ViewMode {
-  calendar,
-  list,
-}
