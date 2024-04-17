@@ -2,10 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:latha_tuition_app/utilities/constants.dart';
-import 'package:latha_tuition_app/utilities/dummy_data.dart';
 import 'package:latha_tuition_app/utilities/helper_functions.dart';
 import 'package:latha_tuition_app/providers/loading_provider.dart';
-import 'package:latha_tuition_app/providers/test_marks_provider.dart';
 import 'package:latha_tuition_app/widgets/utilities/loading_overlay.dart';
 import 'package:latha_tuition_app/widgets/app_bar/text_app_bar.dart';
 import 'package:latha_tuition_app/widgets/texts/subtitle_text.dart';
@@ -49,12 +47,8 @@ class _TutorStudentInformationScreenState
   void studentInformationViewToggleHandler(int selectedIndex) {
     if (index == selectedIndex) return;
 
-    if (selectedIndex == 1 || selectedIndex == 3 || selectedIndex == 4) {
+    if (selectedIndex > 0) {
       ref.read(loadingProvider.notifier).setLoadingStatus(true);
-    } else if (selectedIndex == 2) {
-      ref
-          .read(testMarksProvider.notifier)
-          .setInitialState(dummyStudentTestMarks);
     }
 
     setState(() {

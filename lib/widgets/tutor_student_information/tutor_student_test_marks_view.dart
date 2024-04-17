@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:latha_tuition_app/utilities/constants.dart';
 import 'package:latha_tuition_app/utilities/helper_functions.dart';
-import 'package:latha_tuition_app/utilities/form_validation_functions.dart';
-import 'package:latha_tuition_app/providers/test_marks_provider.dart';
-import 'package:latha_tuition_app/widgets/buttons/floating_circular_action_button.dart';
+import 'package:latha_tuition_app/utilities/snack_bar.dart';
+import 'package:latha_tuition_app/providers/loading_provider.dart';
+import 'package:latha_tuition_app/providers/tutor_search_provider.dart';
+import 'package:latha_tuition_app/widgets/utilities/percent_indicator.dart';
 import 'package:latha_tuition_app/widgets/cards/text_avatar_action_card.dart';
 import 'package:latha_tuition_app/widgets/form_inputs/month_input.dart';
-import 'package:latha_tuition_app/widgets/form_inputs/text_input.dart';
 
 class TutorStudentTestMarksView extends ConsumerStatefulWidget {
   const TutorStudentTestMarksView({super.key});
@@ -20,35 +21,106 @@ class TutorStudentTestMarksView extends ConsumerStatefulWidget {
 
 class _TutorStudentTestMarksViewState
     extends ConsumerState<TutorStudentTestMarksView> {
-  late int length;
-  late List<TextEditingController> marksControllers;
+  final testMarksCollectionReference =
+      FirebaseFirestore.instance.collection('testMarks');
+
+  int currentMonth = DateTime.now().month;
+  int currentYear = DateTime.now().year;
+  List<Map<String, dynamic>> testMarks = [];
+
+  void loadTestMarksSummary(BuildContext context) async {
+    final loadingMethods = ref.read(loadingProvider.notifier);
+    final currentMonthStart = DateTime(currentYear, currentMonth);
+    final nextMonthStart = DateTime(currentYear, currentMonth + 1);
+    final studentID =
+        ref.read(tutorSearchProvider)[TutorSearch.selectedStudentID];
+
+    try {
+      final testMarksQuerySnapshot = await testMarksCollectionReference
+          .where('date', isGreaterThanOrEqualTo: currentMonthStart)
+          .where('date', isLessThan: nextMonthStart)
+          .orderBy('date')
+          .orderBy('startTime')
+          .get();
+
+      final documentIDs = [];
+
+      for (final testMarksQueryDocumentSnapshot
+          in testMarksQuerySnapshot.docs) {
+        final studentTestMark = testMarksQueryDocumentSnapshot
+            .data()['marks']
+            .where(
+              (marks) => marks['studentID'] == studentID,
+            )
+            .toList();
+
+        if (studentTestMark.length == 0) continue;
+
+        documentIDs.add(testMarksQueryDocumentSnapshot.id);
+      }
+
+      final studentTestMarksQueryDocumentSnapshots = testMarksQuerySnapshot.docs
+          .where((testMarksQueryDocumentSnapshot) => documentIDs.contains(
+                testMarksQueryDocumentSnapshot.id,
+              ))
+          .toList();
+
+      final studentTestMarks = studentTestMarksQueryDocumentSnapshots
+          .map((testMarksQueryDocumentSnapshot) => {
+                'name': testMarksQueryDocumentSnapshot.data()['name'],
+                'date': testMarksQueryDocumentSnapshot.data()['date'].toDate(),
+                'startTime': timestampToTimeOfDay(
+                  testMarksQueryDocumentSnapshot.data()['startTime'],
+                ),
+                'endTime': timestampToTimeOfDay(
+                  testMarksQueryDocumentSnapshot.data()['endTime'],
+                ),
+                'marks':
+                    testMarksQueryDocumentSnapshot.data()['marks'].firstWhere(
+                          (marks) => marks['studentID'] == studentID,
+                        )['marks'],
+                'totalMarks':
+                    testMarksQueryDocumentSnapshot.data()['totalMarks'],
+              })
+          .toList();
+
+      setState(() {
+        testMarks = studentTestMarks;
+      });
+
+      loadingMethods.setLoadingStatus(false);
+    } catch (error) {
+      loadingMethods.setLoadingStatus(false);
+
+      if (!context.mounted) return;
+
+      snackBar(
+        context,
+        content: const Text(defaultErrorMessage),
+      );
+    }
+  }
+
+  void monthChangeHandler(DateTime date) {
+    setState(() {
+      currentMonth = date.month;
+      currentYear = date.year;
+    });
+
+    ref.read(loadingProvider.notifier).setLoadingStatus(true);
+
+    loadTestMarksSummary(context);
+  }
 
   @override
   void initState() {
     super.initState();
 
-    final testMarksList = ref.read(testMarksProvider);
-
-    length = testMarksList.length;
-    marksControllers = List.generate(
-      length,
-      (index) => TextEditingController(),
-    );
-  }
-
-  @override
-  void dispose() {
-    for (final marksController in marksControllers) {
-      marksController.dispose();
-    }
-
-    super.dispose();
+    loadTestMarksSummary(context);
   }
 
   @override
   Widget build(BuildContext context) {
-    final List<dynamic> testMarksList = ref.watch(testMarksProvider);
-
     return Expanded(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: screenPadding),
@@ -56,57 +128,35 @@ class _TutorStudentTestMarksViewState
           children: [
             Column(
               children: [
-                MonthInput(
-                  onChange: (date) {},
-                ),
+                MonthInput(onChange: monthChangeHandler),
                 const SizedBox(height: 10),
                 Expanded(
                   child: ListView.builder(
-                    itemCount: length + 1,
-                    itemBuilder: (context, index) => index < length
+                    itemCount: testMarks.length + 1,
+                    itemBuilder: (context, index) => index < testMarks.length
                         ? TextAvatarActionCard(
-                            title: testMarksList[index]['name'],
+                            title: testMarks[index]['name'].toString(),
                             action: SizedBox(
-                              width: 120,
-                              child: TextInput(
-                                labelText: 'Marks',
-                                prefixIcon: Icons.assignment_outlined,
-                                inputType: TextInputType.number,
-                                initialValue:
-                                    testMarksList[index]['marks'].toString(),
-                                controller: marksControllers[index],
-                                validator: (value) => validateMarks(
-                                  marksControllers[index].text,
-                                  100.toString(),
-                                ),
-                              ),
-                            ),
+                                width: 120,
+                                child: PercentIndicator(
+                                  currentValue: testMarks[index]['marks'],
+                                  totalValue: testMarks[index]['totalMarks'],
+                                  showPercentage: false,
+                                  description:
+                                      'Out of ${formatMarks(testMarks[index]['totalMarks'])}',
+                                )),
                             children: [
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const Text('Total Marks: '),
-                                  Text(
-                                    '${testMarksList[index]['totalMarks']}',
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(height: 5),
-                              Text(formatDate(testMarksList[index]['date'])),
-                              Text(testMarksList[index]['time']),
+                              Text(formatDate(testMarks[index]['date'])),
+                              Text(formatTimeRange(
+                                testMarks[index]['startTime'],
+                                testMarks[index]['endTime'],
+                              )),
                             ],
                           )
                         : const SizedBox(height: 120),
                   ),
                 ),
               ],
-            ),
-            FloatingCircularActionButton(
-              icon: Icons.check_outlined,
-              onPressed: () {},
             ),
           ],
         ),

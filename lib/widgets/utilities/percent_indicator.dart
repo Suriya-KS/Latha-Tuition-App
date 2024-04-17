@@ -6,12 +6,14 @@ class PercentIndicator extends StatelessWidget {
     required this.currentValue,
     required this.totalValue,
     this.description,
+    this.showPercentage = true,
     super.key,
   });
 
   final num currentValue;
   final num totalValue;
   final String? description;
+  final bool showPercentage;
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +31,9 @@ class PercentIndicator extends StatelessWidget {
           animation: true,
           percent: percentage,
           center: Text(
-            '${(percentage * 100).round().toString()}%',
+            showPercentage
+                ? '${(percentage * 100).round().toString()}%'
+                : currentValue.toString(),
             style: TextStyle(
               color: percentage > 0.5
                   ? Theme.of(context).colorScheme.primary
