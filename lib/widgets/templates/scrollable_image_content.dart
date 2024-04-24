@@ -51,6 +51,7 @@ class ScrollableImageContent extends StatelessWidget {
                   ),
                   const SizedBox(height: 50),
                   Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       TitleText(title: title),
                       const SizedBox(height: 10),

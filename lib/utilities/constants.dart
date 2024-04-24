@@ -19,6 +19,7 @@ const phoneConfirmImage = "assets/images/phone_confirm.svg";
 const groupPaymentImage = "assets/images/group_payment.svg";
 const errorImage = "assets/images/error.svg";
 const waitingImage = "assets/images/waiting.svg";
+const noNetworkImage = "assets/images/no_network.svg";
 const placeholderImage = "assets/images/placeholder.svg";
 
 const alphabets = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';

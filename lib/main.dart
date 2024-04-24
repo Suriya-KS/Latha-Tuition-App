@@ -8,13 +8,13 @@ import 'package:latha_tuition_app/firebase_options.dart';
 import 'package:latha_tuition_app/utilities/constants.dart';
 import 'package:latha_tuition_app/utilities/helper_functions.dart';
 import 'package:latha_tuition_app/utilities/app_theme.dart';
-import 'package:latha_tuition_app/utilities/snack_bar.dart';
 import 'package:latha_tuition_app/providers/authentication_provider.dart';
 import 'package:latha_tuition_app/providers/awaiting_admission_provider.dart';
 import 'package:latha_tuition_app/screens/onboarding.dart';
 import 'package:latha_tuition_app/screens/student/student_awaiting_approval.dart';
 import 'package:latha_tuition_app/screens/tutor/tutor_dashboard.dart';
 import 'package:latha_tuition_app/screens/student/student_dashboard.dart';
+import 'package:latha_tuition_app/screens/offline_error.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -46,7 +46,7 @@ class _MyAppState extends ConsumerState<MyApp> {
 
   Widget screen = const Placeholder();
 
-  void loadScreen(BuildContext context) async {
+  Future<void> loadScreen(BuildContext context) async {
     try {
       await ref.read(awaitingAdmissionProvider.notifier).loadStudentID();
 
@@ -103,15 +103,12 @@ class _MyAppState extends ConsumerState<MyApp> {
       authenticationMethods.clearStudentID();
 
       setState(() {
-        screen = const Placeholder();
+        screen = OfflineErrorScreen(onRetry: loadScreen);
       });
     } catch (error) {
-      if (!context.mounted) return;
-
-      snackBar(
-        context,
-        content: const Text(defaultErrorMessage),
-      );
+      setState(() {
+        screen = OfflineErrorScreen(onRetry: loadScreen);
+      });
     }
   }
 
