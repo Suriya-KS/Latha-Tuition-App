@@ -86,12 +86,14 @@ class _TutorStudentFeedbacksViewState
           'message': feedback,
           'date': DateTime.now(),
           'studentID': studentID,
+          'notifyStudent': true,
           'notifyParent': true,
         });
       } else {
         await feedbacksCollectionReference.doc(id).update({
           'message': feedback,
           'date': DateTime.now(),
+          'notifyStudent': true,
           'notifyParent': true,
         });
       }

@@ -7,12 +7,13 @@ import 'package:latha_tuition_app/utilities/helper_functions.dart';
 import 'package:latha_tuition_app/utilities/snack_bar.dart';
 import 'package:latha_tuition_app/providers/animated_drawer_provider.dart';
 import 'package:latha_tuition_app/providers/authentication_provider.dart';
+import 'package:latha_tuition_app/screens/student/student_payment_history.dart';
+import 'package:latha_tuition_app/screens/student/student_feedbacks.dart';
 import 'package:latha_tuition_app/widgets/utilities/loading_overlay.dart';
 import 'package:latha_tuition_app/widgets/utilities/side_drawer.dart';
 import 'package:latha_tuition_app/widgets/app_bar/scrollable_image_app_bar.dart';
 import 'package:latha_tuition_app/widgets/buttons/icon_with_badge_button.dart';
 import 'package:latha_tuition_app/widgets/student_dashboard/student_home_contents.dart';
-import 'package:latha_tuition_app/screens/student/student_payment_history.dart';
 
 class StudentHomeView extends ConsumerStatefulWidget {
   const StudentHomeView({super.key});
@@ -25,7 +26,8 @@ class _StudentHomeViewState extends ConsumerState<StudentHomeView> {
   final firestore = FirebaseFirestore.instance;
 
   bool isLoading = false;
-  bool showBadgeMark = false;
+  bool showPaymentBadgeMark = false;
+  bool showFeedbackBadgeMark = false;
   String studentName = '';
 
   void loadStudentName(BuildContext context) async {
@@ -63,6 +65,7 @@ class _StudentHomeViewState extends ConsumerState<StudentHomeView> {
   void loadPaymentHistoryNotification(BuildContext context) async {
     final studentID =
         ref.read(authenticationProvider)[Authentication.studentID];
+
     setState(() {
       isLoading = true;
     });
@@ -77,8 +80,43 @@ class _StudentHomeViewState extends ConsumerState<StudentHomeView> {
 
       setState(() {
         isLoading = false;
-        showBadgeMark =
+        showPaymentBadgeMark =
             (paymentHistoryNotificationAggregateQuerySnapshot.count ?? 0) > 0;
+      });
+    } catch (error) {
+      setState(() {
+        isLoading = false;
+      });
+
+      if (!context.mounted) return;
+
+      snackBar(
+        context,
+        content: const Text(defaultErrorMessage),
+      );
+    }
+  }
+
+  void loadFeedbackNotification(BuildContext context) async {
+    final studentID =
+        ref.read(authenticationProvider)[Authentication.studentID];
+
+    setState(() {
+      isLoading = true;
+    });
+
+    try {
+      final feedbackNotificationAggregateQuerySnapshot = await firestore
+          .collection('feedbacks')
+          .where('studentID', isEqualTo: studentID)
+          .where('notifyStudent', isEqualTo: true)
+          .count()
+          .get();
+
+      setState(() {
+        isLoading = false;
+        showFeedbackBadgeMark =
+            (feedbackNotificationAggregateQuerySnapshot.count ?? 0) > 0;
       });
     } catch (error) {
       setState(() {
@@ -107,12 +145,26 @@ class _StudentHomeViewState extends ConsumerState<StudentHomeView> {
     loadPaymentHistoryNotification(context);
   }
 
+  void navigateToStudentFeedbacksScreen(BuildContext context) async {
+    await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const StudentFeedbacksScreen(),
+      ),
+    );
+
+    if (!context.mounted) return;
+
+    loadFeedbackNotification(context);
+  }
+
   @override
   void initState() {
     super.initState();
 
     loadStudentName(context);
     loadPaymentHistoryNotification(context);
+    loadFeedbackNotification(context);
   }
 
   @override
@@ -160,8 +212,16 @@ class _StudentHomeViewState extends ConsumerState<StudentHomeView> {
                   actions: [
                     IconWithBadgeButton(
                       icon: Icons.currency_rupee,
-                      showBadgeMark: showBadgeMark,
+                      showBadgeMark: showPaymentBadgeMark,
                       onPressed: () => navigateToStudentPaymentHistoryScreen(
+                        context,
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    IconWithBadgeButton(
+                      icon: Icons.message_outlined,
+                      showBadgeMark: showFeedbackBadgeMark,
+                      onPressed: () => navigateToStudentFeedbacksScreen(
                         context,
                       ),
                     ),
