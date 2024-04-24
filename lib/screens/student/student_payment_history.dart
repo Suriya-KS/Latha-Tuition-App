@@ -8,6 +8,7 @@ import 'package:latha_tuition_app/utilities/modal_bottom_sheet.dart';
 import 'package:latha_tuition_app/utilities/snack_bar.dart';
 import 'package:latha_tuition_app/providers/authentication_provider.dart';
 import 'package:latha_tuition_app/widgets/utilities/loading_overlay.dart';
+import 'package:latha_tuition_app/widgets/utilities/image_with_caption.dart';
 import 'package:latha_tuition_app/widgets/app_bar/text_app_bar.dart';
 import 'package:latha_tuition_app/widgets/bottom_sheets/student_payment_request_sheet.dart';
 import 'package:latha_tuition_app/widgets/buttons/floating_circular_action_button.dart';
@@ -169,50 +170,58 @@ class _StudentPaymentRequestsScreenState
                   children: [
                     YearInput(onChange: yearChangeHandler),
                     const SizedBox(height: 10),
-                    Expanded(
-                      child: ListView.builder(
-                        itemCount: studentPaymentHistory.length + 1,
-                        itemBuilder: (context, index) => index <
-                                studentPaymentHistory.length
-                            ? TextAvatarActionCard(
-                                title: formatDate(
-                                  studentPaymentHistory[index]['date'],
-                                ),
-                                action: Container(
-                                  padding: const EdgeInsets.all(12),
-                                  decoration: BoxDecoration(
-                                    color: getPaymentContainerColor(
-                                      context,
-                                      studentPaymentHistory[index]['status'],
-                                    ),
-                                    shape: BoxShape.circle,
-                                  ),
-                                  child: Center(
-                                    child: Icon(
-                                      getPaymentStatusIcon(
-                                        studentPaymentHistory[index]['status'],
+                    studentPaymentHistory.isEmpty
+                        ? const ImageWithCaption(
+                            imagePath: notFoundImage,
+                            description: 'No records found!',
+                          )
+                        : Expanded(
+                            child: ListView.builder(
+                              itemCount: studentPaymentHistory.length + 1,
+                              itemBuilder: (context, index) => index <
+                                      studentPaymentHistory.length
+                                  ? TextAvatarActionCard(
+                                      title: formatDate(
+                                        studentPaymentHistory[index]['date'],
                                       ),
-                                      color: studentPaymentHistory[index]
-                                                  ['status'] ==
-                                              'pending approval'
-                                          ? Theme.of(context)
-                                              .colorScheme
-                                              .primary
-                                          : Colors.white,
-                                    ),
-                                  ),
-                                ),
-                                children: [
-                                  Text(
-                                    formatAmount(
-                                      studentPaymentHistory[index]['amount'],
-                                    ),
-                                  ),
-                                ],
-                              )
-                            : const SizedBox(height: 120),
-                      ),
-                    ),
+                                      action: Container(
+                                        padding: const EdgeInsets.all(12),
+                                        decoration: BoxDecoration(
+                                          color: getPaymentContainerColor(
+                                            context,
+                                            studentPaymentHistory[index]
+                                                ['status'],
+                                          ),
+                                          shape: BoxShape.circle,
+                                        ),
+                                        child: Center(
+                                          child: Icon(
+                                            getPaymentStatusIcon(
+                                              studentPaymentHistory[index]
+                                                  ['status'],
+                                            ),
+                                            color: studentPaymentHistory[index]
+                                                        ['status'] ==
+                                                    'pending approval'
+                                                ? Theme.of(context)
+                                                    .colorScheme
+                                                    .primary
+                                                : Colors.white,
+                                          ),
+                                        ),
+                                      ),
+                                      children: [
+                                        Text(
+                                          formatAmount(
+                                            studentPaymentHistory[index]
+                                                ['amount'],
+                                          ),
+                                        ),
+                                      ],
+                                    )
+                                  : const SizedBox(height: 120),
+                            ),
+                          ),
                     const SizedBox(height: screenPadding),
                   ],
                 ),

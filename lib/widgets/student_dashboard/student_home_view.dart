@@ -22,11 +22,43 @@ class StudentHomeView extends ConsumerStatefulWidget {
 }
 
 class _StudentHomeViewState extends ConsumerState<StudentHomeView> {
-  final paymentsCollectionReference =
-      FirebaseFirestore.instance.collection('payments');
+  final firestore = FirebaseFirestore.instance;
 
   bool isLoading = false;
   bool showBadgeMark = false;
+  String studentName = '';
+
+  void loadStudentName(BuildContext context) async {
+    setState(() {
+      isLoading = true;
+    });
+
+    try {
+      final studentID =
+          ref.read(authenticationProvider)[Authentication.studentID];
+
+      final studentDocumentSnapshot =
+          await firestore.collection('students').doc(studentID).get();
+
+      if (!studentDocumentSnapshot.exists) throw Error();
+
+      setState(() {
+        isLoading = false;
+        studentName = studentDocumentSnapshot.data()!['name'];
+      });
+    } catch (error) {
+      setState(() {
+        isLoading = false;
+      });
+
+      if (!context.mounted) return;
+
+      snackBar(
+        context,
+        content: const Text(defaultErrorMessage),
+      );
+    }
+  }
 
   void loadPaymentHistoryNotification(BuildContext context) async {
     final studentID =
@@ -36,12 +68,12 @@ class _StudentHomeViewState extends ConsumerState<StudentHomeView> {
     });
 
     try {
-      final paymentHistoryNotificationAggregateQuerySnapshot =
-          await paymentsCollectionReference
-              .where('studentID', isEqualTo: studentID)
-              .where('notifyStudent', isEqualTo: true)
-              .count()
-              .get();
+      final paymentHistoryNotificationAggregateQuerySnapshot = await firestore
+          .collection('payments')
+          .where('studentID', isEqualTo: studentID)
+          .where('notifyStudent', isEqualTo: true)
+          .count()
+          .get();
 
       setState(() {
         isLoading = false;
@@ -79,6 +111,7 @@ class _StudentHomeViewState extends ConsumerState<StudentHomeView> {
   void initState() {
     super.initState();
 
+    loadStudentName(context);
     loadPaymentHistoryNotification(context);
   }
 
@@ -86,7 +119,7 @@ class _StudentHomeViewState extends ConsumerState<StudentHomeView> {
   Widget build(BuildContext context) {
     final animatedDrawerData = ref.watch(animatedDrawerProvider);
     final screenHeight = MediaQuery.of(context).size.height;
-    final formattedName = formatName('Student Name');
+    final formattedName = formatName(studentName);
 
     return LoadingOverlay(
       isLoading: isLoading,

@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
 import 'package:latha_tuition_app/utilities/constants.dart';
+import 'package:latha_tuition_app/utilities/modal_bottom_sheet.dart';
 import 'package:latha_tuition_app/utilities/snack_bar.dart';
 import 'package:latha_tuition_app/providers/loading_provider.dart';
 import 'package:latha_tuition_app/providers/tutor_search_provider.dart';
@@ -11,6 +12,7 @@ import 'package:latha_tuition_app/screens/authentication/login.dart';
 import 'package:latha_tuition_app/screens/student/student_registration.dart';
 import 'package:latha_tuition_app/screens/tutor/tutor_new_admissions.dart';
 import 'package:latha_tuition_app/screens/tutor/tutor_payment_approval.dart';
+import 'package:latha_tuition_app/widgets/bottom_sheets/student_fetch_admission_status_sheet.dart';
 
 void navigateToLoginScreen(BuildContext context, Screen? screen) {
   if (screen == Screen.onboarding) {
@@ -56,7 +58,7 @@ Future<void> navigateToTrackScreen(
 void navigateToStudentRegistrationScreen(
   BuildContext context,
   WidgetRef ref, {
-  Screen? screen,
+  required Screen screen,
 }) {
   final loadingMethods = ref.read(loadingProvider.notifier);
 
@@ -69,12 +71,22 @@ void navigateToStudentRegistrationScreen(
         builder: (BuildContext context) => const StudentRegistrationScreen(),
       ),
     );
-  } else {
+  } else if (screen == Screen.login) {
+    Navigator.pop(context);
+
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
         builder: (BuildContext context) => const StudentRegistrationScreen(),
       ),
+    );
+  } else {
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(
+        builder: (BuildContext context) => const StudentRegistrationScreen(),
+      ),
+      (route) => false,
     );
   }
 }
@@ -94,6 +106,18 @@ Future<void> navigateToTutorPaymentApprovalScreen(BuildContext context) async {
     MaterialPageRoute(
       builder: (context) => const TutorPaymentApprovalScreen(),
     ),
+  );
+}
+
+void showStudentFetchAdmissionStatusSheet(
+  BuildContext context, {
+  required Screen screen,
+}) {
+  if (screen == Screen.onboarding) Navigator.pop(context);
+
+  modalBottomSheet(
+    context,
+    const StudentFetchAdmissionStatusSheet(),
   );
 }
 

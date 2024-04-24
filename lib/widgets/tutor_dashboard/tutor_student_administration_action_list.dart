@@ -203,6 +203,7 @@ class _TutorStudentAdministrationActionListState
               ],
             ),
           ),
+          const SizedBox(height: 10),
           IntrinsicHeight(
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,

@@ -3,12 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:latha_tuition_app/utilities/constants.dart';
 import 'package:latha_tuition_app/utilities/helper_functions.dart';
-import 'package:latha_tuition_app/utilities/modal_bottom_sheet.dart';
 import 'package:latha_tuition_app/screens/authentication/tutor_sign_up.dart';
 import 'package:latha_tuition_app/widgets/buttons/primary_button.dart';
 import 'package:latha_tuition_app/widgets/buttons/info_action_button.dart';
 import 'package:latha_tuition_app/widgets/texts/title_text.dart';
-import 'package:latha_tuition_app/widgets/bottom_sheets/student_fetch_admission_status_sheet.dart';
 
 class GetStartedSheet extends ConsumerWidget {
   const GetStartedSheet({
@@ -16,16 +14,7 @@ class GetStartedSheet extends ConsumerWidget {
     super.key,
   });
 
-  final Screen? screen;
-
-  void showStudentFetchAdmissionStatusSheet(BuildContext context) {
-    Navigator.pop(context);
-
-    modalBottomSheet(
-      context,
-      const StudentFetchAdmissionStatusSheet(),
-    );
-  }
+  final Screen screen;
 
   void navigateToTutorSignUpScreen(BuildContext context) {
     if (screen == Screen.onboarding) {
@@ -65,7 +54,10 @@ class GetStartedSheet extends ConsumerWidget {
         InfoActionButton(
           infoText: 'Applied and waiting?',
           buttonText: 'Check status',
-          onPressed: () => showStudentFetchAdmissionStatusSheet(context),
+          onPressed: () => showStudentFetchAdmissionStatusSheet(
+            context,
+            screen: Screen.onboarding,
+          ),
         ),
         if (screen == Screen.onboarding)
           InfoActionButton(

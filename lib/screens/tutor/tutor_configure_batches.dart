@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:latha_tuition_app/utilities/constants.dart';
 import 'package:latha_tuition_app/utilities/snack_bar.dart';
+import 'package:latha_tuition_app/utilities/alert_dialogue.dart';
 import 'package:latha_tuition_app/widgets/utilities/loading_overlay.dart';
 import 'package:latha_tuition_app/widgets/utilities/title_icon_list.dart';
 import 'package:latha_tuition_app/widgets/app_bar/text_app_bar.dart';
@@ -138,36 +139,58 @@ class _TutorConfigureBatchesScreenState
 
   @override
   Widget build(BuildContext context) {
-    return LoadingOverlay(
-      isLoading: isLoading,
-      child: Scaffold(
-        appBar: const TextAppBar(
-          title: 'Manage Batches',
-        ),
-        body: SafeArea(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Expanded(
-                child: TitleIconList(
-                  fieldName: 'batch name',
-                  items: batchNames,
-                  onListTileTap: (index, batchName) => editBatchHandler(
-                    index,
-                    batchName,
+    return PopScope(
+      canPop: !isChanged,
+      onPopInvoked: (didPop) => alertDialogue(
+        context,
+        actions: [
+          TextButton(
+            onPressed: () => closeAlertDialogue(
+              context,
+              function: Navigator.pop,
+            ),
+            child: const Text('Discard'),
+          ),
+          OutlinedButton(
+            onPressed: () => closeAlertDialogue(
+              context,
+              function: saveBatchHandler,
+            ),
+            child: const Text('Save'),
+          ),
+        ],
+      ),
+      child: LoadingOverlay(
+        isLoading: isLoading,
+        child: Scaffold(
+          appBar: const TextAppBar(
+            title: 'Manage Batches',
+          ),
+          body: SafeArea(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: TitleIconList(
+                    fieldName: 'batch name',
+                    items: batchNames,
+                    onListTileTap: (index, batchName) => editBatchHandler(
+                      index,
+                      batchName,
+                    ),
+                    onIconPressAndSwipe: (index) => deleteBatchHandler(index),
+                    onButtonPress: (batchName) => addBatchHandler(batchName),
                   ),
-                  onIconPressAndSwipe: (index) => deleteBatchHandler(index),
-                  onButtonPress: (batchName) => addBatchHandler(batchName),
                 ),
-              ),
-              const SizedBox(height: 20),
-              if (isChanged)
-                PrimaryButton(
-                  title: 'Save',
-                  onPressed: () => saveBatchHandler(context),
-                ),
-              const SizedBox(height: 30),
-            ],
+                const SizedBox(height: 20),
+                if (isChanged)
+                  PrimaryButton(
+                    title: 'Save',
+                    onPressed: () => saveBatchHandler(context),
+                  ),
+                const SizedBox(height: 30),
+              ],
+            ),
           ),
         ),
       ),

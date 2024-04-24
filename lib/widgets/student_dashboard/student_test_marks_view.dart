@@ -8,9 +8,10 @@ import 'package:latha_tuition_app/utilities/helper_functions.dart';
 import 'package:latha_tuition_app/utilities/snack_bar.dart';
 import 'package:latha_tuition_app/providers/authentication_provider.dart';
 import 'package:latha_tuition_app/widgets/app_bar/text_app_bar.dart';
+import 'package:latha_tuition_app/widgets/utilities/loading_overlay.dart';
+import 'package:latha_tuition_app/widgets/utilities/image_with_caption.dart';
 import 'package:latha_tuition_app/widgets/form_inputs/month_input.dart';
 import 'package:latha_tuition_app/widgets/student_dashboard/student_test_marks_list.dart';
-import 'package:latha_tuition_app/widgets/utilities/loading_overlay.dart';
 
 class StudentTestMarksView extends ConsumerStatefulWidget {
   const StudentTestMarksView({super.key});
@@ -128,30 +129,35 @@ class _StudentTestViewState extends ConsumerState<StudentTestMarksView> {
       child: Column(
         children: [
           const TextAppBar(title: 'Test Marks Records'),
-          Expanded(
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  MonthInput(onChange: monthChangeHandler),
-                  const SizedBox(height: 20),
-                  testMarks.isEmpty
-                      ? Column(
-                          children: [
-                            const SizedBox(height: 30),
-                            SvgPicture.asset(
-                              notFoundImage,
-                              height: 100,
-                            ),
-                            const SizedBox(height: 20),
-                            const Text('No Records Found!'),
-                          ],
-                        )
-                      : StudentTestMarksList(items: testMarks),
-                  const SizedBox(height: 20),
-                ],
-              ),
-            ),
-          ),
+          MonthInput(onChange: monthChangeHandler),
+          testMarks.isEmpty
+              ? const ImageWithCaption(
+                  imagePath: notFoundImage,
+                  description: 'No records found!',
+                )
+              : Expanded(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        const SizedBox(height: 20),
+                        testMarks.isEmpty
+                            ? Column(
+                                children: [
+                                  const SizedBox(height: 30),
+                                  SvgPicture.asset(
+                                    notFoundImage,
+                                    height: 100,
+                                  ),
+                                  const SizedBox(height: 20),
+                                  const Text('No Records Found!'),
+                                ],
+                              )
+                            : StudentTestMarksList(items: testMarks),
+                        const SizedBox(height: 20),
+                      ],
+                    ),
+                  ),
+                ),
         ],
       ),
     );

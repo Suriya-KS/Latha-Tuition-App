@@ -32,6 +32,14 @@ class StudentRegistrationScreen extends ConsumerWidget {
                 const StudentRegistrationForm(),
                 const SizedBox(height: 10),
                 InfoActionButton(
+                  infoText: 'Applied and waiting?',
+                  buttonText: 'Check status',
+                  onPressed: () => showStudentFetchAdmissionStatusSheet(
+                    context,
+                    screen: Screen.studentRegistration,
+                  ),
+                ),
+                InfoActionButton(
                   infoText: 'Already a student?',
                   buttonText: 'Login here',
                   onPressed: () => navigateToLoginScreen(

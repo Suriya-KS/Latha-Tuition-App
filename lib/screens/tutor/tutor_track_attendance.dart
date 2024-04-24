@@ -5,9 +5,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:latha_tuition_app/utilities/constants.dart';
 import 'package:latha_tuition_app/utilities/helper_functions.dart';
 import 'package:latha_tuition_app/utilities/snack_bar.dart';
+import 'package:latha_tuition_app/utilities/alert_dialogue.dart';
 import 'package:latha_tuition_app/providers/calendar_view_provider.dart';
 import 'package:latha_tuition_app/providers/track_sheet_provider.dart';
 import 'package:latha_tuition_app/widgets/utilities/loading_overlay.dart';
+import 'package:latha_tuition_app/widgets/utilities/image_with_caption.dart';
 import 'package:latha_tuition_app/widgets/utilities/tutor_track_record_details.dart';
 import 'package:latha_tuition_app/widgets/templates/scrollable_details_list.dart';
 import 'package:latha_tuition_app/widgets/cards/text_avatar_action_card.dart';
@@ -19,7 +21,7 @@ class TutorTrackAttendanceScreen extends ConsumerStatefulWidget {
     super.key,
   });
 
-  final List<dynamic>? attendanceList;
+  final List<Map<String, dynamic>>? attendanceList;
 
   @override
   ConsumerState<TutorTrackAttendanceScreen> createState() =>
@@ -32,7 +34,7 @@ class _TutorTrackAttendanceScreenState
 
   bool isLoading = false;
   bool isChanged = false;
-  List<dynamic> attendanceList = [];
+  List<Map<String, dynamic>> attendanceList = [];
 
   void loadBatchStudents(
     BuildContext context, {
@@ -45,7 +47,7 @@ class _TutorTrackAttendanceScreenState
 
     final batchName = ref.read(trackSheetProvider)[TrackSheet.batchName];
 
-    List<dynamic> studentAttendanceList = [];
+    List<Map<String, dynamic>> studentAttendanceList = [];
 
     try {
       if (widget.attendanceList != null) {
@@ -67,10 +69,10 @@ class _TutorTrackAttendanceScreenState
         for (final student in studentIDsAndNames) {
           final status = widget.attendanceList!.firstWhere(
             (status) => status['studentID'] == student['studentID'],
-            orElse: () => null,
+            orElse: () => {'status': null},
           );
 
-          if (status == null) continue;
+          if (status['status'] == null) continue;
 
           studentAttendanceList.add({
             'studentID': student['studentID'],
@@ -186,53 +188,82 @@ class _TutorTrackAttendanceScreenState
   Widget build(BuildContext context) {
     final calendarViewData = ref.watch(calendarViewProvider);
     final trackSheetData = ref.watch(trackSheetProvider);
+    final canSave = (widget.attendanceList == null || isChanged) &&
+        attendanceList.isNotEmpty;
 
-    return LoadingOverlay(
-      isLoading: isLoading,
-      child: ScrollableDetailsList(
-        title: 'Track Attendance',
-        onPressed: widget.attendanceList == null || isChanged
-            ? () => trackAttendanceHandler(context)
-            : null,
-        children: [
-          TutorTrackRecordDetails(
-            title: trackSheetData[TrackSheet.batchName],
-            date: calendarViewData[CalendarView.selectedDate],
-            startTime: trackSheetData[TrackSheet.startTime],
-            endTime: trackSheetData[TrackSheet.endTime],
-            screen: Screen.attendance,
-            onEdit: () => loadBatchStudents(context, isUpdated: true),
-          ),
-          const SizedBox(height: 10),
-          Expanded(
-            child: ListView.builder(
-              itemCount: attendanceList.length + 1,
-              itemBuilder: (context, index) => index < attendanceList.length
-                  ? TextAvatarActionCard(
-                      title: attendanceList[index]['studentName'],
-                      action: ToggleInput(
-                        backgroundColors: [
-                          Theme.of(context).colorScheme.primary,
-                          Theme.of(context).colorScheme.error,
-                        ],
-                        isSelected: attendanceList[index]['status'] == 'present'
-                            ? [true, false]
-                            : [false, true],
-                        onToggle: (toggleIndex) =>
-                            attendanceStatusToggleHandler(
-                          toggleIndex,
-                          index,
-                        ),
-                        children: const [
-                          Icon(Icons.check),
-                          Icon(Icons.close),
-                        ],
-                      ),
-                    )
-                  : const SizedBox(height: 120),
+    return PopScope(
+      canPop: !canSave,
+      onPopInvoked: (didPop) => alertDialogue(
+        context,
+        actions: [
+          TextButton(
+            onPressed: () => closeAlertDialogue(
+              context,
+              function: Navigator.pop,
             ),
+            child: const Text('Discard'),
+          ),
+          OutlinedButton(
+            onPressed: () => closeAlertDialogue(
+              context,
+              function: trackAttendanceHandler,
+            ),
+            child: const Text('Save'),
           ),
         ],
+      ),
+      child: LoadingOverlay(
+        isLoading: isLoading,
+        child: ScrollableDetailsList(
+          title: 'Track Attendance',
+          onPressed: canSave ? () => trackAttendanceHandler(context) : null,
+          children: [
+            TutorTrackRecordDetails(
+              title: trackSheetData[TrackSheet.batchName],
+              date: calendarViewData[CalendarView.selectedDate],
+              startTime: trackSheetData[TrackSheet.startTime],
+              endTime: trackSheetData[TrackSheet.endTime],
+              screen: Screen.attendance,
+              onEdit: () => loadBatchStudents(context, isUpdated: true),
+            ),
+            const SizedBox(height: 10),
+            attendanceList.isEmpty
+                ? const ImageWithCaption(
+                    imagePath: notFoundImage,
+                    description: 'No students found!',
+                  )
+                : Expanded(
+                    child: ListView.builder(
+                      itemCount: attendanceList.length + 1,
+                      itemBuilder: (context, index) => index <
+                              attendanceList.length
+                          ? TextAvatarActionCard(
+                              title: attendanceList[index]['studentName'],
+                              action: ToggleInput(
+                                backgroundColors: [
+                                  Theme.of(context).colorScheme.primary,
+                                  Theme.of(context).colorScheme.error,
+                                ],
+                                isSelected:
+                                    attendanceList[index]['status'] == 'present'
+                                        ? [true, false]
+                                        : [false, true],
+                                onToggle: (toggleIndex) =>
+                                    attendanceStatusToggleHandler(
+                                  toggleIndex,
+                                  index,
+                                ),
+                                children: const [
+                                  Icon(Icons.check),
+                                  Icon(Icons.close),
+                                ],
+                              ),
+                            )
+                          : const SizedBox(height: 120),
+                    ),
+                  ),
+          ],
+        ),
       ),
     );
   }

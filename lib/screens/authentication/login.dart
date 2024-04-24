@@ -23,7 +23,7 @@ class LoginScreen extends ConsumerWidget {
 
     modalBottomSheet(
       context,
-      const GetStartedSheet(screen: null),
+      const GetStartedSheet(screen: Screen.login),
     );
   }
 

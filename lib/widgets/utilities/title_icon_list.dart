@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
+import 'package:latha_tuition_app/utilities/constants.dart';
 import 'package:latha_tuition_app/utilities/helper_functions.dart';
 import 'package:latha_tuition_app/utilities/modal_bottom_sheet.dart';
+import 'package:latha_tuition_app/widgets/utilities/image_with_caption.dart';
 import 'package:latha_tuition_app/widgets/list_tiles/title_icon_action_tile.dart';
 import 'package:latha_tuition_app/widgets/bottom_sheets/text_edit_sheet.dart';
 
@@ -48,6 +50,11 @@ class TitleIconList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String emptyDescription = 'data';
+
+    if (fieldName == 'batch name') emptyDescription = 'batches';
+    if (fieldName == 'education board') emptyDescription = 'education boards';
+
     return ListView.builder(
       itemCount: items.length + 1,
       itemBuilder: (context, index) => index < items.length
@@ -66,6 +73,13 @@ class TitleIconList extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   const SizedBox(height: 20),
+                  if (items.isEmpty)
+                    ImageWithCaption(
+                      imagePath: notFoundImage,
+                      description: 'No $emptyDescription found!',
+                      useMaxHeight: false,
+                    ),
+                  if (items.isEmpty) const SizedBox(height: 50),
                   OutlinedButton(
                     style: OutlinedButton.styleFrom(
                       shape: RoundedRectangleBorder(

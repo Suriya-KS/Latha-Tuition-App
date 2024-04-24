@@ -20,7 +20,7 @@ class TutorEventsList extends ConsumerWidget {
   final List<Map<String, dynamic>> items;
   final void Function()? onUpdate;
 
-  int countPresentStudents(List<dynamic> studentList) {
+  int countPresentStudents(List<Map<String, dynamic>> studentList) {
     int presentCount = 0;
 
     for (var student in studentList) {
@@ -32,7 +32,7 @@ class TutorEventsList extends ConsumerWidget {
     return presentCount;
   }
 
-  num countStudentsAverageMarks(List<dynamic> studentList) {
+  num countStudentsAverageMarks(List<Map<String, dynamic>> studentList) {
     num studentsMarks = 0;
 
     for (var student in studentList) {
@@ -49,7 +49,7 @@ class TutorEventsList extends ConsumerWidget {
     required String batchName,
     required TimeOfDay startTime,
     required TimeOfDay endTime,
-    required List<dynamic> attendance,
+    required List<Map<String, dynamic>> attendance,
   }) async {
     final trackSheetMethods = ref.read(trackSheetProvider.notifier);
 
@@ -77,7 +77,7 @@ class TutorEventsList extends ConsumerWidget {
     required String batchName,
     required TimeOfDay startTime,
     required TimeOfDay endTime,
-    required List<dynamic> testMarks,
+    required List<Map<String, dynamic>> testMarks,
     required num totalMarks,
   }) async {
     final trackSheetMethods = ref.read(trackSheetProvider.notifier);
@@ -120,10 +120,14 @@ class TutorEventsList extends ConsumerWidget {
                 batchName: items[index]['batchName'],
                 startTime: items[index]['startTime'],
                 endTime: items[index]['endTime'],
-                attendance: items[index]['attendance'],
+                attendance: List<Map<String, dynamic>>.from(
+                  items[index]['attendance'],
+                ),
               ),
               action: PercentIndicator(
-                currentValue: countPresentStudents(items[index]['attendance']),
+                currentValue: countPresentStudents(
+                  List<Map<String, dynamic>>.from(items[index]['attendance']),
+                ),
                 totalValue: items[index]['attendance'].length,
               ),
               children: [
@@ -156,12 +160,15 @@ class TutorEventsList extends ConsumerWidget {
                   batchName: items[index]['batchName'],
                   startTime: items[index]['startTime'],
                   endTime: items[index]['endTime'],
-                  testMarks: items[index]['marks'],
+                  testMarks: List<Map<String, dynamic>>.from(
+                    items[index]['marks'],
+                  ),
                   totalMarks: items[index]['totalMarks'],
                 ),
                 action: PercentIndicator(
-                  currentValue:
-                      countStudentsAverageMarks(items[index]['marks']),
+                  currentValue: countStudentsAverageMarks(
+                    List<Map<String, dynamic>>.from(items[index]['marks']),
+                  ),
                   totalValue: items[index]['totalMarks'],
                   description: 'On average',
                 ),

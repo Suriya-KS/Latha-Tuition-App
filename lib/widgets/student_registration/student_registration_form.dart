@@ -37,6 +37,12 @@ class _StudentRegistrationFormState
   String? parentalRole;
   List<String> educationBoardsAllowed = [];
   List<String> standardsAllowed = [];
+  Map<String, bool> isUnique = {
+    'emailAddress': true,
+    'phoneNumber': true,
+    'parentEmailAddress': true,
+    'parentPhoneNumber': true,
+  };
 
   late TextEditingController nameController;
   late TextEditingController emailController;
@@ -114,9 +120,33 @@ class _StudentRegistrationFormState
   }
 
   void studentRegistrationHandler(BuildContext context) async {
-    if (!formKey.currentState!.validate()) return;
-
     final loadingMethods = ref.read(loadingProvider.notifier);
+
+    loadingMethods.setLoadingStatus(true);
+
+    isUnique['emailAddress'] = await validateUnique(
+      emailController.text,
+      'emailAddress',
+    );
+
+    isUnique['phoneNumber'] = await validateUnique(
+      phoneController.text,
+      'phoneNumber',
+    );
+
+    isUnique['parentEmailAddress'] = await validateUnique(
+      parentEmailController.text,
+      'parentEmailAddress',
+    );
+
+    isUnique['parentPhoneNumber'] = await validateUnique(
+      parentPhoneController.text,
+      'parentPhoneNumber',
+    );
+
+    loadingMethods.setLoadingStatus(false);
+
+    if (!formKey.currentState!.validate()) return;
 
     loadingMethods.setLoadingStatus(true);
 
@@ -232,8 +262,15 @@ class _StudentRegistrationFormState
             labelText: 'Email Address',
             prefixIcon: Icons.mail_outlined,
             inputType: TextInputType.emailAddress,
+            onChanged: (value) => isUnique['emailAddress'] = true,
             controller: emailController,
-            validator: validateEmail,
+            validator: (value) => isUnique['emailAddress']!
+                ? validateEmail(
+                    value,
+                    secondaryField: "parent's email address",
+                    secondaryValue: parentEmailController.text,
+                  )
+                : 'Email address already exists',
           ),
           const SizedBox(height: 10),
           TextInput(
@@ -241,8 +278,15 @@ class _StudentRegistrationFormState
             prefixText: '+91 ',
             prefixIcon: Icons.phone_outlined,
             inputType: TextInputType.phone,
+            onChanged: (value) => isUnique['phoneNumber'] = true,
             controller: phoneController,
-            validator: validatePhoneNumber,
+            validator: (value) => isUnique['phoneNumber']!
+                ? validatePhoneNumber(
+                    value,
+                    secondaryField: "parent's phone number",
+                    secondaryValue: parentPhoneController.text,
+                  )
+                : 'Phone number already exists',
           ),
           const SizedBox(height: 10),
           DropdownInput(
@@ -259,8 +303,11 @@ class _StudentRegistrationFormState
             prefixIcon: Icons.school_outlined,
             inputType: TextInputType.text,
             controller: schoolNameController,
-            validator: (value) =>
-                validateRequiredInput(value, 'your', 'school name'),
+            validator: (value) => validateRequiredInput(
+              value,
+              'your',
+              'school name',
+            ),
           ),
           const SizedBox(height: 10),
           DropdownInput(
@@ -296,8 +343,11 @@ class _StudentRegistrationFormState
             prefixIcon: Icons.home_outlined,
             inputType: TextInputType.text,
             controller: addressLine1Controller,
-            validator: (value) =>
-                validateRequiredInput(value, 'your', 'address line 1'),
+            validator: (value) => validateRequiredInput(
+              value,
+              'your',
+              'address line 1',
+            ),
           ),
           const SizedBox(height: 10),
           TextInput(
@@ -305,8 +355,11 @@ class _StudentRegistrationFormState
             prefixIcon: Icons.home_outlined,
             inputType: TextInputType.text,
             controller: addressLine2Controller,
-            validator: (value) =>
-                validateRequiredInput(value, 'your', 'address line 2'),
+            validator: (value) => validateRequiredInput(
+              value,
+              'your',
+              'address line 2',
+            ),
           ),
           const SizedBox(height: 10),
           TextInput(
@@ -322,7 +375,11 @@ class _StudentRegistrationFormState
             prefixIcon: Icons.location_city_outlined,
             inputType: TextInputType.text,
             controller: cityController,
-            validator: (value) => validateRequiredInput(value, 'your', 'city'),
+            validator: (value) => validateRequiredInput(
+              value,
+              'your',
+              'city',
+            ),
           ),
           const SizedBox(height: 10),
           TextInput(
@@ -330,7 +387,11 @@ class _StudentRegistrationFormState
             prefixIcon: Icons.map_outlined,
             inputType: TextInputType.text,
             controller: stateController,
-            validator: (value) => validateRequiredInput(value, 'your', 'state'),
+            validator: (value) => validateRequiredInput(
+              value,
+              'your',
+              'state',
+            ),
           ),
           const SizedBox(height: 10),
           TextInput(
@@ -338,8 +399,11 @@ class _StudentRegistrationFormState
             prefixIcon: Icons.public_outlined,
             inputType: TextInputType.text,
             controller: countryController,
-            validator: (value) =>
-                validateRequiredInput(value, 'your', 'country'),
+            validator: (value) => validateRequiredInput(
+              value,
+              'your',
+              'country',
+            ),
           ),
           const SizedBox(height: 50),
           const SubtitleText(subtitle: "Parent's Details"),
@@ -360,20 +424,34 @@ class _StudentRegistrationFormState
           ),
           const SizedBox(height: 10),
           TextInput(
+            labelText: "Parent's Email Address",
+            prefixIcon: Icons.mail_outlined,
+            inputType: TextInputType.emailAddress,
+            onChanged: (value) => isUnique['parentEmailAddress'] = true,
+            controller: parentEmailController,
+            validator: (value) => isUnique['parentEmailAddress']!
+                ? validateEmail(
+                    value,
+                    secondaryField: "student's email address",
+                    secondaryValue: emailController.text,
+                  )
+                : 'Email address already exists',
+          ),
+          const SizedBox(height: 10),
+          TextInput(
             labelText: "Parent's Phone Number",
             prefixText: '+91 ',
             prefixIcon: Icons.phone_outlined,
             inputType: TextInputType.phone,
+            onChanged: (value) => isUnique['parentPhoneNumber'] = true,
             controller: parentPhoneController,
-            validator: validatePhoneNumber,
-          ),
-          const SizedBox(height: 10),
-          TextInput(
-            labelText: "Parent's Email Address",
-            prefixIcon: Icons.mail_outlined,
-            inputType: TextInputType.emailAddress,
-            controller: parentEmailController,
-            validator: validateEmail,
+            validator: (value) => isUnique['parentPhoneNumber']!
+                ? validatePhoneNumber(
+                    value,
+                    secondaryField: "student's phone number",
+                    secondaryValue: phoneController.text,
+                  )
+                : 'Phone number already exists',
           ),
           const SizedBox(height: 50),
           PrimaryButton(

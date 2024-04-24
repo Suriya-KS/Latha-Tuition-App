@@ -5,10 +5,12 @@ import 'package:latha_tuition_app/widgets/texts/subtitle_text.dart';
 class YearInput extends StatefulWidget {
   const YearInput({
     required this.onChange,
+    this.yearRange = 2,
     super.key,
   });
 
   final void Function(int) onChange;
+  final int yearRange;
 
   @override
   State<YearInput> createState() => _YearInputState();
@@ -17,7 +19,15 @@ class YearInput extends StatefulWidget {
 class _YearInputState extends State<YearInput> {
   int selectedYear = DateTime.now().year;
 
+  bool get canNavigateBack =>
+      selectedYear - 1 >= DateTime.now().year - widget.yearRange;
+
+  bool get canNavigateForward =>
+      selectedYear + 1 <= DateTime.now().year + widget.yearRange;
+
   void navigateToPreviousYear() {
+    if (!canNavigateBack) return;
+
     setState(() {
       selectedYear--;
     });
@@ -26,6 +36,8 @@ class _YearInputState extends State<YearInput> {
   }
 
   void navigateToNextYear() {
+    if (!canNavigateForward) return;
+
     setState(() {
       selectedYear++;
     });
@@ -43,7 +55,7 @@ class _YearInputState extends State<YearInput> {
             Icons.arrow_back_ios_outlined,
             size: 16,
           ),
-          onPressed: navigateToPreviousYear,
+          onPressed: canNavigateBack ? navigateToPreviousYear : null,
         ),
         SubtitleText(subtitle: selectedYear.toString()),
         IconButton(
@@ -51,7 +63,7 @@ class _YearInputState extends State<YearInput> {
             Icons.arrow_forward_ios_outlined,
             size: 16,
           ),
-          onPressed: navigateToNextYear,
+          onPressed: canNavigateForward ? navigateToNextYear : null,
         ),
       ],
     );

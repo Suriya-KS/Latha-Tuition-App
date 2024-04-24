@@ -6,10 +6,12 @@ import 'package:latha_tuition_app/utilities/constants.dart';
 import 'package:latha_tuition_app/utilities/helper_functions.dart';
 import 'package:latha_tuition_app/utilities/form_validation_functions.dart';
 import 'package:latha_tuition_app/utilities/snack_bar.dart';
+import 'package:latha_tuition_app/utilities/alert_dialogue.dart';
 import 'package:latha_tuition_app/providers/calendar_view_provider.dart';
 import 'package:latha_tuition_app/providers/track_sheet_provider.dart';
 import 'package:latha_tuition_app/widgets/templates/scrollable_details_list.dart';
 import 'package:latha_tuition_app/widgets/utilities/loading_overlay.dart';
+import 'package:latha_tuition_app/widgets/utilities/image_with_caption.dart';
 import 'package:latha_tuition_app/widgets/utilities/tutor_track_record_details.dart';
 import 'package:latha_tuition_app/widgets/cards/text_avatar_action_card.dart';
 import 'package:latha_tuition_app/widgets/form_inputs/text_input.dart';
@@ -20,7 +22,7 @@ class TutorTrackTestMarksScreen extends ConsumerStatefulWidget {
     super.key,
   });
 
-  final List<dynamic>? testMarks;
+  final List<Map<String, dynamic>>? testMarks;
 
   @override
   ConsumerState<TutorTrackTestMarksScreen> createState() =>
@@ -34,7 +36,7 @@ class _TutorTrackTestMarksScreenState
 
   bool isLoading = false;
   bool isChanged = false;
-  List<dynamic> testMarks = [];
+  List<Map<String, dynamic>> testMarks = [];
   List<TextEditingController> marksControllers = [];
 
   void loadBatchStudents(
@@ -48,7 +50,7 @@ class _TutorTrackTestMarksScreenState
 
     final batchName = ref.read(trackSheetProvider)[TrackSheet.batchName];
 
-    List<dynamic> studentTestMarks = [];
+    List<Map<String, dynamic>> studentTestMarks = [];
 
     try {
       if (widget.testMarks != null) {
@@ -69,15 +71,15 @@ class _TutorTrackTestMarksScreenState
         for (final student in studentIDsAndNames) {
           final marks = widget.testMarks!.firstWhere(
             (mark) => mark['studentID'] == student['studentID'],
-            orElse: () => null,
+            orElse: () => {'marks': null},
           );
 
-          if (marks == null) continue;
+          if (marks == marks['marks']) continue;
 
           studentTestMarks.add({
             'studentID': student['studentID'],
             'studentName': student['studentName'],
-            'marks': marks['marks']
+            'marks': marks['marks'],
           });
         }
       } else {
@@ -207,60 +209,90 @@ class _TutorTrackTestMarksScreenState
   Widget build(BuildContext context) {
     final calendarViewData = ref.watch(calendarViewProvider);
     final trackSheetData = ref.watch(trackSheetProvider);
+    final canSave =
+        (widget.testMarks == null || isChanged) && testMarks.isNotEmpty;
 
-    return LoadingOverlay(
-      isLoading: isLoading,
-      child: ScrollableDetailsList(
-        title: 'Track Test Marks',
-        onPressed: widget.testMarks == null || isChanged
-            ? () => trackTestMarksHandler(context)
-            : null,
-        children: [
-          TutorTrackRecordDetails(
-            title: trackSheetData[TrackSheet.testName],
-            description: trackSheetData[TrackSheet.batchName],
-            totalMarks: trackSheetData[TrackSheet.totalMarks],
-            date: calendarViewData[CalendarView.selectedDate],
-            startTime: trackSheetData[TrackSheet.startTime],
-            endTime: trackSheetData[TrackSheet.endTime],
-            screen: Screen.testMarks,
-            onEdit: () => loadBatchStudents(context, isUpdated: true),
-          ),
-          const SizedBox(height: 10),
-          Expanded(
-            child: Form(
-              key: formKey,
-              child: ListView.builder(
-                itemCount: testMarks.length + 1,
-                itemBuilder: (context, index) => index < testMarks.length
-                    ? TextAvatarActionCard(
-                        title: testMarks[index]['studentName'],
-                        action: SizedBox(
-                          width: 120,
-                          child: TextInput(
-                            labelText: 'Marks',
-                            prefixIcon: Icons.assignment_outlined,
-                            inputType: TextInputType.text,
-                            initialValue: testMarks[index]['marks'] != null
-                                ? testMarks[index]['marks'].toString()
-                                : '',
-                            onChanged: (marks) => marksChangeHandler(
-                              marks,
-                              index,
-                            ),
-                            controller: marksControllers[index],
-                            validator: (value) => validateMarks(
-                              marksControllers[index].text,
-                              trackSheetData[TrackSheet.totalMarks].toString(),
-                            ),
-                          ),
-                        ),
-                      )
-                    : const SizedBox(height: 120),
-              ),
+    return PopScope(
+      canPop: !canSave,
+      onPopInvoked: (didPop) => alertDialogue(
+        context,
+        actions: [
+          TextButton(
+            onPressed: () => closeAlertDialogue(
+              context,
+              function: Navigator.pop,
             ),
+            child: const Text('Discard'),
+          ),
+          OutlinedButton(
+            onPressed: () => closeAlertDialogue(
+              context,
+              function: trackTestMarksHandler,
+            ),
+            child: const Text('Save'),
           ),
         ],
+      ),
+      child: LoadingOverlay(
+        isLoading: isLoading,
+        child: ScrollableDetailsList(
+          title: 'Track Test Marks',
+          onPressed: canSave ? () => trackTestMarksHandler(context) : null,
+          children: [
+            TutorTrackRecordDetails(
+              title: trackSheetData[TrackSheet.testName],
+              description: trackSheetData[TrackSheet.batchName],
+              totalMarks: trackSheetData[TrackSheet.totalMarks],
+              date: calendarViewData[CalendarView.selectedDate],
+              startTime: trackSheetData[TrackSheet.startTime],
+              endTime: trackSheetData[TrackSheet.endTime],
+              screen: Screen.testMarks,
+              onEdit: () => loadBatchStudents(context, isUpdated: true),
+            ),
+            const SizedBox(height: 10),
+            testMarks.isEmpty
+                ? const ImageWithCaption(
+                    imagePath: notFoundImage,
+                    description: 'No students found!',
+                  )
+                : Expanded(
+                    child: Form(
+                      key: formKey,
+                      child: ListView.builder(
+                        itemCount: testMarks.length + 1,
+                        itemBuilder: (context, index) => index <
+                                testMarks.length
+                            ? TextAvatarActionCard(
+                                title: testMarks[index]['studentName'],
+                                action: SizedBox(
+                                  width: 120,
+                                  child: TextInput(
+                                    labelText: 'Marks',
+                                    prefixIcon: Icons.assignment_outlined,
+                                    inputType: TextInputType.text,
+                                    initialValue: testMarks[index]['marks'] !=
+                                            null
+                                        ? testMarks[index]['marks'].toString()
+                                        : '',
+                                    onChanged: (marks) => marksChangeHandler(
+                                      marks,
+                                      index,
+                                    ),
+                                    controller: marksControllers[index],
+                                    validator: (value) => validateMarks(
+                                      marksControllers[index].text,
+                                      trackSheetData[TrackSheet.totalMarks]
+                                          .toString(),
+                                    ),
+                                  ),
+                                ),
+                              )
+                            : const SizedBox(height: 120),
+                      ),
+                    ),
+                  ),
+          ],
+        ),
       ),
     );
   }

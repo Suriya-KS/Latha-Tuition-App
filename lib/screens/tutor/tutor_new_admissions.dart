@@ -5,6 +5,7 @@ import 'package:latha_tuition_app/utilities/constants.dart';
 import 'package:latha_tuition_app/utilities/snack_bar.dart';
 import 'package:latha_tuition_app/screens/tutor/tutor_new_admission_details.dart';
 import 'package:latha_tuition_app/widgets/utilities/loading_overlay.dart';
+import 'package:latha_tuition_app/widgets/utilities/image_with_caption.dart';
 import 'package:latha_tuition_app/widgets/app_bar/text_app_bar.dart';
 import 'package:latha_tuition_app/widgets/list_tiles/icon_text_tile.dart';
 
@@ -90,51 +91,57 @@ class _TutorNewAdmissionsScreenState extends State<TutorNewAdmissionsScreen> {
       child: Scaffold(
         appBar: const TextAppBar(title: 'New Admissions'),
         body: SafeArea(
-          child: ListView.builder(
-            itemCount: studentAdmissionRequests.length + 1,
-            itemBuilder: (context, index) =>
-                index < studentAdmissionRequests.length
-                    ? IconTextTile(
-                        title: studentAdmissionRequests[index]['name'],
-                        description: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                children: [
-                                  const Text('Standard: '),
-                                  Text(
-                                    studentAdmissionRequests[index]['standard'],
-                                    style: const TextStyle(
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                ],
-                              ),
-                              Row(
-                                children: [
-                                  const Text('Education Board: '),
-                                  Text(
-                                    studentAdmissionRequests[index]
-                                        ['educationBoard'],
-                                    style: const TextStyle(
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                ],
-                              ),
-                            ]),
-                        icon: Text(
-                          '${index + 1}',
-                          style: const TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
+          child: studentAdmissionRequests.isEmpty
+              ? const ImageWithCaption(
+                  imagePath: notFoundImage,
+                  description: 'No requests found!',
+                )
+              : ListView.builder(
+                  itemCount: studentAdmissionRequests.length + 1,
+                  itemBuilder: (context, index) => index <
+                          studentAdmissionRequests.length
+                      ? IconTextTile(
+                          title: studentAdmissionRequests[index]['name'],
+                          description: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  children: [
+                                    const Text('Standard: '),
+                                    Text(
+                                      studentAdmissionRequests[index]
+                                          ['standard'],
+                                      style: const TextStyle(
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    const Text('Education Board: '),
+                                    Text(
+                                      studentAdmissionRequests[index]
+                                          ['educationBoard'],
+                                      style: const TextStyle(
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ],
+                                ),
+                              ]),
+                          icon: Text(
+                            '${index + 1}',
+                            style: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
-                        ),
-                        onTap: () => navigateToTutorNewAdmissionDetailsScreen(
-                          context,
-                          studentAdmissionRequests[index],
-                        ),
-                      )
-                    : const SizedBox(height: 20),
-          ),
+                          onTap: () => navigateToTutorNewAdmissionDetailsScreen(
+                            context,
+                            studentAdmissionRequests[index],
+                          ),
+                        )
+                      : const SizedBox(height: 20),
+                ),
         ),
       ),
     );

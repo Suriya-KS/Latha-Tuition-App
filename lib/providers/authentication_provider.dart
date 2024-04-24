@@ -2,10 +2,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 enum Authentication {
   studentID,
+  tutorID,
 }
 
 final initialState = {
   Authentication.studentID: null,
+  Authentication.tutorID: null,
 };
 
 class AuthenticationNotifier
@@ -16,6 +18,13 @@ class AuthenticationNotifier
     state = {
       ...state,
       Authentication.studentID: studentID,
+    };
+  }
+
+  void setTutorID(String tutorID) {
+    state = {
+      ...state,
+      Authentication.tutorID: tutorID,
     };
   }
 

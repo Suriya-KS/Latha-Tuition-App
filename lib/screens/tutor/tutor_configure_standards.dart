@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:latha_tuition_app/utilities/constants.dart';
 import 'package:latha_tuition_app/utilities/snack_bar.dart';
+import 'package:latha_tuition_app/utilities/alert_dialogue.dart';
 import 'package:latha_tuition_app/widgets/utilities/loading_overlay.dart';
 import 'package:latha_tuition_app/widgets/app_bar/text_app_bar.dart';
 import 'package:latha_tuition_app/widgets/buttons/primary_button.dart';
@@ -127,42 +128,64 @@ class _TutorConfigureStandardsScreenState
 
   @override
   Widget build(BuildContext context) {
-    return LoadingOverlay(
-      isLoading: isLoading,
-      child: Scaffold(
-        appBar: const TextAppBar(title: 'Customize Standards'),
-        body: SafeArea(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Expanded(
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      for (String standard in standards)
-                        SwitchListTile(
-                          title: Text(standard),
-                          value: enabledStandards.contains(standard),
-                          contentPadding: const EdgeInsets.symmetric(
-                            horizontal: 50,
+    return PopScope(
+      canPop: !isChanged,
+      onPopInvoked: (didPop) => alertDialogue(
+        context,
+        actions: [
+          TextButton(
+            onPressed: () => closeAlertDialogue(
+              context,
+              function: Navigator.pop,
+            ),
+            child: const Text('Discard'),
+          ),
+          OutlinedButton(
+            onPressed: () => closeAlertDialogue(
+              context,
+              function: saveStandardHandler,
+            ),
+            child: const Text('Save'),
+          ),
+        ],
+      ),
+      child: LoadingOverlay(
+        isLoading: isLoading,
+        child: Scaffold(
+          appBar: const TextAppBar(title: 'Customize Standards'),
+          body: SafeArea(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        for (String standard in standards)
+                          SwitchListTile(
+                            title: Text(standard),
+                            value: enabledStandards.contains(standard),
+                            contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 50,
+                            ),
+                            onChanged: (isChecked) => changeStandardHandler(
+                              standard,
+                              isChecked,
+                            ),
                           ),
-                          onChanged: (isChecked) => changeStandardHandler(
-                            standard,
-                            isChecked,
-                          ),
-                        ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
-              ),
-              const SizedBox(height: 20),
-              if (isChanged)
-                PrimaryButton(
-                  title: 'Save',
-                  onPressed: () => saveStandardHandler(context),
-                ),
-              const SizedBox(height: 30),
-            ],
+                const SizedBox(height: 20),
+                if (isChanged)
+                  PrimaryButton(
+                    title: 'Save',
+                    onPressed: () => saveStandardHandler(context),
+                  ),
+                const SizedBox(height: 30),
+              ],
+            ),
           ),
         ),
       ),

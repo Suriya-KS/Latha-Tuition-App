@@ -7,6 +7,7 @@ import 'package:latha_tuition_app/utilities/helper_functions.dart';
 import 'package:latha_tuition_app/utilities/snack_bar.dart';
 import 'package:latha_tuition_app/providers/loading_provider.dart';
 import 'package:latha_tuition_app/providers/tutor_search_provider.dart';
+import 'package:latha_tuition_app/widgets/utilities/image_with_caption.dart';
 import 'package:latha_tuition_app/widgets/cards/text_avatar_action_card.dart';
 import 'package:latha_tuition_app/widgets/form_inputs/year_input.dart';
 
@@ -24,7 +25,7 @@ class _TutorStudentPaymentHistoryViewState
       FirebaseFirestore.instance.collection('payments');
 
   int currentYear = DateTime.now().year;
-  List<dynamic> studentPaymentHistory = [];
+  List<Map<String, dynamic>> studentPaymentHistory = [];
 
   void loadStudentPaymentHistory(BuildContext context) async {
     final loadingMethods = ref.read(loadingProvider.notifier);
@@ -94,45 +95,53 @@ class _TutorStudentPaymentHistoryViewState
           children: [
             YearInput(onChange: yearChangeHandler),
             const SizedBox(height: 10),
-            Expanded(
-              child: ListView.builder(
-                itemCount: studentPaymentHistory.length + 1,
-                itemBuilder: (context, index) => index <
-                        studentPaymentHistory.length
-                    ? TextAvatarActionCard(
-                        title: formatDate(studentPaymentHistory[index]['date']),
-                        action: Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(100),
-                            color: getPaymentContainerColor(
-                              context,
-                              studentPaymentHistory[index]['status'],
-                            ),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(10),
-                            child: Icon(
-                              getPaymentStatusIcon(
-                                studentPaymentHistory[index]['status'],
+            studentPaymentHistory.isEmpty
+                ? const ImageWithCaption(
+                    imagePath: notFoundImage,
+                    description: 'No payments found!',
+                  )
+                : Expanded(
+                    child: ListView.builder(
+                      itemCount: studentPaymentHistory.length + 1,
+                      itemBuilder: (context, index) => index <
+                              studentPaymentHistory.length
+                          ? TextAvatarActionCard(
+                              title: formatDate(
+                                studentPaymentHistory[index]['date'],
                               ),
-                              color: studentPaymentHistory[index]['status'] ==
-                                      'pending approval'
-                                  ? Theme.of(context).colorScheme.primary
-                                  : Colors.white,
-                            ),
-                          ),
-                        ),
-                        children: [
-                          Text(
-                            formatAmount(
-                              studentPaymentHistory[index]['amount'],
-                            ),
-                          ),
-                        ],
-                      )
-                    : const SizedBox(height: screenPadding),
-              ),
-            ),
+                              action: Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(100),
+                                  color: getPaymentContainerColor(
+                                    context,
+                                    studentPaymentHistory[index]['status'],
+                                  ),
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(10),
+                                  child: Icon(
+                                    getPaymentStatusIcon(
+                                      studentPaymentHistory[index]['status'],
+                                    ),
+                                    color: studentPaymentHistory[index]
+                                                ['status'] ==
+                                            'pending approval'
+                                        ? Theme.of(context).colorScheme.primary
+                                        : Colors.white,
+                                  ),
+                                ),
+                              ),
+                              children: [
+                                Text(
+                                  formatAmount(
+                                    studentPaymentHistory[index]['amount'],
+                                  ),
+                                ),
+                              ],
+                            )
+                          : const SizedBox(height: screenPadding),
+                    ),
+                  ),
           ],
         ),
       ),

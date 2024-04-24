@@ -1,6 +1,31 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:latha_tuition_app/utilities/constants.dart';
+
+Future<bool> validateUnique(String? value, String type) async {
+  try {
+    final studentQuerySnapshot = await FirebaseFirestore.instance
+        .collection('students')
+        .where(type, isEqualTo: value)
+        .get();
+
+    final studentAdmissionRequestQuerySnapshot = await FirebaseFirestore
+        .instance
+        .collection('studentAdmissionRequests')
+        .where(type, isEqualTo: value)
+        .get();
+
+    if (studentQuerySnapshot.size > 0 ||
+        studentAdmissionRequestQuerySnapshot.size > 0) {
+      return false;
+    }
+
+    return true;
+  } catch (error) {
+    return false;
+  }
+}
 
 String? validateName(String? value) {
   if (value == null || value.isEmpty) {
@@ -24,7 +49,11 @@ String? validateName(String? value) {
   return null;
 }
 
-String? validateEmail(String? value) {
+String? validateEmail(
+  String? value, {
+  String? secondaryField,
+  String? secondaryValue,
+}) {
   if (value == null || value.isEmpty) {
     return 'Please enter your email address';
   }
@@ -52,10 +81,20 @@ String? validateEmail(String? value) {
     return 'Please enter a valid email address';
   }
 
+  if (secondaryField == null) return null;
+
+  if (value == secondaryValue) {
+    return "Email address can't be same as $secondaryField";
+  }
+
   return null;
 }
 
-String? validatePhoneNumber(String? value) {
+String? validatePhoneNumber(
+  String? value, {
+  String? secondaryField,
+  String? secondaryValue,
+}) {
   if (value == null || value.isEmpty) {
     return 'Please enter your phone number';
   }
@@ -66,6 +105,12 @@ String? validatePhoneNumber(String? value) {
 
   if (value.length != 10) {
     return 'Phone number must be 10 digits long';
+  }
+
+  if (secondaryField == null) return null;
+
+  if (value == secondaryValue) {
+    return "Phone number can't be same as $secondaryField";
   }
 
   return null;

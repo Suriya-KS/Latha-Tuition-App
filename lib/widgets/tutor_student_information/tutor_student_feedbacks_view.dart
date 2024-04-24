@@ -8,6 +8,7 @@ import 'package:latha_tuition_app/utilities/modal_bottom_sheet.dart';
 import 'package:latha_tuition_app/utilities/snack_bar.dart';
 import 'package:latha_tuition_app/providers/loading_provider.dart';
 import 'package:latha_tuition_app/providers/tutor_search_provider.dart';
+import 'package:latha_tuition_app/widgets/utilities/image_with_caption.dart';
 import 'package:latha_tuition_app/widgets/buttons/primary_button.dart';
 import 'package:latha_tuition_app/widgets/buttons/floating_circular_action_button.dart';
 import 'package:latha_tuition_app/widgets/cards/info_card.dart';
@@ -180,42 +181,49 @@ class _TutorStudentFeedbacksViewState
       child: Stack(
         fit: StackFit.expand,
         children: [
-          SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.only(
-                top: screenPadding,
-                right: screenPadding,
-                bottom: 100,
-                left: screenPadding,
-              ),
-              child: Column(
-                children: [
-                  for (int i = 0; i < studentFeedbacks.length; i++)
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 25),
-                      child: InfoCard(
-                        icon: Icons.edit_outlined,
-                        iconPosition: 'right',
-                        isClickable: true,
-                        onTap: () => editFeedbackHandler(
-                          context,
-                          studentFeedbacks[i]['message'],
-                          studentFeedbacks[i]['id'],
-                        ),
-                        children: [
-                          Text(
-                            formatDate(studentFeedbacks[i]['date']),
-                            style: const TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                          const SizedBox(height: 10),
-                          Text(studentFeedbacks[i]['message']),
-                        ],
-                      ),
+          studentFeedbacks.isEmpty
+              ? const ImageWithCaption(
+                  imagePath: notFoundImage,
+                  description: 'No feedbacks found!',
+                )
+              : SingleChildScrollView(
+                  child: Padding(
+                    padding: const EdgeInsets.only(
+                      top: screenPadding,
+                      right: screenPadding,
+                      bottom: 100,
+                      left: screenPadding,
                     ),
-                ],
-              ),
-            ),
-          ),
+                    child: Column(
+                      children: [
+                        for (int i = 0; i < studentFeedbacks.length; i++)
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 25),
+                            child: InfoCard(
+                              icon: Icons.edit_outlined,
+                              iconPosition: 'right',
+                              isClickable: true,
+                              onTap: () => editFeedbackHandler(
+                                context,
+                                studentFeedbacks[i]['message'],
+                                studentFeedbacks[i]['id'],
+                              ),
+                              children: [
+                                Text(
+                                  formatDate(studentFeedbacks[i]['date']),
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                const SizedBox(height: 10),
+                                Text(studentFeedbacks[i]['message']),
+                              ],
+                            ),
+                          ),
+                      ],
+                    ),
+                  ),
+                ),
           FloatingCircularActionButton(
             icon: Icons.add_outlined,
             onPressed: () => addFeedbackHandler(context),

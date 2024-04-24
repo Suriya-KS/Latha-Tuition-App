@@ -8,7 +8,7 @@ Future<dynamic> modalBottomSheet(BuildContext context, Widget content) async {
   return await showModalBottomSheet(
     context: context,
     isScrollControlled: true,
-    builder: (BuildContext context) => SingleChildScrollView(
+    builder: (context) => SingleChildScrollView(
       child: Container(
         width: double.infinity,
         padding: EdgeInsets.only(

@@ -5,14 +5,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:latha_tuition_app/utilities/constants.dart';
 import 'package:latha_tuition_app/utilities/helper_functions.dart';
 import 'package:latha_tuition_app/utilities/form_validation_functions.dart';
-import 'package:latha_tuition_app/utilities/modal_bottom_sheet.dart';
 import 'package:latha_tuition_app/utilities/snack_bar.dart';
 import 'package:latha_tuition_app/providers/loading_provider.dart';
 import 'package:latha_tuition_app/providers/authentication_provider.dart';
 import 'package:latha_tuition_app/screens/tutor/tutor_dashboard.dart';
 import 'package:latha_tuition_app/screens/student/student_dashboard.dart';
 import 'package:latha_tuition_app/widgets/buttons/primary_button.dart';
-import 'package:latha_tuition_app/widgets/bottom_sheets/password_recovery_option_sheet.dart';
 import 'package:latha_tuition_app/widgets/form_inputs/text_input.dart';
 
 class LoginForm extends ConsumerStatefulWidget {
@@ -61,12 +59,13 @@ class _LoginFormState extends ConsumerState<LoginForm> {
 
       final userType = await getAuthenticatedUserType(context, userID);
 
-      authenticationMethods.setStudentID(userID);
       loadingMethods.setLoadingStatus(false);
 
       if (!context.mounted) return;
 
       if (userType == UserType.student) {
+        authenticationMethods.setStudentID(userID);
+
         Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(
@@ -75,6 +74,8 @@ class _LoginFormState extends ConsumerState<LoginForm> {
           (route) => false,
         );
       } else if (userType == UserType.tutor) {
+        authenticationMethods.setTutorID(userID);
+
         Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(builder: (context) => const TutorDashboardScreen()),
@@ -149,18 +150,7 @@ class _LoginFormState extends ConsumerState<LoginForm> {
             controller: passwordController,
             validator: validatePassword,
           ),
-          const SizedBox(height: 10),
-          Align(
-            alignment: Alignment.centerRight,
-            child: TextButton(
-              onPressed: () => modalBottomSheet(
-                context,
-                const PasswordRecoveryOptionSheet(),
-              ),
-              child: const Text('Forgot Password?'),
-            ),
-          ),
-          const SizedBox(height: 30),
+          const SizedBox(height: 50),
           PrimaryButton(
             title: 'Login',
             onPressed: () => loginHandler(context),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -27,6 +28,10 @@ void main() async {
       child: MyApp(),
     ),
   );
+
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+  ]);
 }
 
 class MyApp extends ConsumerStatefulWidget {
@@ -75,9 +80,9 @@ class _MyAppState extends ConsumerState<MyApp> {
 
       final authenticationMethods = ref.read(authenticationProvider.notifier);
 
-      authenticationMethods.setStudentID(userID);
-
       if (userType == UserType.student) {
+        authenticationMethods.setStudentID(userID);
+
         setState(() {
           screen = const StudentDashboardScreen();
         });
@@ -86,6 +91,8 @@ class _MyAppState extends ConsumerState<MyApp> {
       }
 
       if (userType == UserType.tutor) {
+        authenticationMethods.setTutorID(userID);
+
         setState(() {
           screen = const TutorDashboardScreen();
         });
@@ -121,6 +128,7 @@ class _MyAppState extends ConsumerState<MyApp> {
       title: "Latha's Tuition App",
       theme: AppTheme.theme,
       themeMode: AppTheme.themeMode,
+      debugShowCheckedModeBanner: false,
       home: screen,
     );
   }

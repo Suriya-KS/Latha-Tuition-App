@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:latha_tuition_app/utilities/constants.dart';
 import 'package:latha_tuition_app/utilities/snack_bar.dart';
+import 'package:latha_tuition_app/utilities/alert_dialogue.dart';
 import 'package:latha_tuition_app/widgets/utilities/loading_overlay.dart';
 import 'package:latha_tuition_app/widgets/utilities/title_icon_list.dart';
 import 'package:latha_tuition_app/widgets/app_bar/text_app_bar.dart';
@@ -144,36 +145,58 @@ class _TutorConfigureEducationBoardsState
 
   @override
   Widget build(BuildContext context) {
-    return LoadingOverlay(
-      isLoading: isLoading,
-      child: Scaffold(
-        appBar: const TextAppBar(
-          title: 'Configure Education Boards',
-        ),
-        body: SafeArea(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Expanded(
-                child: TitleIconList(
-                  fieldName: 'education board',
-                  items: educationBoards,
-                  onListTileTap: (index, educationBoard) =>
-                      editEducationBoardHandler(index, educationBoard),
-                  onIconPressAndSwipe: (index) =>
-                      deleteEducationBoardHandler(index),
-                  onButtonPress: (educationBoard) =>
-                      addEducationBoardHandler(educationBoard),
+    return PopScope(
+      canPop: !isChanged,
+      onPopInvoked: (didPop) => alertDialogue(
+        context,
+        actions: [
+          TextButton(
+            onPressed: () => closeAlertDialogue(
+              context,
+              function: Navigator.pop,
+            ),
+            child: const Text('Discard'),
+          ),
+          OutlinedButton(
+            onPressed: () => closeAlertDialogue(
+              context,
+              function: saveEducationBoardHandler,
+            ),
+            child: const Text('Save'),
+          ),
+        ],
+      ),
+      child: LoadingOverlay(
+        isLoading: isLoading,
+        child: Scaffold(
+          appBar: const TextAppBar(
+            title: 'Configure Education Boards',
+          ),
+          body: SafeArea(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: TitleIconList(
+                    fieldName: 'education board',
+                    items: educationBoards,
+                    onListTileTap: (index, educationBoard) =>
+                        editEducationBoardHandler(index, educationBoard),
+                    onIconPressAndSwipe: (index) =>
+                        deleteEducationBoardHandler(index),
+                    onButtonPress: (educationBoard) =>
+                        addEducationBoardHandler(educationBoard),
+                  ),
                 ),
-              ),
-              const SizedBox(height: 20),
-              if (isChanged)
-                PrimaryButton(
-                  title: 'Save',
-                  onPressed: () => saveEducationBoardHandler(context),
-                ),
-              const SizedBox(height: 30),
-            ],
+                const SizedBox(height: 20),
+                if (isChanged)
+                  PrimaryButton(
+                    title: 'Save',
+                    onPressed: () => saveEducationBoardHandler(context),
+                  ),
+                const SizedBox(height: 30),
+              ],
+            ),
           ),
         ),
       ),

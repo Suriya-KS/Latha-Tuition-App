@@ -5,6 +5,7 @@ import 'package:latha_tuition_app/utilities/constants.dart';
 import 'package:latha_tuition_app/utilities/helper_functions.dart';
 import 'package:latha_tuition_app/utilities/snack_bar.dart';
 import 'package:latha_tuition_app/widgets/utilities/loading_overlay.dart';
+import 'package:latha_tuition_app/widgets/utilities/image_with_caption.dart';
 import 'package:latha_tuition_app/widgets/app_bar/text_app_bar.dart';
 import 'package:latha_tuition_app/widgets/cards/text_avatar_action_card.dart';
 
@@ -184,62 +185,72 @@ class _TutorPaymentApprovalScreenState
           body: SafeArea(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: screenPadding),
-              child: ListView.builder(
-                itemCount: studentsPaymentDetails.length + 1,
-                itemBuilder: (context, index) => index <
-                        studentsPaymentDetails.length
-                    ? TextAvatarActionCard(
-                        title: studentsPaymentDetails[index]['studentName'],
-                        action: Column(
-                          children: [
-                            IconButton(
-                              onPressed: !isProcessing
-                                  ? () => statusTapHandler(
-                                        context,
-                                        index: index,
-                                        isApproved: true,
-                                      )
-                                  : null,
-                              icon: const Icon(Icons.check_outlined),
-                              style: IconButton.styleFrom(
-                                foregroundColor: Colors.white,
-                                backgroundColor:
-                                    Theme.of(context).colorScheme.primary,
+              child: studentsPaymentDetails.isEmpty
+                  ? const ImageWithCaption(
+                      imagePath: notFoundImage,
+                      description: 'No requests found!',
+                    )
+                  : ListView.builder(
+                      itemCount: studentsPaymentDetails.length + 1,
+                      itemBuilder: (context, index) => index <
+                              studentsPaymentDetails.length
+                          ? TextAvatarActionCard(
+                              title: studentsPaymentDetails[index]
+                                  ['studentName'],
+                              action: Column(
+                                children: [
+                                  IconButton(
+                                    onPressed: !isProcessing
+                                        ? () => statusTapHandler(
+                                              context,
+                                              index: index,
+                                              isApproved: true,
+                                            )
+                                        : null,
+                                    icon: const Icon(Icons.check_outlined),
+                                    style: IconButton.styleFrom(
+                                      foregroundColor: Colors.white,
+                                      backgroundColor:
+                                          Theme.of(context).colorScheme.primary,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 5),
+                                  IconButton(
+                                    onPressed: !isProcessing
+                                        ? () => statusTapHandler(
+                                              context,
+                                              index: index,
+                                              isApproved: false,
+                                            )
+                                        : null,
+                                    icon: const Icon(Icons.close_outlined),
+                                    style: IconButton.styleFrom(
+                                      foregroundColor: Colors.white,
+                                      backgroundColor:
+                                          Theme.of(context).colorScheme.error,
+                                    ),
+                                  ),
+                                ],
                               ),
-                            ),
-                            const SizedBox(width: 5),
-                            IconButton(
-                              onPressed: !isProcessing
-                                  ? () => statusTapHandler(
-                                        context,
-                                        index: index,
-                                        isApproved: false,
-                                      )
-                                  : null,
-                              icon: const Icon(Icons.close_outlined),
-                              style: IconButton.styleFrom(
-                                foregroundColor: Colors.white,
-                                backgroundColor:
-                                    Theme.of(context).colorScheme.error,
-                              ),
-                            ),
-                          ],
-                        ),
-                        children: [
-                          Text(studentsPaymentDetails[index]['batch']),
-                          const SizedBox(height: 5),
-                          Text(
-                            formatAmount(
-                                studentsPaymentDetails[index]['amount']),
-                            style: const TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                          Text(
-                            formatDate(studentsPaymentDetails[index]['date']),
-                          ),
-                        ],
-                      )
-                    : const SizedBox(height: screenPadding),
-              ),
+                              children: [
+                                Text(studentsPaymentDetails[index]['batch']),
+                                const SizedBox(height: 5),
+                                Text(
+                                  formatAmount(
+                                      studentsPaymentDetails[index]['amount']),
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                Text(
+                                  formatDate(
+                                    studentsPaymentDetails[index]['date'],
+                                  ),
+                                ),
+                              ],
+                            )
+                          : const SizedBox(height: screenPadding),
+                    ),
             ),
           ),
         ),

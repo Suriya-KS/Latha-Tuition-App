@@ -6,6 +6,7 @@ import 'package:latha_tuition_app/utilities/constants.dart';
 import 'package:latha_tuition_app/utilities/helper_functions.dart';
 import 'package:latha_tuition_app/utilities/snack_bar.dart';
 import 'package:latha_tuition_app/providers/loading_provider.dart';
+import 'package:latha_tuition_app/providers/authentication_provider.dart';
 import 'package:latha_tuition_app/providers/animated_drawer_provider.dart';
 import 'package:latha_tuition_app/widgets/utilities/loading_overlay.dart';
 import 'package:latha_tuition_app/widgets/utilities/side_drawer.dart';
@@ -24,8 +25,42 @@ class _TutorHomeViewState extends ConsumerState<TutorHomeView> {
   final firestore = FirebaseFirestore.instance;
 
   bool isLoading = false;
+  String tutorName = '';
   int studentAdmissionRequestCount = 0;
   int studentPaymentRequestCount = 0;
+
+  void loadTutorName(BuildContext context) async {
+    setState(() {
+      isLoading = true;
+    });
+
+    try {
+      final tutorID = ref.read(authenticationProvider)[Authentication.tutorID];
+
+      final tutorDocumentSnapshot =
+          await firestore.collection('tutors').doc(tutorID).get();
+
+      if (!tutorDocumentSnapshot.exists) {
+        throw Exception('Tutor data not found');
+      }
+
+      setState(() {
+        isLoading = false;
+        tutorName = tutorDocumentSnapshot.data()!['name'];
+      });
+    } catch (error) {
+      setState(() {
+        isLoading = false;
+      });
+
+      if (!context.mounted) return;
+
+      snackBar(
+        context,
+        content: const Text(defaultErrorMessage),
+      );
+    }
+  }
 
   void loadStudentAdmissionRequestCount(BuildContext context) async {
     setState(() {
@@ -109,6 +144,7 @@ class _TutorHomeViewState extends ConsumerState<TutorHomeView> {
   void initState() {
     super.initState();
 
+    loadTutorName(context);
     loadStudentAdmissionRequestCount(context);
     loadStudentPaymentRequestsCount(context);
   }
@@ -118,7 +154,7 @@ class _TutorHomeViewState extends ConsumerState<TutorHomeView> {
     final isLoadingFromProvider = ref.watch(loadingProvider);
     final animatedDrawerData = ref.watch(animatedDrawerProvider);
     final screenHeight = MediaQuery.of(context).size.height;
-    final formattedName = formatName('Tutor Name');
+    final formattedName = formatName(tutorName);
 
     return LoadingOverlay(
       isLoading: isLoading || isLoadingFromProvider,
