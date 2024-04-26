@@ -22,10 +22,13 @@ const waitingImage = "assets/images/waiting.svg";
 const noNetworkImage = "assets/images/no_network.svg";
 const placeholderImage = "assets/images/placeholder.svg";
 
+const booksLoadingVideo = "assets/videos/books_loading.mp4";
+
 const alphabets = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
 const specialCharacters = ' !"#\$%&\'()*+,-./:;<=>?@[\\]^_`{|}~';
 const defaultErrorMessage = 'Something went wrong, please try again later';
 
+const splashScreenVideoDuration = Duration(seconds: 4);
 const passwordVerificationCodeResendTime = Duration(seconds: 60);
 
 const screenPadding = 30.0;

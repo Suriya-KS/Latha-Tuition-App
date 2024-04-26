@@ -41,7 +41,7 @@ class _TutorHomeViewState extends ConsumerState<TutorHomeView> {
           await firestore.collection('tutors').doc(tutorID).get();
 
       if (!tutorDocumentSnapshot.exists) {
-        throw Exception('Tutor data not found');
+        throw Error();
       }
 
       setState(() {

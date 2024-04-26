@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 
 import 'package:latha_tuition_app/firebase_options.dart';
 import 'package:latha_tuition_app/utilities/constants.dart';
@@ -10,6 +11,7 @@ import 'package:latha_tuition_app/utilities/helper_functions.dart';
 import 'package:latha_tuition_app/utilities/app_theme.dart';
 import 'package:latha_tuition_app/providers/authentication_provider.dart';
 import 'package:latha_tuition_app/providers/awaiting_admission_provider.dart';
+import 'package:latha_tuition_app/screens/splash.dart';
 import 'package:latha_tuition_app/screens/onboarding.dart';
 import 'package:latha_tuition_app/screens/student/student_awaiting_approval.dart';
 import 'package:latha_tuition_app/screens/tutor/tutor_dashboard.dart';
@@ -17,11 +19,15 @@ import 'package:latha_tuition_app/screens/student/student_dashboard.dart';
 import 'package:latha_tuition_app/screens/offline_error.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+  final widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+
+  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
 
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
+  FlutterNativeSplash.remove();
 
   runApp(
     const ProviderScope(
@@ -44,9 +50,9 @@ class MyApp extends ConsumerStatefulWidget {
 class _MyAppState extends ConsumerState<MyApp> {
   final authenticatedUser = FirebaseAuth.instance.currentUser;
 
-  Widget screen = const Placeholder();
+  late Widget screen = const SplashScreen();
 
-  Future<void> loadScreen(BuildContext context) async {
+  Future<Widget> loadScreen(BuildContext context) async {
     try {
       await ref.read(awaitingAdmissionProvider.notifier).loadStudentID();
 
@@ -54,22 +60,14 @@ class _MyAppState extends ConsumerState<MyApp> {
           ref.read(awaitingAdmissionProvider)[AwaitingAdmission.studentID];
 
       if (awaitingAdmissionStudentID != null) {
-        setState(() {
-          screen = const StudentAwaitingApprovalScreen();
-        });
-
-        return;
+        return const StudentAwaitingApprovalScreen();
       }
 
       if (authenticatedUser == null) {
-        setState(() {
-          screen = const OnboardingScreen();
-        });
-
-        return;
+        return const OnboardingScreen();
       }
 
-      if (!context.mounted) return;
+      if (!context.mounted) throw Error();
 
       final userID = authenticatedUser!.uid;
 
@@ -83,40 +81,39 @@ class _MyAppState extends ConsumerState<MyApp> {
       if (userType == UserType.student) {
         authenticationMethods.setStudentID(userID);
 
-        setState(() {
-          screen = const StudentDashboardScreen();
-        });
-
-        return;
+        return const StudentDashboardScreen();
       }
 
       if (userType == UserType.tutor) {
         authenticationMethods.setTutorID(userID);
 
-        setState(() {
-          screen = const TutorDashboardScreen();
-        });
-
-        return;
+        return const TutorDashboardScreen();
       }
 
       authenticationMethods.clearStudentID();
 
-      setState(() {
-        screen = OfflineErrorScreen(onRetry: loadScreen);
-      });
+      return OfflineErrorScreen(onRetry: loadScreen);
     } catch (error) {
-      setState(() {
-        screen = OfflineErrorScreen(onRetry: loadScreen);
-      });
+      return OfflineErrorScreen(onRetry: loadScreen);
     }
+  }
+
+  void initializeApp() async {
+    final result = await Future.wait([
+      loadScreen(context),
+      Future.delayed(splashScreenVideoDuration),
+    ]);
+
+    setState(() {
+      screen = result[0];
+    });
   }
 
   @override
   void initState() {
     super.initState();
 
-    loadScreen(context);
+    initializeApp();
   }
 
   @override
