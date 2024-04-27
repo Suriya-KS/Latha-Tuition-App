@@ -43,7 +43,9 @@ class ImageWithCaption extends StatelessWidget {
           mainAxisSize: MainAxisSize.max,
           children: [
             SvgPicture.asset(
-              notFoundImage,
+              Theme.of(context).brightness == Brightness.light
+                  ? notFoundImage
+                  : notFoundImageDark,
               height: imageHeight,
             ),
             const SizedBox(height: 20),

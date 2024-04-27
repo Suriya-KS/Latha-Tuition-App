@@ -132,8 +132,11 @@ class _TutorStudentTestMarksViewState
                 MonthInput(onChange: monthChangeHandler),
                 const SizedBox(height: 10),
                 testMarks.isEmpty
-                    ? const ImageWithCaption(
-                        imagePath: notFoundImage,
+                    ? ImageWithCaption(
+                        imagePath:
+                            Theme.of(context).brightness == Brightness.light
+                                ? notFoundImage
+                                : notFoundImageDark,
                         description: 'No records found!',
                       )
                     : Expanded(

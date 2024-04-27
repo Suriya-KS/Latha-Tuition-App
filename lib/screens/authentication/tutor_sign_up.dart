@@ -25,7 +25,9 @@ class TutorSignUpScreen extends ConsumerWidget {
             title: 'Teaching with Impact',
             description:
                 "Transform lives and shape minds by teaching with impact, leaving a lasting educational imprint",
-            imagePath: handshakeImage,
+            imagePath: Theme.of(context).brightness == Brightness.light
+                ? tutorSignUpImage
+                : tutorSignUpImageDark,
             screenSize: screenSize,
             child: Column(
               children: [

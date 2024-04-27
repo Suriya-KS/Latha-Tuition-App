@@ -171,8 +171,11 @@ class _StudentPaymentRequestsScreenState
                     YearInput(onChange: yearChangeHandler),
                     const SizedBox(height: 10),
                     studentPaymentHistory.isEmpty
-                        ? const ImageWithCaption(
-                            imagePath: notFoundImage,
+                        ? ImageWithCaption(
+                            imagePath:
+                                Theme.of(context).brightness == Brightness.light
+                                    ? notFoundImage
+                                    : notFoundImageDark,
                             description: 'No records found!',
                           )
                         : Expanded(
@@ -206,7 +209,9 @@ class _StudentPaymentRequestsScreenState
                                                 ? Theme.of(context)
                                                     .colorScheme
                                                     .primary
-                                                : Colors.white,
+                                                : Theme.of(context)
+                                                    .colorScheme
+                                                    .background,
                                           ),
                                         ),
                                       ),

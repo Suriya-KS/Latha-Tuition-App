@@ -116,8 +116,10 @@ class _TutorStudentAttendanceRecordsViewState
             MonthInput(onChange: monthChangeHandler),
             const SizedBox(height: 10),
             attendanceList.isEmpty
-                ? const ImageWithCaption(
-                    imagePath: notFoundImage,
+                ? ImageWithCaption(
+                    imagePath: Theme.of(context).brightness == Brightness.light
+                        ? notFoundImage
+                        : notFoundImageDark,
                     description: 'No records found!',
                   )
                 : Expanded(

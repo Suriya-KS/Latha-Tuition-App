@@ -254,8 +254,11 @@ class _TutorEventsViewState extends ConsumerState<TutorEventsView> {
                       ),
                       const SizedBox(height: 20),
                       items.isEmpty
-                          ? const ImageWithCaption(
-                              imagePath: notFoundImage,
+                          ? ImageWithCaption(
+                              imagePath: Theme.of(context).brightness ==
+                                      Brightness.light
+                                  ? notFoundImage
+                                  : notFoundImageDark,
                               description: 'No records found!',
                               useMaxHeight: false,
                             )

@@ -44,7 +44,7 @@ class _CalendarState extends ConsumerState<Calendar> {
 
     final focusedDayTextStyle = Theme.of(context).textTheme.bodyLarge!.copyWith(
           fontWeight: FontWeight.bold,
-          color: Colors.white,
+          color: Theme.of(context).colorScheme.background,
         );
 
     focusedDay = calendarViewData[CalendarView.selectedDate];

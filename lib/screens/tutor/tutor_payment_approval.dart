@@ -101,12 +101,12 @@ class _TutorPaymentApprovalScreenState
             style: Theme.of(context)
                 .textTheme
                 .bodySmall!
-                .copyWith(color: Colors.white),
+                .copyWith(color: Theme.of(context).colorScheme.background),
           ),
           TextSpan(
             text: isApproved ? 'approved' : 'rejected',
             style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                  color: Colors.white,
+                  color: Theme.of(context).colorScheme.background,
                   fontWeight: FontWeight.bold,
                 ),
           ),
@@ -186,8 +186,11 @@ class _TutorPaymentApprovalScreenState
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: screenPadding),
               child: studentsPaymentDetails.isEmpty
-                  ? const ImageWithCaption(
-                      imagePath: notFoundImage,
+                  ? ImageWithCaption(
+                      imagePath:
+                          Theme.of(context).brightness == Brightness.light
+                              ? notFoundImage
+                              : notFoundImageDark,
                       description: 'No requests found!',
                     )
                   : ListView.builder(
@@ -209,7 +212,9 @@ class _TutorPaymentApprovalScreenState
                                         : null,
                                     icon: const Icon(Icons.check_outlined),
                                     style: IconButton.styleFrom(
-                                      foregroundColor: Colors.white,
+                                      foregroundColor: Theme.of(context)
+                                          .colorScheme
+                                          .background,
                                       backgroundColor:
                                           Theme.of(context).colorScheme.primary,
                                     ),
@@ -225,7 +230,9 @@ class _TutorPaymentApprovalScreenState
                                         : null,
                                     icon: const Icon(Icons.close_outlined),
                                     style: IconButton.styleFrom(
-                                      foregroundColor: Colors.white,
+                                      foregroundColor: Theme.of(context)
+                                          .colorScheme
+                                          .background,
                                       backgroundColor:
                                           Theme.of(context).colorScheme.error,
                                     ),

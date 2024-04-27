@@ -14,4 +14,12 @@ class AppTheme {
     ),
     fontFamily: 'Poppins',
   );
+
+  static ThemeData darkTheme = ThemeData(
+    colorScheme: ColorScheme.fromSeed(
+      seedColor: darkSeedColor,
+      brightness: Brightness.dark,
+    ),
+    fontFamily: 'Poppins',
+  );
 }

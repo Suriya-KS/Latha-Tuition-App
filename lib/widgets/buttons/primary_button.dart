@@ -23,8 +23,9 @@ class PrimaryButton extends StatelessWidget {
         backgroundColor: !isOutlined
             ? Theme.of(context).colorScheme.onBackground
             : Colors.transparent,
-        foregroundColor:
-            !isOutlined ? Colors.white : Theme.of(context).colorScheme.error,
+        foregroundColor: !isOutlined
+            ? Theme.of(context).colorScheme.background
+            : Theme.of(context).colorScheme.error,
         side: isOutlined
             ? BorderSide(color: Theme.of(context).colorScheme.error)
             : BorderSide.none,
@@ -40,8 +41,8 @@ class PrimaryButton extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             isLoading
-                ? const CircularProgressIndicator.adaptive(
-                    backgroundColor: Colors.white,
+                ? CircularProgressIndicator.adaptive(
+                    backgroundColor: Theme.of(context).colorScheme.background,
                   )
                 : Text(
                     title ?? '',

@@ -288,3 +288,5 @@ IconData getPaymentStatusIcon(String status) {
 
   return Icons.timer_outlined;
 }
+
+Brightness getThemeMode(BuildContext context) => Theme.of(context).brightness;

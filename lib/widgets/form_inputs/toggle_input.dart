@@ -53,7 +53,9 @@ class _ToggleInputState extends State<ToggleInput> {
   Widget build(BuildContext context) {
     return ToggleButtons(
       fillColor: backgroundColor,
-      selectedColor: widget.backgroundColors != null ? Colors.white : null,
+      selectedColor: widget.backgroundColors != null
+          ? Theme.of(context).colorScheme.background
+          : null,
       borderRadius: BorderRadius.circular(8),
       isSelected: isSelected,
       onPressed: toggleHandler,

@@ -40,7 +40,9 @@ class LoginScreen extends ConsumerWidget {
             title: 'Resume Your Learning',
             description:
                 "Welcome back! It's time to resume your academic journey",
-            imagePath: handWaveImage,
+            imagePath: Theme.of(context).brightness == Brightness.light
+                ? loginImage
+                : loginImageDark,
             screenSize: screenSize,
             child: Column(
               children: [

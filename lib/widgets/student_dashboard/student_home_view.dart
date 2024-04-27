@@ -181,13 +181,13 @@ class _StudentHomeViewState extends ConsumerState<StudentHomeView> {
           AnimatedContainer(
             duration: const Duration(milliseconds: 200),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: Theme.of(context).colorScheme.background,
               borderRadius: BorderRadius.circular(
                 animatedDrawerData[AnimatedDrawer.isOpen] ? 30 : 0,
               ),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.2),
+                  color: Theme.of(context).colorScheme.primary.withOpacity(0.2),
                   spreadRadius: 10,
                   blurRadius: 30,
                   offset: const Offset(0, 3),

@@ -29,7 +29,9 @@ class StudentSignUpScreen extends ConsumerWidget {
             title: 'Congratulations',
             description:
                 'Admission approved, marking the final step! Create your password by signing up to complete enrollment',
-            imagePath: celebrateImage,
+            imagePath: Theme.of(context).brightness == Brightness.light
+                ? studentSignUpImage
+                : studentSignUpImageDark,
             screenSize: screenSize,
             child: Column(
               children: [

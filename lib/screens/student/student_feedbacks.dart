@@ -97,8 +97,11 @@ class _StudentFeedbacksScreenState
           child: Column(
             children: [
               feedbacks.isEmpty
-                  ? const ImageWithCaption(
-                      imagePath: notFoundImage,
+                  ? ImageWithCaption(
+                      imagePath:
+                          Theme.of(context).brightness == Brightness.light
+                              ? notFoundImage
+                              : notFoundImageDark,
                       description: 'No feedbacks found!',
                     )
                   : SingleChildScrollView(

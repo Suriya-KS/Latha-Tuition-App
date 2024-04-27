@@ -21,7 +21,7 @@ class IconWithBadgeButton extends StatelessWidget {
       children: [
         IconButton(
           style: IconButton.styleFrom(
-            backgroundColor: Colors.white,
+            backgroundColor: Theme.of(context).colorScheme.background,
           ),
           onPressed: onPressed,
           icon: Icon(icon),
@@ -43,8 +43,8 @@ class IconWithBadgeButton extends StatelessWidget {
                   child: !showBadgeMark
                       ? Text(
                           badgeCount.toString(),
-                          style: const TextStyle(
-                            color: Colors.white,
+                          style: TextStyle(
+                            color: Theme.of(context).colorScheme.background,
                             fontSize: 10,
                             fontWeight: FontWeight.bold,
                           ),

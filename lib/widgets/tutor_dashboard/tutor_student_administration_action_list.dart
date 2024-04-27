@@ -188,7 +188,9 @@ class _TutorStudentAdministrationActionListState
                 Expanded(
                   child: BoxCard(
                     title: 'Student Search',
-                    image: searchImage,
+                    image: Theme.of(context).brightness == Brightness.light
+                        ? searchStudentImage
+                        : searchStudentImageDark,
                     onTap: () => showTutorStudentSearchSheet(context),
                   ),
                 ),
@@ -196,7 +198,9 @@ class _TutorStudentAdministrationActionListState
                 Expanded(
                   child: BoxCard(
                     title: 'Batch wise Payments',
-                    image: groupPaymentImage,
+                    image: Theme.of(context).brightness == Brightness.light
+                        ? batchPaymentImage
+                        : batchPaymentImageDark,
                     onTap: () => showTutorBatchSearchSheet(context),
                   ),
                 ),
@@ -211,7 +215,9 @@ class _TutorStudentAdministrationActionListState
                 Expanded(
                   child: BoxCard(
                     title: 'New Admissions',
-                    image: pendingApprovalImage,
+                    image: Theme.of(context).brightness == Brightness.light
+                        ? newAdmissionsImage
+                        : newAdmissionsImageDark,
                     onTap: () => navigateToTutorNewAdmissionsScreen(context),
                   ),
                 ),
@@ -219,7 +225,9 @@ class _TutorStudentAdministrationActionListState
                 Expanded(
                   child: BoxCard(
                     title: 'Payment Approval',
-                    image: phoneConfirmImage,
+                    image: Theme.of(context).brightness == Brightness.light
+                        ? paymentConfirmImage
+                        : paymentConfirmImageDark,
                     onTap: () => navigateToTutorPaymentApprovalScreen(context),
                   ),
                 ),

@@ -25,7 +25,9 @@ class StudentRegistrationScreen extends ConsumerWidget {
             title: 'Enroll for Excellence',
             description:
                 'Take control of your educational journey and pave the way to a brighter future',
-            imagePath: newEntryImage,
+            imagePath: Theme.of(context).brightness == Brightness.light
+                ? studentRegistrationImage
+                : studentRegistrationImageDark,
             screenSize: screenSize,
             child: Column(
               children: [

@@ -20,7 +20,7 @@ class FloatingCircularActionButton extends StatelessWidget {
       bottom: padding ?? screenPadding,
       right: padding ?? screenPadding,
       child: FloatingActionButton(
-        foregroundColor: Colors.white,
+        foregroundColor: Theme.of(context).colorScheme.background,
         backgroundColor: Theme.of(context).colorScheme.primary,
         shape: const CircleBorder(),
         onPressed: onPressed,

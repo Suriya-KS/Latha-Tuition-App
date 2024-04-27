@@ -30,7 +30,7 @@ class _StudentAwaitingApprovalScreenState
   bool isLoading = true;
   bool errorOccurred = false;
   String title = 'Application Under Review';
-  String image = waitingImage;
+  String image = awaitingApprovalImageDark;
 
   String studentName = '';
   String studentEmailAddress = '';
@@ -68,7 +68,9 @@ class _StudentAwaitingApprovalScreenState
           isLoading = false;
           errorOccurred = true;
           title = 'Something Went Wrong';
-          image = errorImage;
+          image = Theme.of(context).brightness == Brightness.light
+              ? warningImage
+              : warningImageDark;
         });
 
         final awaitingAdmissionMethods =
@@ -89,7 +91,9 @@ class _StudentAwaitingApprovalScreenState
       if (studentDetails!['awaitingApproval']) {
         setState(() {
           title = 'Application Under Review';
-          image = waitingImage;
+          image = Theme.of(context).brightness == Brightness.light
+              ? awaitingApprovalImage
+              : awaitingApprovalImageDark;
           studentName = studentDetails['name'];
           studentEmailAddress = studentDetails['emailAddress'];
           studentPhoneNumber = studentDetails['phoneNumber'];

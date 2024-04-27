@@ -75,7 +75,10 @@ class TitleIconList extends StatelessWidget {
                   const SizedBox(height: 20),
                   if (items.isEmpty)
                     ImageWithCaption(
-                      imagePath: notFoundImage,
+                      imagePath:
+                          Theme.of(context).brightness == Brightness.light
+                              ? notFoundImage
+                              : notFoundImageDark,
                       description: 'No $emptyDescription found!',
                       useMaxHeight: false,
                     ),

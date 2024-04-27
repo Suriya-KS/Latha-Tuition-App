@@ -131,8 +131,10 @@ class _StudentTestViewState extends ConsumerState<StudentTestMarksView> {
           const TextAppBar(title: 'Test Marks Records'),
           MonthInput(onChange: monthChangeHandler),
           testMarks.isEmpty
-              ? const ImageWithCaption(
-                  imagePath: notFoundImage,
+              ? ImageWithCaption(
+                  imagePath: Theme.of(context).brightness == Brightness.light
+                      ? notFoundImage
+                      : notFoundImageDark,
                   description: 'No records found!',
                 )
               : Expanded(
@@ -145,7 +147,10 @@ class _StudentTestViewState extends ConsumerState<StudentTestMarksView> {
                                 children: [
                                   const SizedBox(height: 30),
                                   SvgPicture.asset(
-                                    notFoundImage,
+                                    Theme.of(context).brightness ==
+                                            Brightness.light
+                                        ? notFoundImage
+                                        : notFoundImageDark,
                                     height: 100,
                                   ),
                                   const SizedBox(height: 20),

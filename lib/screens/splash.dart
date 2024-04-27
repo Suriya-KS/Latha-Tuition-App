@@ -12,14 +12,16 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+  bool isDarkMode = false;
+
   late VideoPlayerController videoPlayerController;
   late ChewieController chewieController;
 
-  @override
-  void initState() {
-    super.initState();
+  void loadControllers() {
+    final videoDataSource =
+        isDarkMode ? splashLoadingVideoDark : splashLoadingVideo;
 
-    videoPlayerController = VideoPlayerController.asset(booksLoadingVideo);
+    videoPlayerController = VideoPlayerController.asset(videoDataSource);
     chewieController = ChewieController(
       videoPlayerController: videoPlayerController,
       autoPlay: true,
@@ -27,6 +29,22 @@ class _SplashScreenState extends State<SplashScreen> {
       allowPlaybackSpeedChanging: false,
       showControls: false,
     );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    loadControllers();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
+    loadControllers();
   }
 
   @override
@@ -42,7 +60,7 @@ class _SplashScreenState extends State<SplashScreen> {
     final screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).colorScheme.background,
       body: Center(
         child: Container(
           width: screenWidth * 0.8,

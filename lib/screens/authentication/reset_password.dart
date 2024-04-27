@@ -17,7 +17,9 @@ class ResetPassword extends StatelessWidget {
           title: 'Reset Your Password',
           description:
               'Reset your password and revive your access to educational empowerment',
-          imagePath: confirmImage,
+          imagePath: Theme.of(context).brightness == Brightness.light
+              ? resetPasswordImage
+              : resetPasswordImageDark,
           screenSize: screenSize,
           child: const ResetPasswordForm(),
         ),

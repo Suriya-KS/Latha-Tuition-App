@@ -24,7 +24,9 @@ class ForgotPasswordScreen extends ConsumerWidget {
           title: 'Recover Your Account',
           description:
               "Forgotten your password? No worries! We'll assist you in resetting it securely",
-          imagePath: forgotPasswordImage,
+          imagePath: Theme.of(context).brightness == Brightness.light
+              ? forgotPasswordImage
+              : forgotPasswordImageDark,
           screenSize: screenSize,
           child: Column(
             children: [

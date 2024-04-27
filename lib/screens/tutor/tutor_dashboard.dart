@@ -44,20 +44,20 @@ class _TutorDashboardScreenState extends State<TutorDashboardScreen> {
         bottomNavigationBar: CurvedBottomNavigationBar(
           index: currentPageIndex,
           onTap: changeView,
-          items: const [
+          items: [
             Icon(
               Icons.home_outlined,
-              color: Colors.white,
+              color: Theme.of(context).colorScheme.background,
               size: 30,
             ),
             Icon(
               Icons.calendar_month_outlined,
-              color: Colors.white,
+              color: Theme.of(context).colorScheme.background,
               size: 30,
             ),
             Icon(
               Icons.person_outline,
-              color: Colors.white,
+              color: Theme.of(context).colorScheme.background,
               size: 30,
             ),
           ],

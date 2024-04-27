@@ -184,8 +184,10 @@ class _TutorStudentFeedbacksViewState
         fit: StackFit.expand,
         children: [
           studentFeedbacks.isEmpty
-              ? const ImageWithCaption(
-                  imagePath: notFoundImage,
+              ? ImageWithCaption(
+                  imagePath: Theme.of(context).brightness == Brightness.light
+                      ? notFoundImage
+                      : notFoundImageDark,
                   description: 'No feedbacks found!',
                 )
               : SingleChildScrollView(

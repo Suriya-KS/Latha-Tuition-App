@@ -96,8 +96,10 @@ class _TutorStudentPaymentHistoryViewState
             YearInput(onChange: yearChangeHandler),
             const SizedBox(height: 10),
             studentPaymentHistory.isEmpty
-                ? const ImageWithCaption(
-                    imagePath: notFoundImage,
+                ? ImageWithCaption(
+                    imagePath: Theme.of(context).brightness == Brightness.light
+                        ? notFoundImage
+                        : notFoundImageDark,
                     description: 'No payments found!',
                   )
                 : Expanded(
@@ -127,7 +129,9 @@ class _TutorStudentPaymentHistoryViewState
                                                 ['status'] ==
                                             'pending approval'
                                         ? Theme.of(context).colorScheme.primary
-                                        : Colors.white,
+                                        : Theme.of(context)
+                                            .colorScheme
+                                            .background,
                                   ),
                                 ),
                               ),

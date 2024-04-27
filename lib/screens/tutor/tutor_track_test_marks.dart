@@ -251,8 +251,10 @@ class _TutorTrackTestMarksScreenState
             ),
             const SizedBox(height: 10),
             testMarks.isEmpty
-                ? const ImageWithCaption(
-                    imagePath: notFoundImage,
+                ? ImageWithCaption(
+                    imagePath: Theme.of(context).brightness == Brightness.light
+                        ? notFoundImage
+                        : notFoundImageDark,
                     description: 'No students found!',
                   )
                 : Expanded(

@@ -92,8 +92,10 @@ class _TutorNewAdmissionsScreenState extends State<TutorNewAdmissionsScreen> {
         appBar: const TextAppBar(title: 'New Admissions'),
         body: SafeArea(
           child: studentAdmissionRequests.isEmpty
-              ? const ImageWithCaption(
-                  imagePath: notFoundImage,
+              ? ImageWithCaption(
+                  imagePath: Theme.of(context).brightness == Brightness.light
+                      ? notFoundImage
+                      : notFoundImageDark,
                   description: 'No requests found!',
                 )
               : ListView.builder(

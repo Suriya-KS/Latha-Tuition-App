@@ -76,11 +76,14 @@ class _InfoCardState extends State<InfoCard> {
               height: 36,
               width: 36,
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: Theme.of(context).colorScheme.background,
                 borderRadius: BorderRadius.circular(100),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.1),
+                    color: Theme.of(context)
+                        .colorScheme
+                        .onBackground
+                        .withOpacity(0.1),
                     spreadRadius: 5,
                     blurRadius: 7,
                     offset: const Offset(0, 3),
@@ -90,7 +93,7 @@ class _InfoCardState extends State<InfoCard> {
               child: IconButton(
                 padding: EdgeInsets.zero,
                 style: IconButton.styleFrom(
-                  backgroundColor: Colors.white,
+                  backgroundColor: Theme.of(context).colorScheme.background,
                 ),
                 onPressed: widget.isClickable ? widget.onTap : null,
                 icon: Icon(

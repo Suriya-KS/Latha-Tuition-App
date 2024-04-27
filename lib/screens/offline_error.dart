@@ -35,7 +35,9 @@ class _OfflineErrorScreenState extends State<OfflineErrorScreen> {
     return Scaffold(
       body: ScrollableImageContent(
         screenSize: MediaQuery.of(context),
-        imagePath: noNetworkImage,
+        imagePath: Theme.of(context).brightness == Brightness.light
+            ? noNetworkImage
+            : noNetworkImageDark,
         imageHeightFactor: 0.6,
         imageAlignment: Alignment.center,
         title: 'Lost Network Connection',

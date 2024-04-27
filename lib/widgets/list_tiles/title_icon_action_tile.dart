@@ -38,7 +38,7 @@ class TitleIconActionTile extends StatelessWidget {
             child: Row(mainAxisAlignment: MainAxisAlignment.end, children: [
               Icon(
                 icon,
-                color: Colors.white,
+                color: Theme.of(context).colorScheme.background,
               ),
               const SizedBox(width: 25),
             ]),

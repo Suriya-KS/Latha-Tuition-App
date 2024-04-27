@@ -44,20 +44,20 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
         bottomNavigationBar: CurvedBottomNavigationBar(
           index: currentPageIndex,
           onTap: changeView,
-          items: const [
+          items: [
             Icon(
               Icons.home_outlined,
-              color: Colors.white,
+              color: Theme.of(context).colorScheme.background,
               size: 30,
             ),
             Icon(
               Icons.groups_outlined,
-              color: Colors.white,
+              color: Theme.of(context).colorScheme.background,
               size: 30,
             ),
             Icon(
               Icons.assignment_outlined,
-              color: Colors.white,
+              color: Theme.of(context).colorScheme.background,
               size: 30,
             ),
           ],

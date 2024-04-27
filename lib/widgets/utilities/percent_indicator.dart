@@ -25,6 +25,9 @@ class PercentIndicator extends StatelessWidget {
           radius: 35,
           lineWidth: 8,
           circularStrokeCap: CircularStrokeCap.round,
+          backgroundColor: percentage > 0.5
+              ? Theme.of(context).colorScheme.primary.withOpacity(0.2)
+              : Theme.of(context).colorScheme.error.withOpacity(0.2),
           progressColor: percentage > 0.5
               ? Theme.of(context).colorScheme.primary
               : Theme.of(context).colorScheme.error,

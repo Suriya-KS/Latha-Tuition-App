@@ -122,8 +122,11 @@ class _TutorBatchPaymentHistoryScreenState
               MonthInput(onChange: monthChangeHandler),
               const SizedBox(height: 10),
               paymentHistory.isEmpty
-                  ? const ImageWithCaption(
-                      imagePath: notFoundImage,
+                  ? ImageWithCaption(
+                      imagePath:
+                          Theme.of(context).brightness == Brightness.light
+                              ? notFoundImage
+                              : notFoundImageDark,
                       description: 'No payments found!',
                     )
                   : Expanded(
@@ -148,7 +151,9 @@ class _TutorBatchPaymentHistoryScreenState
                                               'approved'
                                           ? Icons.check_outlined
                                           : Icons.close_outlined,
-                                      color: Colors.white,
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .background,
                                     ),
                                   ),
                                 ),

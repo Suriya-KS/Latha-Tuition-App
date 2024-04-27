@@ -64,7 +64,9 @@ flutter:
                 weight: 100
 
 flutter_native_splash:
-    color: "#FFFFFF"
+    color: "#FAFDFC"
+    color_dark: "#191C1C"
 
     android_12:
-        color: "#FFFFFF"
+        color: "#FAFDFC"
+        color_dark: "#191C1C"

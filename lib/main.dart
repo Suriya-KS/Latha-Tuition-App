@@ -101,7 +101,7 @@ class _MyAppState extends ConsumerState<MyApp> {
   void initializeApp() async {
     final result = await Future.wait([
       loadScreen(context),
-      Future.delayed(splashScreenVideoDuration),
+      Future.delayed(splashLoadingVideoDuration),
     ]);
 
     setState(() {
@@ -122,6 +122,7 @@ class _MyAppState extends ConsumerState<MyApp> {
       title: "Latha's Tuition App",
       theme: AppTheme.theme,
       themeMode: AppTheme.themeMode,
+      darkTheme: AppTheme.darkTheme,
       debugShowCheckedModeBanner: false,
       home: screen,
     );

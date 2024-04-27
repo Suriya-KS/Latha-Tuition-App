@@ -39,14 +39,23 @@ class ScrollableImageAppBar extends ConsumerWidget {
       flexibleSpace: FlexibleSpaceBar(
         title: Text(
           title,
-          style: const TextStyle(
-            color: Colors.black,
+          style: TextStyle(
+            color: Theme.of(context).colorScheme.onBackground,
             fontWeight: FontWeight.w700,
           ),
         ),
-        background: SvgPicture.asset(
-          placeholderImage,
-          fit: BoxFit.cover,
+        background: Stack(
+          children: [
+            SvgPicture.asset(
+              Theme.of(context).brightness == Brightness.light
+                  ? classRoomImage
+                  : classRoomImageDark,
+              fit: BoxFit.cover,
+            ),
+            Container(
+              color: Theme.of(context).colorScheme.background.withOpacity(0.2),
+            )
+          ],
         ),
       ),
     );

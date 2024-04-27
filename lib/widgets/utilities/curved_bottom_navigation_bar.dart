@@ -27,7 +27,7 @@ class CurvedBottomNavigationBar extends ConsumerWidget {
     return CurvedNavigationBar(
       index: index,
       color: Theme.of(context).colorScheme.primary,
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).colorScheme.background,
       animationDuration: const Duration(milliseconds: 300),
       animationCurve: Curves.easeInOut,
       onTap: (index) => navigationItemTapHandler(
