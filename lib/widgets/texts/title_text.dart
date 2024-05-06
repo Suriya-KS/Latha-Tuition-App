@@ -15,7 +15,7 @@ class TitleText extends StatelessWidget {
       child: Text(
         title,
         textAlign: TextAlign.start,
-        style: Theme.of(context).textTheme.displaySmall?.copyWith(
+        style: Theme.of(context).textTheme.headlineLarge?.copyWith(
               fontWeight: FontWeight.w900,
             ),
       ),

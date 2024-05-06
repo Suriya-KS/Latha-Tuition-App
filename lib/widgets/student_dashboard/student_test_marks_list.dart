@@ -29,11 +29,17 @@ class StudentTestMarksList extends StatelessWidget {
             totalValue: items[index]['totalMarks'],
           ),
           children: [
-            Text(formatDateDay(items[index]['date'])),
-            Text(formatTimeRange(
-              items[index]['startTime'],
-              items[index]['endTime'],
-            )),
+            Text(
+              formatDateDay(items[index]['date']),
+              style: const TextStyle(fontSize: 13),
+            ),
+            Text(
+              formatTimeRange(
+                items[index]['startTime'],
+                items[index]['endTime'],
+              ),
+              style: const TextStyle(fontSize: 13),
+            ),
           ],
         ),
       ),

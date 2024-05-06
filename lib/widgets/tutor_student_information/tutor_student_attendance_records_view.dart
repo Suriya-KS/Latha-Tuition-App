@@ -142,10 +142,13 @@ class _TutorStudentAttendanceRecordsViewState
                                           Theme.of(context).colorScheme.error,
                                     ),
                               children: [
-                                Text(formatTimeRange(
-                                  attendanceList[index]['startTime'],
-                                  attendanceList[index]['endTime'],
-                                )),
+                                Text(
+                                  formatTimeRange(
+                                    attendanceList[index]['startTime'],
+                                    attendanceList[index]['endTime'],
+                                  ),
+                                  style: const TextStyle(fontSize: 13),
+                                ),
                               ],
                             )
                           : const SizedBox(height: 120),

@@ -221,6 +221,7 @@ class _StudentPaymentRequestsScreenState
                                             studentPaymentHistory[index]
                                                 ['amount'],
                                           ),
+                                          style: const TextStyle(fontSize: 13),
                                         ),
                                       ],
                                     )

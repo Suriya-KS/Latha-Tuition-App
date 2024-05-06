@@ -265,13 +265,12 @@ class _TutorTrackTestMarksScreenState
                         itemBuilder: (context, index) => index <
                                 testMarks.length
                             ? TextAvatarActionCard(
-                                title: testMarks[index]['studentName'],
                                 action: SizedBox(
                                   width: 120,
                                   child: TextInput(
                                     labelText: 'Marks',
                                     prefixIcon: Icons.assignment_outlined,
-                                    inputType: TextInputType.text,
+                                    inputType: TextInputType.number,
                                     initialValue: testMarks[index]['marks'] !=
                                             null
                                         ? testMarks[index]['marks'].toString()
@@ -288,6 +287,12 @@ class _TutorTrackTestMarksScreenState
                                     ),
                                   ),
                                 ),
+                                children: [
+                                  Text(
+                                    testMarks[index]['studentName'],
+                                    style: const TextStyle(fontSize: 16),
+                                  ),
+                                ],
                               )
                             : const SizedBox(height: 120),
                       ),

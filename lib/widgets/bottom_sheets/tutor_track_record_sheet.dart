@@ -240,7 +240,7 @@ class _TutorTrackRecordSheetState extends ConsumerState<TutorTrackRecordSheet> {
     return Column(
       children: [
         TitleText(title: title),
-        if (!isEditMode) const SizedBox(height: 50),
+        if (!isEditMode) const SizedBox(height: 30),
         Form(
           key: formKey,
           child: Column(
@@ -364,7 +364,7 @@ class _TutorTrackRecordSheetState extends ConsumerState<TutorTrackRecordSheet> {
               const SizedBox(height: 50),
               Row(
                 mainAxisAlignment: isEditMode
-                    ? MainAxisAlignment.spaceBetween
+                    ? MainAxisAlignment.spaceEvenly
                     : MainAxisAlignment.center,
                 children: [
                   if (isEditMode)

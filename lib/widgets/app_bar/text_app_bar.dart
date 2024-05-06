@@ -13,6 +13,11 @@ class TextAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AppBar(title: Text(title));
+    return AppBar(
+      title: Text(
+        title,
+        style: const TextStyle(fontSize: 20),
+      ),
+    );
   }
 }

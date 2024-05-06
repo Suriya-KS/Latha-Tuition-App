@@ -65,7 +65,7 @@ class _OnboardingState extends State<OnboardingScreen> {
                 )
               : const SizedBox.shrink(),
           Padding(
-            padding: EdgeInsets.only(bottom: navigationBarHeight + 10),
+            padding: EdgeInsets.only(bottom: navigationBarHeight + 15),
             child: Align(
               alignment: Alignment.bottomCenter,
               child: AnimatedSmoothIndicator(
@@ -78,8 +78,8 @@ class _OnboardingState extends State<OnboardingScreen> {
                       .onBackground
                       .withOpacity(0.2),
                   activeDotScale: 1.6,
-                  dotWidth: 10,
-                  dotHeight: 10,
+                  dotWidth: 8,
+                  dotHeight: 8,
                 ),
               ),
             ),

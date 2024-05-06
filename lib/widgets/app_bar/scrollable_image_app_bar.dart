@@ -53,7 +53,7 @@ class ScrollableImageAppBar extends ConsumerWidget {
               fit: BoxFit.cover,
             ),
             Container(
-              color: Theme.of(context).colorScheme.background.withOpacity(0.2),
+              color: Colors.black.withOpacity(0.3),
             )
           ],
         ),

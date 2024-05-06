@@ -4,7 +4,7 @@ import 'package:latha_tuition_app/widgets/texts/subtitle_text.dart';
 
 class TextAvatarActionCard extends StatelessWidget {
   const TextAvatarActionCard({
-    required this.title,
+    this.title,
     this.avatarText,
     this.onTap,
     this.action,
@@ -12,7 +12,7 @@ class TextAvatarActionCard extends StatelessWidget {
     super.key,
   });
 
-  final String title;
+  final String? title;
   final String? avatarText;
   final List<Widget>? children;
   final Widget? action;
@@ -29,7 +29,7 @@ class TextAvatarActionCard extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.symmetric(
               vertical: 12,
-              horizontal: 24,
+              horizontal: 8,
             ),
             child: Row(
               children: [
@@ -57,7 +57,7 @@ class TextAvatarActionCard extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      SubtitleText(subtitle: title),
+                      if (title != null) SubtitleText(subtitle: title!),
                       if (children != null) const SizedBox(height: 3),
                       if (children != null) ...children!,
                     ],

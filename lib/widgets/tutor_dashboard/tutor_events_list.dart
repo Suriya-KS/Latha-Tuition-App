@@ -131,16 +131,20 @@ class TutorEventsList extends ConsumerWidget {
                 totalValue: items[index]['attendance'].length,
               ),
               children: [
-                Text(formatDateDay(items[index]['date'])),
+                Text(
+                  formatDateDay(items[index]['date']),
+                  style: const TextStyle(fontSize: 13),
+                ),
                 Text(
                   formatTimeRange(
                     items[index]['startTime'],
                     items[index]['endTime'],
                   ),
+                  style: const TextStyle(fontSize: 13),
                 ),
               ],
             )
-          : const SizedBox(height: 120),
+          : const SizedBox(height: 80),
     );
 
     if (activeToggle == CalendarViewToggles.tests) {
@@ -173,14 +177,21 @@ class TutorEventsList extends ConsumerWidget {
                   description: 'On average',
                 ),
                 children: [
-                  Text(items[index]['batchName']),
+                  Text(
+                    items[index]['batchName'],
+                    style: const TextStyle(fontSize: 13),
+                  ),
                   const SizedBox(height: 5),
-                  Text(formatDateDay(items[index]['date'])),
+                  Text(
+                    formatDateDay(items[index]['date']),
+                    style: const TextStyle(fontSize: 13),
+                  ),
                   Text(
                     formatTimeRange(
                       items[index]['startTime'],
                       items[index]['endTime'],
                     ),
+                    style: const TextStyle(fontSize: 13),
                   ),
                 ],
               )

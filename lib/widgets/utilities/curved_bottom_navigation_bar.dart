@@ -26,6 +26,7 @@ class CurvedBottomNavigationBar extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return CurvedNavigationBar(
       index: index,
+      height: 65,
       color: Theme.of(context).colorScheme.primary,
       backgroundColor: Theme.of(context).colorScheme.background,
       animationDuration: const Duration(milliseconds: 300),

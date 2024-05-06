@@ -160,7 +160,10 @@ class TutorTrackRecordDetails extends ConsumerWidget {
           right: 10,
           child: IconButton(
             onPressed: () => editTrackRecordHandler(context, ref),
-            icon: const Icon(Icons.edit_outlined),
+            icon: const Icon(
+              Icons.edit_outlined,
+              size: 20,
+            ),
           ),
         ),
       ],

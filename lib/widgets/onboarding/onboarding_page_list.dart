@@ -40,11 +40,6 @@ class OnboardingPageList extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return LiquidSwipe(
-      slideIconWidget: currentPageIndex < lastPageIndex
-          ? const Icon(
-              Icons.keyboard_double_arrow_left,
-            )
-          : const SizedBox.shrink(),
       enableLoop: false,
       positionSlideIcon: 0.85,
       liquidController: liquidController,

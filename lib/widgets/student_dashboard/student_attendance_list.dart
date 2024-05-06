@@ -35,10 +35,13 @@ class StudentAttendanceList extends StatelessWidget {
                   backgroundColor: Theme.of(context).colorScheme.error,
                 ),
           children: [
-            Text(formatTimeRange(
-              items[index]['startTime'],
-              items[index]['endTime'],
-            )),
+            Text(
+              formatTimeRange(
+                items[index]['startTime'],
+                items[index]['endTime'],
+              ),
+              style: const TextStyle(fontSize: 13),
+            ),
           ],
         ),
       ),

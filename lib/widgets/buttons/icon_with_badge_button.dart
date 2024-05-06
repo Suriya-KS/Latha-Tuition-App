@@ -28,8 +28,8 @@ class IconWithBadgeButton extends StatelessWidget {
         ),
         if (showBadgeMark || badgeCount != 0)
           Positioned(
-            top: !showBadgeMark ? -3 : 3,
-            right: !showBadgeMark ? -3 : 3,
+            top: !showBadgeMark ? -2 : 2,
+            right: !showBadgeMark ? -2 : 2,
             child: Container(
               height: !showBadgeMark ? 18 : 12,
               width: !showBadgeMark ? 18 : 12,

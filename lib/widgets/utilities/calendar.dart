@@ -56,6 +56,7 @@ class _CalendarState extends ConsumerState<Calendar> {
         firstDay: firstDay,
         lastDay: lastDay,
         focusedDay: focusedDay,
+        rowHeight: 42,
         calendarStyle: CalendarStyle(
           todayTextStyle: focusedDayTextStyle,
           selectedTextStyle: focusedDayTextStyle,
@@ -74,7 +75,7 @@ class _CalendarState extends ConsumerState<Calendar> {
         ),
         headerStyle: HeaderStyle(
           titleCentered: true,
-          titleTextStyle: Theme.of(context).textTheme.titleLarge!.copyWith(
+          titleTextStyle: Theme.of(context).textTheme.titleMedium!.copyWith(
                 fontWeight: FontWeight.w700,
               ),
           formatButtonVisible: false,

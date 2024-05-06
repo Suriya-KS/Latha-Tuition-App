@@ -21,24 +21,24 @@ class ScrollableDetailsList extends StatelessWidget {
     return Scaffold(
       appBar: TextAppBar(title: title),
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: screenPadding),
-          child: Stack(
-            children: [
-              Column(
+        child: Stack(
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: screenPadding),
+              child: Column(
                 children: [
                   const SizedBox(height: 20),
                   ...children,
                 ],
               ),
-              if (onPressed != null)
-                FloatingCircularActionButton(
-                  icon: Icons.check,
-                  padding: 20,
-                  onPressed: onPressed!,
-                ),
-            ],
-          ),
+            ),
+            if (onPressed != null)
+              FloatingCircularActionButton(
+                icon: Icons.check,
+                padding: 20,
+                onPressed: onPressed!,
+              ),
+          ],
         ),
       ),
     );

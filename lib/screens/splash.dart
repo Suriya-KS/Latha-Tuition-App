@@ -11,11 +11,20 @@ class SplashScreen extends StatefulWidget {
   State<SplashScreen> createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen> {
+class _SplashScreenState extends State<SplashScreen>
+    with TickerProviderStateMixin {
   bool isDarkMode = false;
 
   late VideoPlayerController videoPlayerController;
   late ChewieController chewieController;
+  late AnimationController titleAnimationController = AnimationController(
+    duration: const Duration(seconds: 2),
+    vsync: this,
+  )..repeat(reverse: false);
+  late Animation<double> titleAnimation = CurvedAnimation(
+    parent: titleAnimationController,
+    curve: Curves.easeIn,
+  );
 
   void loadControllers() {
     final videoDataSource =
@@ -29,6 +38,14 @@ class _SplashScreenState extends State<SplashScreen> {
       allowPlaybackSpeedChanging: false,
       showControls: false,
     );
+
+    titleAnimationController.forward();
+
+    titleAnimationController.addStatusListener((status) {
+      if (status == AnimationStatus.completed) {
+        titleAnimationController.dispose();
+      }
+    });
   }
 
   @override
@@ -58,22 +75,39 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
-      body: Center(
-        child: Container(
-          width: screenWidth * 0.8,
-          decoration: const BoxDecoration(
-            shape: BoxShape.circle,
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(screenPadding),
-            child: Chewie(
-              controller: chewieController,
+      body: Stack(
+        alignment: Alignment.center,
+        children: [
+          Center(
+            child: SizedBox(
+              height: screenHeight,
+              width: screenWidth * 0.8,
+              child: Padding(
+                padding: const EdgeInsets.all(screenPadding),
+                child: Chewie(
+                  controller: chewieController,
+                ),
+              ),
             ),
           ),
-        ),
+          Positioned(
+            top: screenHeight * 0.7,
+            child: FadeTransition(
+              opacity: titleAnimation,
+              child: const Text(
+                'Latha Tuition',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

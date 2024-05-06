@@ -41,7 +41,7 @@ class GetStartedSheet extends ConsumerWidget {
     return Column(
       children: [
         const TitleText(title: 'Start Your Journey!'),
-        const SizedBox(height: 50),
+        const SizedBox(height: 30),
         PrimaryButton(
           title: 'Apply for Admission',
           onPressed: () => navigateToStudentRegistrationScreen(
@@ -65,7 +65,7 @@ class GetStartedSheet extends ConsumerWidget {
             buttonText: 'Login here',
             onPressed: () => navigateToLoginScreen(context, screen),
           ),
-        const SizedBox(height: 30),
+        const SizedBox(height: 20),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [

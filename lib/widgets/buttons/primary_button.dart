@@ -34,8 +34,8 @@ class PrimaryButton extends StatelessWidget {
       onPressed: onPressed ?? () {},
       child: Padding(
         padding: const EdgeInsets.symmetric(
-          vertical: 16,
-          horizontal: 24,
+          vertical: 14,
+          horizontal: 18,
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
@@ -56,7 +56,7 @@ class PrimaryButton extends StatelessWidget {
             if (iconData != null)
               Icon(
                 iconData,
-                size: 30,
+                size: 35,
               ),
           ],
         ),

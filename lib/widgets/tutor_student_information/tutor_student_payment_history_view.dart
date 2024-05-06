@@ -140,6 +140,7 @@ class _TutorStudentPaymentHistoryViewState
                                   formatAmount(
                                     studentPaymentHistory[index]['amount'],
                                   ),
+                                  style: const TextStyle(fontSize: 13),
                                 ),
                               ],
                             )

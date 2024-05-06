@@ -22,8 +22,8 @@ class PercentIndicator extends StatelessWidget {
     return Column(
       children: [
         CircularPercentIndicator(
-          radius: 35,
-          lineWidth: 8,
+          radius: 32,
+          lineWidth: 6,
           circularStrokeCap: CircularStrokeCap.round,
           backgroundColor: percentage > 0.5
               ? Theme.of(context).colorScheme.primary.withOpacity(0.2)
@@ -41,13 +41,17 @@ class PercentIndicator extends StatelessWidget {
               color: percentage > 0.5
                   ? Theme.of(context).colorScheme.primary
                   : Theme.of(context).colorScheme.error,
-              fontSize: 18,
+              fontSize: 16,
               fontWeight: FontWeight.bold,
             ),
           ),
         ),
         if (description != null) const SizedBox(height: 5),
-        if (description != null) Text(description!),
+        if (description != null)
+          Text(
+            description!,
+            style: const TextStyle(fontSize: 13),
+          ),
       ],
     );
   }

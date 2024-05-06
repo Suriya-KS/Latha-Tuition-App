@@ -240,7 +240,6 @@ class _TutorTrackAttendanceScreenState
                       itemBuilder: (context, index) => index <
                               attendanceList.length
                           ? TextAvatarActionCard(
-                              title: attendanceList[index]['studentName'],
                               action: ToggleInput(
                                 backgroundColors: [
                                   Theme.of(context).colorScheme.primary,
@@ -260,6 +259,12 @@ class _TutorTrackAttendanceScreenState
                                   Icon(Icons.close),
                                 ],
                               ),
+                              children: [
+                                Text(
+                                  attendanceList[index]['studentName'],
+                                  style: const TextStyle(fontSize: 16),
+                                ),
+                              ],
                             )
                           : const SizedBox(height: 120),
                     ),

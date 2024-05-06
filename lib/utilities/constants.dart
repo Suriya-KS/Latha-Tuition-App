@@ -52,7 +52,7 @@ const defaultErrorMessage = 'Something went wrong, please try again later';
 const splashLoadingVideoDuration = Duration(seconds: 5);
 const passwordVerificationCodeResendTime = Duration(seconds: 60);
 
-const screenPadding = 30.0;
+const screenPadding = 20.0;
 
 enum Screen {
   onboarding,

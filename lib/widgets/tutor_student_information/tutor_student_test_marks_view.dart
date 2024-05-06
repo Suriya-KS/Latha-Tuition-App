@@ -158,10 +158,13 @@ class _TutorStudentTestMarksViewState
                                       )),
                                   children: [
                                     Text(formatDate(testMarks[index]['date'])),
-                                    Text(formatTimeRange(
-                                      testMarks[index]['startTime'],
-                                      testMarks[index]['endTime'],
-                                    )),
+                                    Text(
+                                      formatTimeRange(
+                                        testMarks[index]['startTime'],
+                                        testMarks[index]['endTime'],
+                                      ),
+                                      style: const TextStyle(fontSize: 13),
+                                    ),
                                   ],
                                 )
                               : const SizedBox(height: 120),

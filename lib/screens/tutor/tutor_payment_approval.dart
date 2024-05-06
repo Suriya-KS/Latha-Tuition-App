@@ -240,19 +240,24 @@ class _TutorPaymentApprovalScreenState
                                 ],
                               ),
                               children: [
-                                Text(studentsPaymentDetails[index]['batch']),
+                                Text(
+                                  studentsPaymentDetails[index]['batch'],
+                                  style: const TextStyle(fontSize: 13),
+                                ),
                                 const SizedBox(height: 5),
                                 Text(
                                   formatAmount(
                                       studentsPaymentDetails[index]['amount']),
                                   style: const TextStyle(
                                     fontWeight: FontWeight.bold,
+                                    fontSize: 13,
                                   ),
                                 ),
                                 Text(
                                   formatDate(
                                     studentsPaymentDetails[index]['date'],
                                   ),
+                                  style: const TextStyle(fontSize: 13),
                                 ),
                               ],
                             )
