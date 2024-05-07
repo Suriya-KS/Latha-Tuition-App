@@ -73,6 +73,7 @@ class TitleIconList extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   const SizedBox(height: 20),
+                  if (items.isEmpty) const SizedBox(height: 50),
                   if (items.isEmpty)
                     ImageWithCaption(
                       imagePath:
@@ -80,7 +81,7 @@ class TitleIconList extends StatelessWidget {
                               ? notFoundImage
                               : notFoundImageDark,
                       description: 'No $emptyDescription found!',
-                      useMaxHeight: false,
+                      enableBottomPadding: false,
                     ),
                   if (items.isEmpty) const SizedBox(height: 50),
                   OutlinedButton(

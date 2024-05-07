@@ -131,11 +131,13 @@ class _StudentTestViewState extends ConsumerState<StudentTestMarksView> {
           const TextAppBar(title: 'Test Marks Records'),
           MonthInput(onChange: monthChangeHandler),
           testMarks.isEmpty
-              ? ImageWithCaption(
-                  imagePath: Theme.of(context).brightness == Brightness.light
-                      ? notFoundImage
-                      : notFoundImageDark,
-                  description: 'No records found!',
+              ? Expanded(
+                  child: ImageWithCaption(
+                    imagePath: Theme.of(context).brightness == Brightness.light
+                        ? notFoundImage
+                        : notFoundImageDark,
+                    description: 'No records found!',
+                  ),
                 )
               : Expanded(
                   child: SingleChildScrollView(

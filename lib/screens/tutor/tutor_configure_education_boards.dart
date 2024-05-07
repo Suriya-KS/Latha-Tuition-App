@@ -147,25 +147,27 @@ class _TutorConfigureEducationBoardsState
   Widget build(BuildContext context) {
     return PopScope(
       canPop: !isChanged,
-      onPopInvoked: (didPop) => alertDialogue(
-        context,
-        actions: [
-          TextButton(
-            onPressed: () => closeAlertDialogue(
+      onPopInvoked: (didPop) => !didPop
+          ? alertDialogue(
               context,
-              function: Navigator.pop,
-            ),
-            child: const Text('Discard'),
-          ),
-          OutlinedButton(
-            onPressed: () => closeAlertDialogue(
-              context,
-              function: saveEducationBoardHandler,
-            ),
-            child: const Text('Save'),
-          ),
-        ],
-      ),
+              actions: [
+                TextButton(
+                  onPressed: () => closeAlertDialogue(
+                    context,
+                    function: Navigator.pop,
+                  ),
+                  child: const Text('Discard'),
+                ),
+                OutlinedButton(
+                  onPressed: () => closeAlertDialogue(
+                    context,
+                    function: saveEducationBoardHandler,
+                  ),
+                  child: const Text('Save'),
+                ),
+              ],
+            )
+          : null,
       child: LoadingOverlay(
         isLoading: isLoading,
         child: Scaffold(

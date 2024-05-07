@@ -135,14 +135,22 @@ class _StudentRegistrationFormState
     );
 
     isUnique['parentEmailAddress'] = await validateUnique(
-      parentEmailController.text,
-      'parentEmailAddress',
-    );
+          parentEmailController.text,
+          'parentEmailAddress',
+        ) &&
+        await validateUnique(
+          parentEmailController.text,
+          'emailAddress',
+        );
 
     isUnique['parentPhoneNumber'] = await validateUnique(
-      parentPhoneController.text,
-      'parentPhoneNumber',
-    );
+          parentPhoneController.text,
+          'parentPhoneNumber',
+        ) &&
+        await validateUnique(
+          parentPhoneController.text,
+          'phoneNumber',
+        );
 
     loadingMethods.setLoadingStatus(false);
 

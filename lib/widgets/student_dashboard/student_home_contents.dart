@@ -13,11 +13,10 @@ class StudentHomeContents extends StatelessWidget {
       child: Column(
         children: [
           Text('Upcoming Classes & Scheduled Tests'),
-          SizedBox(height: 20),
+          SizedBox(height: 50),
           ImageWithCaption(
             imagePath: placeholderImage,
             description: 'Under construction, coming soon!',
-            useMaxHeight: false,
             imageHeight: 200,
           ),
         ],

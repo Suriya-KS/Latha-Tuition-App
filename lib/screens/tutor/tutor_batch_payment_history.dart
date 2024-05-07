@@ -122,12 +122,14 @@ class _TutorBatchPaymentHistoryScreenState
               MonthInput(onChange: monthChangeHandler),
               const SizedBox(height: 10),
               paymentHistory.isEmpty
-                  ? ImageWithCaption(
-                      imagePath:
-                          Theme.of(context).brightness == Brightness.light
-                              ? notFoundImage
-                              : notFoundImageDark,
-                      description: 'No payments found!',
+                  ? Expanded(
+                      child: ImageWithCaption(
+                        imagePath:
+                            Theme.of(context).brightness == Brightness.light
+                                ? notFoundImage
+                                : notFoundImageDark,
+                        description: 'No payments found!',
+                      ),
                     )
                   : Expanded(
                       child: ListView.builder(

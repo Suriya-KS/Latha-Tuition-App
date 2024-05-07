@@ -141,25 +141,27 @@ class _TutorStudentPersonalDetailsViewState
 
     return PopScope(
       canPop: !isChanged,
-      onPopInvoked: (didPop) => alertDialogue(
-        context,
-        actions: [
-          TextButton(
-            onPressed: () => closeAlertDialogue(
+      onPopInvoked: (didPop) => !didPop
+          ? alertDialogue(
               context,
-              function: (context) => resetBatchAndFeesAmount(),
-            ),
-            child: const Text('Discard'),
-          ),
-          OutlinedButton(
-            onPressed: () => closeAlertDialogue(
-              context,
-              function: updateBatchAndFeesAmount,
-            ),
-            child: const Text('Save'),
-          ),
-        ],
-      ),
+              actions: [
+                TextButton(
+                  onPressed: () => closeAlertDialogue(
+                    context,
+                    function: (context) => resetBatchAndFeesAmount(),
+                  ),
+                  child: const Text('Discard'),
+                ),
+                OutlinedButton(
+                  onPressed: () => closeAlertDialogue(
+                    context,
+                    function: updateBatchAndFeesAmount,
+                  ),
+                  child: const Text('Save'),
+                ),
+              ],
+            )
+          : null,
       child: Expanded(
         child: SingleChildScrollView(
           child: Padding(

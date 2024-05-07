@@ -46,6 +46,12 @@ class _TutorSignUpFormState extends ConsumerState<TutorSignUpForm> {
     });
   }
 
+  Future<bool> doesTutorExists() async {
+    final tutorsQuerySnapshot = await tutorsCollectionReference.get();
+
+    return tutorsQuerySnapshot.docs.isNotEmpty;
+  }
+
   void tutorSignUpHandler(BuildContext context) async {
     if (!formKey.currentState!.validate()) return;
 
@@ -55,6 +61,19 @@ class _TutorSignUpFormState extends ConsumerState<TutorSignUpForm> {
     loadingMethods.setLoadingStatus(true);
 
     try {
+      final hasTutor = await doesTutorExists();
+
+      if (hasTutor) {
+        loadingMethods.setLoadingStatus(false);
+
+        if (!context.mounted) return;
+
+        return snackBar(
+          context,
+          content: const Text('Access Denied: Tutor Already Registered'),
+        );
+      }
+
       final userCredentials =
           await authentication.createUserWithEmailAndPassword(
         email: emailController.text,
@@ -69,7 +88,7 @@ class _TutorSignUpFormState extends ConsumerState<TutorSignUpForm> {
         'phoneNumber': phoneController.text,
       });
 
-      authenticationMethods.setStudentID(tutorID);
+      authenticationMethods.setTutorID(tutorID);
       loadingMethods.setLoadingStatus(false);
 
       if (!context.mounted) return;

@@ -5,19 +5,26 @@ import 'package:latha_tuition_app/utilities/constants.dart';
 
 Future<bool> validateUnique(String? value, String type) async {
   try {
-    final studentQuerySnapshot = await FirebaseFirestore.instance
+    final firestore = FirebaseFirestore.instance;
+
+    final studentQuerySnapshot = await firestore
         .collection('students')
         .where(type, isEqualTo: value)
         .get();
 
-    final studentAdmissionRequestQuerySnapshot = await FirebaseFirestore
-        .instance
+    final studentAdmissionRequestQuerySnapshot = await firestore
         .collection('studentAdmissionRequests')
         .where(type, isEqualTo: value)
         .get();
 
+    final tutorQuerySnapshot = await firestore
+        .collection('tutors')
+        .where(type, isEqualTo: value)
+        .get();
+
     if (studentQuerySnapshot.size > 0 ||
-        studentAdmissionRequestQuerySnapshot.size > 0) {
+        studentAdmissionRequestQuerySnapshot.size > 0 ||
+        tutorQuerySnapshot.size > 0) {
       return false;
     }
 

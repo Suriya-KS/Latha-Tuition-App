@@ -35,7 +35,7 @@ class TextAvatarActionCard extends StatelessWidget {
               children: [
                 if (avatarText != null)
                   Container(
-                    padding: const EdgeInsets.all(8),
+                    padding: const EdgeInsets.all(12),
                     width: 60,
                     decoration: BoxDecoration(
                       color: Theme.of(context).colorScheme.primary,
@@ -45,8 +45,8 @@ class TextAvatarActionCard extends StatelessWidget {
                       child: Text(
                         avatarText!,
                         style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
                           color: Theme.of(context).colorScheme.background,
                         ),
                       ),

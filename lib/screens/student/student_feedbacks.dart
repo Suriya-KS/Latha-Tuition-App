@@ -5,7 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:latha_tuition_app/utilities/constants.dart';
 import 'package:latha_tuition_app/utilities/helper_functions.dart';
 import 'package:latha_tuition_app/utilities/snack_bar.dart';
-import 'package:latha_tuition_app/providers/tutor_search_provider.dart';
+import 'package:latha_tuition_app/providers/authentication_provider.dart';
 import 'package:latha_tuition_app/widgets/utilities/loading_overlay.dart';
 import 'package:latha_tuition_app/widgets/utilities/image_with_caption.dart';
 import 'package:latha_tuition_app/widgets/app_bar/text_app_bar.dart';
@@ -28,7 +28,7 @@ class _StudentFeedbacksScreenState
 
   Future<void> loadStudentFeedbacks(BuildContext context) async {
     final studentID =
-        ref.read(tutorSearchProvider)[TutorSearch.selectedStudentID];
+        ref.read(authenticationProvider)[Authentication.studentID];
 
     try {
       QuerySnapshot feedbackQuerySnapshot = await firestore
@@ -97,12 +97,14 @@ class _StudentFeedbacksScreenState
           child: Column(
             children: [
               feedbacks.isEmpty
-                  ? ImageWithCaption(
-                      imagePath:
-                          Theme.of(context).brightness == Brightness.light
-                              ? notFoundImage
-                              : notFoundImageDark,
-                      description: 'No feedbacks found!',
+                  ? Expanded(
+                      child: ImageWithCaption(
+                        imagePath:
+                            Theme.of(context).brightness == Brightness.light
+                                ? notFoundImage
+                                : notFoundImageDark,
+                        description: 'No feedbacks found!',
+                      ),
                     )
                   : SingleChildScrollView(
                       child: Padding(

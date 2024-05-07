@@ -171,12 +171,14 @@ class _StudentPaymentRequestsScreenState
                     YearInput(onChange: yearChangeHandler),
                     const SizedBox(height: 10),
                     studentPaymentHistory.isEmpty
-                        ? ImageWithCaption(
-                            imagePath:
-                                Theme.of(context).brightness == Brightness.light
-                                    ? notFoundImage
-                                    : notFoundImageDark,
-                            description: 'No records found!',
+                        ? Expanded(
+                            child: ImageWithCaption(
+                              imagePath: Theme.of(context).brightness ==
+                                      Brightness.light
+                                  ? notFoundImage
+                                  : notFoundImageDark,
+                              description: 'No records found!',
+                            ),
                           )
                         : Expanded(
                             child: ListView.builder(

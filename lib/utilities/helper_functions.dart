@@ -182,7 +182,7 @@ String formatDateDay(DateTime date) {
 String formatShortenDay(DateTime date) {
   final dayOfWeekFormatter = DateFormat.E();
 
-  return dayOfWeekFormatter.format(date).substring(0, 2);
+  return dayOfWeekFormatter.format(date).substring(0, 3);
 }
 
 String formatTime(TimeOfDay time) {

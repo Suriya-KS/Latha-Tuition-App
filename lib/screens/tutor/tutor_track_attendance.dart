@@ -193,25 +193,27 @@ class _TutorTrackAttendanceScreenState
 
     return PopScope(
       canPop: !canSave,
-      onPopInvoked: (didPop) => alertDialogue(
-        context,
-        actions: [
-          TextButton(
-            onPressed: () => closeAlertDialogue(
+      onPopInvoked: (didPop) => !didPop
+          ? alertDialogue(
               context,
-              function: Navigator.pop,
-            ),
-            child: const Text('Discard'),
-          ),
-          OutlinedButton(
-            onPressed: () => closeAlertDialogue(
-              context,
-              function: trackAttendanceHandler,
-            ),
-            child: const Text('Save'),
-          ),
-        ],
-      ),
+              actions: [
+                TextButton(
+                  onPressed: () => closeAlertDialogue(
+                    context,
+                    function: Navigator.pop,
+                  ),
+                  child: const Text('Discard'),
+                ),
+                OutlinedButton(
+                  onPressed: () => closeAlertDialogue(
+                    context,
+                    function: trackAttendanceHandler,
+                  ),
+                  child: const Text('Save'),
+                ),
+              ],
+            )
+          : null,
       child: LoadingOverlay(
         isLoading: isLoading,
         child: ScrollableDetailsList(
@@ -228,11 +230,14 @@ class _TutorTrackAttendanceScreenState
             ),
             const SizedBox(height: 10),
             attendanceList.isEmpty
-                ? ImageWithCaption(
-                    imagePath: Theme.of(context).brightness == Brightness.light
-                        ? notFoundImage
-                        : notFoundImageDark,
-                    description: 'No students found!',
+                ? Expanded(
+                    child: ImageWithCaption(
+                      imagePath:
+                          Theme.of(context).brightness == Brightness.light
+                              ? notFoundImage
+                              : notFoundImageDark,
+                      description: 'No students found!',
+                    ),
                   )
                 : Expanded(
                     child: ListView.builder(

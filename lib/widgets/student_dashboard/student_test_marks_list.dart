@@ -24,13 +24,14 @@ class StudentTestMarksList extends StatelessWidget {
         itemCount: items.length,
         itemBuilder: (context, index) => TextAvatarActionCard(
           title: items[index]['name'],
+          avatarText: formatShortenDay(items[index]['date']),
           action: PercentIndicator(
             currentValue: items[index]['marks'],
             totalValue: items[index]['totalMarks'],
           ),
           children: [
             Text(
-              formatDateDay(items[index]['date']),
+              formatDate(items[index]['date']),
               style: const TextStyle(fontSize: 13),
             ),
             Text(

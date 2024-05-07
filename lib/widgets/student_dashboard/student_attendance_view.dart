@@ -117,11 +117,13 @@ class _StudentAttendanceViewState extends ConsumerState<StudentAttendanceView> {
           const TextAppBar(title: 'Attendance Records'),
           MonthInput(onChange: monthChangeHandler),
           attendanceList.isEmpty
-              ? ImageWithCaption(
-                  imagePath: Theme.of(context).brightness == Brightness.light
-                      ? notFoundImage
-                      : notFoundImageDark,
-                  description: 'No records found!',
+              ? Expanded(
+                  child: ImageWithCaption(
+                    imagePath: Theme.of(context).brightness == Brightness.light
+                        ? notFoundImage
+                        : notFoundImageDark,
+                    description: 'No records found!',
+                  ),
                 )
               : Expanded(
                   child: SingleChildScrollView(

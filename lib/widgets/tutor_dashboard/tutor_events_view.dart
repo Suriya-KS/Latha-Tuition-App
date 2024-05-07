@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:latha_tuition_app/screens/tutor/tutor_configure_batches.dart';
 
 import 'package:latha_tuition_app/utilities/constants.dart';
 import 'package:latha_tuition_app/utilities/helper_functions.dart';
@@ -160,7 +161,19 @@ class _TutorEventsViewState extends ConsumerState<TutorEventsView> {
         isLoading = false;
       });
 
-      if (!settingsDocumentSnapshot.exists) return;
+      if (!settingsDocumentSnapshot.exists && context.mounted) {
+        return snackBar(
+          context,
+          content: const Text("No batches found"),
+          actionLabel: 'Create now',
+          onPressed: () => Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const TutorConfigureBatchesScreen(),
+            ),
+          ),
+        );
+      }
 
       final settings = settingsDocumentSnapshot.data()!;
 
@@ -253,6 +266,7 @@ class _TutorEventsViewState extends ConsumerState<TutorEventsView> {
                         ],
                       ),
                       const SizedBox(height: 20),
+                      if (items.isEmpty) const SizedBox(height: 30),
                       items.isEmpty
                           ? ImageWithCaption(
                               imagePath: Theme.of(context).brightness ==
@@ -260,7 +274,6 @@ class _TutorEventsViewState extends ConsumerState<TutorEventsView> {
                                   ? notFoundImage
                                   : notFoundImageDark,
                               description: 'No records found!',
-                              useMaxHeight: false,
                             )
                           : TutorEventsList(
                               items: items,
