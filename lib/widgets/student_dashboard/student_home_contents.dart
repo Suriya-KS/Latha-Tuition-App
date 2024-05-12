@@ -1,0 +1,26 @@
+import 'package:flutter/material.dart';
+
+import 'package:latha_tuition_app/utilities/constants.dart';
+import 'package:latha_tuition_app/widgets/utilities/image_with_caption.dart';
+
+class StudentHomeContents extends StatelessWidget {
+  const StudentHomeContents({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Padding(
+      padding: EdgeInsets.all(screenPadding),
+      child: Column(
+        children: [
+          Text('Upcoming Classes & Scheduled Tests'),
+          SizedBox(height: 50),
+          ImageWithCaption(
+            imagePath: placeholderImage,
+            description: 'Under construction, coming soon!',
+            imageHeight: 200,
+          ),
+        ],
+      ),
+    );
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "540871099333",
+    "project_id": "latha-tuition-app",
+    "storage_bucket": "latha-tuition-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:540871099333:android:e83922734842b11d7f41ac",
+        "android_client_info": {
+          "package_name": "com.example.latha_tuition_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCWSY1bfDQ_OwWLvvbrtdYWibZnkegrkA8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
