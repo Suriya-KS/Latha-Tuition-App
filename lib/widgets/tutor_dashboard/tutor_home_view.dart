@@ -4,14 +4,18 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:latha_tuition_app/utilities/constants.dart';
 import 'package:latha_tuition_app/utilities/helper_functions.dart';
+import 'package:latha_tuition_app/utilities/modal_bottom_sheet.dart';
 import 'package:latha_tuition_app/utilities/snack_bar.dart';
 import 'package:latha_tuition_app/providers/loading_provider.dart';
 import 'package:latha_tuition_app/providers/authentication_provider.dart';
 import 'package:latha_tuition_app/providers/animated_drawer_provider.dart';
+import 'package:latha_tuition_app/providers/schedule_provider.dart';
 import 'package:latha_tuition_app/widgets/utilities/loading_overlay.dart';
 import 'package:latha_tuition_app/widgets/utilities/side_drawer.dart';
 import 'package:latha_tuition_app/widgets/app_bar/scrollable_image_app_bar.dart';
+import 'package:latha_tuition_app/widgets/buttons/floating_circular_action_button.dart';
 import 'package:latha_tuition_app/widgets/buttons/icon_with_badge_button.dart';
+import 'package:latha_tuition_app/widgets/bottom_sheets/tutor_schedule_sheet.dart';
 import 'package:latha_tuition_app/widgets/tutor_dashboard/tutor_home_contents.dart';
 
 class TutorHomeView extends ConsumerStatefulWidget {
@@ -60,6 +64,21 @@ class _TutorHomeViewState extends ConsumerState<TutorHomeView> {
         content: const Text(defaultErrorMessage),
       );
     }
+  }
+
+  Future<void> loadBatches(BuildContext context) async {
+    final settingsDocumentSnapshot =
+        await firestore.collection('settings').doc('studentRegistration').get();
+
+    if (!settingsDocumentSnapshot.exists) return;
+
+    final settings = settingsDocumentSnapshot.data()!;
+
+    if (!settings.containsKey('batchNames')) return;
+
+    ref
+        .read(scheduleProvider.notifier)
+        .loadBatches(List<String>.from(settings['batchNames']));
   }
 
   void loadStudentAdmissionRequestCount(BuildContext context) async {
@@ -138,6 +157,31 @@ class _TutorHomeViewState extends ConsumerState<TutorHomeView> {
     if (!context.mounted) return;
 
     loadStudentPaymentRequestsCount(context);
+  }
+
+  void showSchedulingBottomSheet(BuildContext context) async {
+    final loadingMethods = ref.read(loadingProvider.notifier);
+
+    loadingMethods.setLoadingStatus(true);
+
+    try {
+      await loadBatches(context);
+
+      loadingMethods.setLoadingStatus(false);
+
+      if (!context.mounted) return;
+
+      modalBottomSheet(context, const TutorScheduleSheet());
+    } catch (error) {
+      loadingMethods.setLoadingStatus(false);
+
+      if (!context.mounted) return;
+
+      snackBar(
+        context,
+        content: const Text(defaultErrorMessage),
+      );
+    }
   }
 
   @override
@@ -220,6 +264,13 @@ class _TutorHomeViewState extends ConsumerState<TutorHomeView> {
               ],
             ),
           ),
+          if (!animatedDrawerData[AnimatedDrawer.isOpen])
+            FloatingCircularActionButton(
+              onPressed: () => showSchedulingBottomSheet(
+                context,
+              ),
+              icon: Icons.add,
+            ),
         ],
       ),
     );

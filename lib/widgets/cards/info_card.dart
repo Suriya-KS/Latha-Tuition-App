@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:latha_tuition_app/widgets/utilities/card_floating_icon.dart';
+
 class InfoCard extends StatefulWidget {
   const InfoCard({
     required this.icon,
@@ -68,40 +70,12 @@ class _InfoCardState extends State<InfoCard> {
           ),
         ),
         if (widget.icon != null)
-          Positioned(
-            top: -iconHeight * 0.5,
-            left: widget.iconPosition == 'left' ? -iconWidth * 0.5 : null,
-            right: widget.iconPosition == 'right' ? -iconWidth * 0.5 : null,
-            child: Container(
-              height: 36,
-              width: 36,
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.background,
-                borderRadius: BorderRadius.circular(100),
-                boxShadow: [
-                  BoxShadow(
-                    color: Theme.of(context)
-                        .colorScheme
-                        .onBackground
-                        .withOpacity(0.1),
-                    spreadRadius: 5,
-                    blurRadius: 7,
-                    offset: const Offset(0, 3),
-                  ),
-                ],
-              ),
-              child: IconButton(
-                padding: EdgeInsets.zero,
-                style: IconButton.styleFrom(
-                  backgroundColor: Theme.of(context).colorScheme.background,
-                ),
-                onPressed: widget.isClickable ? widget.onTap : null,
-                icon: Icon(
-                  widget.icon,
-                  color: Theme.of(context).colorScheme.primary,
-                ),
-              ),
-            ),
+          CardFloatingIcon(
+            icon: widget.icon!,
+            color: Theme.of(context).colorScheme.primary,
+            iconPosition: widget.iconPosition,
+            isClickable: widget.isClickable,
+            onTap: widget.onTap,
           ),
       ],
     );
