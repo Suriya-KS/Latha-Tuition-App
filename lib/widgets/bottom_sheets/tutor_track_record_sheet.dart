@@ -48,21 +48,6 @@ class _TutorTrackRecordSheetState extends ConsumerState<TutorTrackRecordSheet> {
   late TextEditingController startTimeController;
   late TextEditingController endTimeController;
 
-  TimeOfDay stringToTimeOfDay(String timeString) {
-    List<String> parts = timeString.split(' ');
-    List<String> timeParts = parts[0].split(':');
-    int hour = int.parse(timeParts[0]);
-    int minute = int.parse(timeParts[1]);
-
-    if (parts[1].toLowerCase() == 'pm' && hour != 12) {
-      hour += 12;
-    } else if (parts[1].toLowerCase() == 'am' && hour == 12) {
-      hour = 0;
-    }
-
-    return TimeOfDay(hour: hour, minute: minute);
-  }
-
   void toggleTrackRecordHandler(int index) {
     ref.read(trackSheetProvider.notifier).changeActiveToggle(index);
 

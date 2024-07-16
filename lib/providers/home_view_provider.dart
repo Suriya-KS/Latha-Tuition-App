@@ -2,6 +2,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 enum HomeView {
   activeToggle,
+  upcomingClasses,
+  scheduledTests,
 }
 
 enum HomeViewToggles {
@@ -11,6 +13,8 @@ enum HomeViewToggles {
 
 final initialState = {
   HomeView.activeToggle: HomeViewToggles.classes,
+  HomeView.upcomingClasses: <Map<String, dynamic>>[],
+  HomeView.scheduledTests: <Map<String, dynamic>>[],
 };
 
 class HomeViewNotifier extends StateNotifier<Map<HomeView, dynamic>> {
@@ -30,6 +34,20 @@ class HomeViewNotifier extends StateNotifier<Map<HomeView, dynamic>> {
         HomeView.activeToggle: HomeViewToggles.tests,
       };
     }
+  }
+
+  void setUpcomingClasses(List<Map<String, dynamic>> upcomingClasses) {
+    state = {
+      ...state,
+      HomeView.upcomingClasses: upcomingClasses,
+    };
+  }
+
+  void setScheduledTests(List<Map<String, dynamic>> scheduledTests) {
+    state = {
+      ...state,
+      HomeView.scheduledTests: scheduledTests,
+    };
   }
 }
 

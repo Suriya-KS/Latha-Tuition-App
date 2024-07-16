@@ -9,6 +9,7 @@ import 'package:latha_tuition_app/utilities/snack_bar.dart';
 import 'package:latha_tuition_app/providers/loading_provider.dart';
 import 'package:latha_tuition_app/providers/authentication_provider.dart';
 import 'package:latha_tuition_app/providers/animated_drawer_provider.dart';
+import 'package:latha_tuition_app/providers/home_view_provider.dart';
 import 'package:latha_tuition_app/providers/schedule_provider.dart';
 import 'package:latha_tuition_app/widgets/utilities/loading_overlay.dart';
 import 'package:latha_tuition_app/widgets/utilities/side_drawer.dart';
@@ -143,6 +144,118 @@ class _TutorHomeViewState extends ConsumerState<TutorHomeView> {
     }
   }
 
+  Future<void> loadUpcomingClasses(BuildContext context) async {
+    final yesterdaysDate = DateTime.now().subtract(const Duration(days: 1));
+
+    setState(() {
+      isLoading = true;
+    });
+
+    try {
+      final upcomingClassesQuerySnapshot = await firestore
+          .collection('upcomingClasses')
+          .where(
+            'date',
+            isGreaterThan: Timestamp.fromDate(yesterdaysDate),
+          )
+          .orderBy('date')
+          .orderBy('startTime')
+          .get();
+
+      final upcomingClassesSummary = upcomingClassesQuerySnapshot.docs
+          .map((upcomingClassesQueryDocumentSnapshot) => {
+                'id': upcomingClassesQueryDocumentSnapshot.id,
+                'batchName':
+                    upcomingClassesQueryDocumentSnapshot.data()['batch'],
+                'date': upcomingClassesQueryDocumentSnapshot
+                    .data()['date']
+                    .toDate(),
+                'startTime': timestampToTimeOfDay(
+                  upcomingClassesQueryDocumentSnapshot.data()['startTime'],
+                ),
+                'endTime': timestampToTimeOfDay(
+                  upcomingClassesQueryDocumentSnapshot.data()['endTime'],
+                ),
+              })
+          .toList();
+
+      ref
+          .read(homeViewProvider.notifier)
+          .setUpcomingClasses(upcomingClassesSummary);
+
+      setState(() {
+        isLoading = false;
+      });
+    } catch (error) {
+      setState(() {
+        isLoading = false;
+      });
+
+      if (!context.mounted) return;
+
+      snackBar(
+        context,
+        content: const Text(defaultErrorMessage),
+      );
+    }
+  }
+
+  Future<void> loadScheduledTests(BuildContext context) async {
+    final yesterdaysDate = DateTime.now().subtract(const Duration(days: 1));
+
+    setState(() {
+      isLoading = true;
+    });
+
+    try {
+      final scheduledTestsQuerySnapshot = await firestore
+          .collection('scheduledTests')
+          .where(
+            'date',
+            isGreaterThan: Timestamp.fromDate(yesterdaysDate),
+          )
+          .orderBy('date')
+          .orderBy('startTime')
+          .get();
+
+      final scheduledTestsSummary = scheduledTestsQuerySnapshot.docs
+          .map((scheduledTestsQueryDocumentSnapshot) => {
+                'id': scheduledTestsQueryDocumentSnapshot.id,
+                'testName': scheduledTestsQueryDocumentSnapshot.data()['name'],
+                'batchName':
+                    scheduledTestsQueryDocumentSnapshot.data()['batch'],
+                'date':
+                    scheduledTestsQueryDocumentSnapshot.data()['date'].toDate(),
+                'startTime': timestampToTimeOfDay(
+                  scheduledTestsQueryDocumentSnapshot.data()['startTime'],
+                ),
+                'endTime': timestampToTimeOfDay(
+                  scheduledTestsQueryDocumentSnapshot.data()['endTime'],
+                ),
+              })
+          .toList();
+
+      ref
+          .read(homeViewProvider.notifier)
+          .setScheduledTests(scheduledTestsSummary);
+
+      setState(() {
+        isLoading = false;
+      });
+    } catch (error) {
+      setState(() {
+        isLoading = false;
+      });
+
+      if (!context.mounted) return;
+
+      snackBar(
+        context,
+        content: const Text(defaultErrorMessage),
+      );
+    }
+  }
+
   void studentAdmissionRequestsHandler(BuildContext context) async {
     await navigateToTutorNewAdmissionsScreen(context);
 
@@ -171,7 +284,22 @@ class _TutorHomeViewState extends ConsumerState<TutorHomeView> {
 
       if (!context.mounted) return;
 
-      modalBottomSheet(context, const TutorScheduleSheet());
+      final didScheduleHistoryChange = await modalBottomSheet(
+            context,
+            const TutorScheduleSheet(),
+          ) ??
+          false;
+
+      if (!didScheduleHistoryChange) return;
+      if (!context.mounted) return;
+
+      final activeToggle = ref.read(homeViewProvider)[HomeView.activeToggle];
+
+      if (activeToggle == HomeViewToggles.classes) {
+        await loadUpcomingClasses(context);
+      } else if (activeToggle == HomeViewToggles.tests) {
+        await loadScheduledTests(context);
+      }
     } catch (error) {
       loadingMethods.setLoadingStatus(false);
 
@@ -188,9 +316,14 @@ class _TutorHomeViewState extends ConsumerState<TutorHomeView> {
   void initState() {
     super.initState();
 
+    final activeToggle = ref.read(homeViewProvider)[HomeView.activeToggle];
+
     loadTutorName(context);
     loadStudentAdmissionRequestCount(context);
     loadStudentPaymentRequestsCount(context);
+
+    if (activeToggle == HomeViewToggles.classes) loadUpcomingClasses(context);
+    if (activeToggle == HomeViewToggles.tests) loadScheduledTests(context);
   }
 
   @override
@@ -258,7 +391,10 @@ class _TutorHomeViewState extends ConsumerState<TutorHomeView> {
                 SliverList(
                   delegate: SliverChildBuilderDelegate(
                     childCount: 1,
-                    (context, index) => const TutorHomeContents(),
+                    (context, index) => TutorHomeContents(
+                      loadUpcomingClasses: loadUpcomingClasses,
+                      loadScheduledTests: loadScheduledTests,
+                    ),
                   ),
                 ),
               ],
