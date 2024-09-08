@@ -7,6 +7,7 @@ import 'package:latha_tuition_app/utilities/helper_functions.dart';
 import 'package:latha_tuition_app/utilities/snack_bar.dart';
 import 'package:latha_tuition_app/providers/animated_drawer_provider.dart';
 import 'package:latha_tuition_app/providers/authentication_provider.dart';
+import 'package:latha_tuition_app/providers/home_view_provider.dart';
 import 'package:latha_tuition_app/screens/student/student_payment_history.dart';
 import 'package:latha_tuition_app/screens/student/student_feedbacks.dart';
 import 'package:latha_tuition_app/widgets/utilities/loading_overlay.dart';
@@ -132,6 +133,132 @@ class _StudentHomeViewState extends ConsumerState<StudentHomeView> {
     }
   }
 
+  Future<void> loadUpcomingClasses(BuildContext context) async {
+    final studentID =
+        ref.read(authenticationProvider)[Authentication.studentID];
+    final yesterdaysDate = DateTime.now().subtract(const Duration(days: 1));
+
+    setState(() {
+      isLoading = true;
+    });
+
+    try {
+      final studentDocumentSnapshot =
+          await firestore.collection('students').doc(studentID).get();
+      final batchName = studentDocumentSnapshot['batch'];
+
+      final upcomingClassesQuerySnapshot = await firestore
+          .collection('upcomingClasses')
+          .where(
+            'date',
+            isGreaterThan: Timestamp.fromDate(yesterdaysDate),
+          )
+          .where('batch', isEqualTo: batchName)
+          .orderBy('date')
+          .orderBy('startTime')
+          .get();
+
+      final upcomingClassesSummary = upcomingClassesQuerySnapshot.docs
+          .map((upcomingClassesQueryDocumentSnapshot) => {
+                'id': upcomingClassesQueryDocumentSnapshot.id,
+                'batchName':
+                    upcomingClassesQueryDocumentSnapshot.data()['batch'],
+                'date': upcomingClassesQueryDocumentSnapshot
+                    .data()['date']
+                    .toDate(),
+                'startTime': timestampToTimeOfDay(
+                  upcomingClassesQueryDocumentSnapshot.data()['startTime'],
+                ),
+                'endTime': timestampToTimeOfDay(
+                  upcomingClassesQueryDocumentSnapshot.data()['endTime'],
+                ),
+              })
+          .toList();
+
+      ref
+          .read(homeViewProvider.notifier)
+          .setUpcomingClasses(upcomingClassesSummary);
+
+      setState(() {
+        isLoading = false;
+      });
+    } catch (error) {
+      setState(() {
+        isLoading = false;
+      });
+
+      if (!context.mounted) return;
+
+      snackBar(
+        context,
+        content: const Text(defaultErrorMessage),
+      );
+    }
+  }
+
+  Future<void> loadScheduledTests(BuildContext context) async {
+    final studentID =
+        ref.read(authenticationProvider)[Authentication.studentID];
+    final yesterdaysDate = DateTime.now().subtract(const Duration(days: 1));
+
+    setState(() {
+      isLoading = true;
+    });
+
+    try {
+      final studentDocumentSnapshot =
+          await firestore.collection('students').doc(studentID).get();
+      final batchName = studentDocumentSnapshot['batch'];
+
+      final scheduledTestsQuerySnapshot = await firestore
+          .collection('scheduledTests')
+          .where(
+            'date',
+            isGreaterThan: Timestamp.fromDate(yesterdaysDate),
+          )
+          .where('batch', isEqualTo: batchName)
+          .orderBy('date')
+          .orderBy('startTime')
+          .get();
+
+      final scheduledTestsSummary = scheduledTestsQuerySnapshot.docs
+          .map((scheduledTestsQueryDocumentSnapshot) => {
+                'id': scheduledTestsQueryDocumentSnapshot.id,
+                'testName': scheduledTestsQueryDocumentSnapshot.data()['name'],
+                'batchName':
+                    scheduledTestsQueryDocumentSnapshot.data()['batch'],
+                'date':
+                    scheduledTestsQueryDocumentSnapshot.data()['date'].toDate(),
+                'startTime': timestampToTimeOfDay(
+                  scheduledTestsQueryDocumentSnapshot.data()['startTime'],
+                ),
+                'endTime': timestampToTimeOfDay(
+                  scheduledTestsQueryDocumentSnapshot.data()['endTime'],
+                ),
+              })
+          .toList();
+
+      ref
+          .read(homeViewProvider.notifier)
+          .setScheduledTests(scheduledTestsSummary);
+
+      setState(() {
+        isLoading = false;
+      });
+    } catch (error) {
+      setState(() {
+        isLoading = false;
+      });
+
+      if (!context.mounted) return;
+
+      snackBar(
+        context,
+        content: const Text(defaultErrorMessage),
+      );
+    }
+  }
+
   void navigateToStudentPaymentHistoryScreen(BuildContext context) async {
     await Navigator.push(
       context,
@@ -162,9 +289,14 @@ class _StudentHomeViewState extends ConsumerState<StudentHomeView> {
   void initState() {
     super.initState();
 
+    final activeToggle = ref.read(homeViewProvider)[HomeView.activeToggle];
+
     loadStudentName(context);
     loadPaymentHistoryNotification(context);
     loadFeedbackNotification(context);
+
+    if (activeToggle == HomeViewToggles.classes) loadUpcomingClasses(context);
+    if (activeToggle == HomeViewToggles.tests) loadScheduledTests(context);
   }
 
   @override
@@ -231,7 +363,10 @@ class _StudentHomeViewState extends ConsumerState<StudentHomeView> {
                 SliverList(
                   delegate: SliverChildBuilderDelegate(
                     childCount: 1,
-                    (context, index) => const StudentHomeContents(),
+                    (context, index) => StudentHomeContents(
+                      loadUpcomingClasses: loadUpcomingClasses,
+                      loadScheduledTests: loadScheduledTests,
+                    ),
                   ),
                 ),
               ],
