@@ -140,13 +140,20 @@ class _TutorPaymentApprovalScreenState
         isLoading = true;
       });
 
-      await firestore
-          .collection('payments')
-          .doc(studentPaymentDetails['id'])
-          .update({
-        'status': isApproved ? 'approved' : 'rejected',
-        'notifyStudent': true,
-      });
+      if (isApproved) {
+        await firestore
+            .collection('payments')
+            .doc(studentPaymentDetails['id'])
+            .update({
+          'status': 'approved',
+          'notifyStudent': true,
+        });
+      } else {
+        await firestore
+            .collection('payments')
+            .doc(studentPaymentDetails['id'])
+            .delete();
+      }
 
       setState(() {
         isLoading = false;
