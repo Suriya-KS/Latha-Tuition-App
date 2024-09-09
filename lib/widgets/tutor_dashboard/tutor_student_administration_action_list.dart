@@ -24,6 +24,8 @@ class _TutorStudentAdministrationActionListState
     extends ConsumerState<TutorStudentAdministrationActionList> {
   final firestore = FirebaseFirestore.instance;
 
+  ScaffoldMessengerState? scaffoldMessengerState;
+
   Future<List<String>> loadBatches(BuildContext context) async {
     final loadingMethods = ref.read(loadingProvider.notifier);
 
@@ -173,6 +175,20 @@ class _TutorStudentAdministrationActionListState
         content: const Text(defaultErrorMessage),
       );
     }
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    scaffoldMessengerState = ScaffoldMessenger.of(context);
+  }
+
+  @override
+  void dispose() {
+    scaffoldMessengerState?.hideCurrentSnackBar();
+
+    super.dispose();
   }
 
   @override

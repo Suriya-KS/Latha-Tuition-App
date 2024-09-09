@@ -39,6 +39,7 @@ class _TutorConfigureStandardsScreenState
 
   bool isLoading = true;
   bool isChanged = false;
+  ScaffoldMessengerState? scaffoldMessengerState;
   List enabledStandards = [];
 
   void loadStandards(BuildContext context) async {
@@ -124,6 +125,20 @@ class _TutorConfigureStandardsScreenState
     super.initState();
 
     loadStandards(context);
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    scaffoldMessengerState = ScaffoldMessenger.of(context);
+  }
+
+  @override
+  void dispose() {
+    scaffoldMessengerState?.hideCurrentSnackBar();
+
+    super.dispose();
   }
 
   @override

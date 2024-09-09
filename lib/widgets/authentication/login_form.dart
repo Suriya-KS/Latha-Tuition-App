@@ -25,6 +25,7 @@ class _LoginFormState extends ConsumerState<LoginForm> {
   final formKey = GlobalKey<FormState>();
 
   bool obscureText = true;
+  ScaffoldMessengerState? scaffoldMessengerState;
 
   late TextEditingController emailController;
   late TextEditingController passwordController;
@@ -117,9 +118,17 @@ class _LoginFormState extends ConsumerState<LoginForm> {
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    scaffoldMessengerState = ScaffoldMessenger.of(context);
+  }
+
+  @override
   void dispose() {
     emailController.dispose();
     passwordController.dispose();
+    scaffoldMessengerState?.hideCurrentSnackBar();
 
     super.dispose();
   }

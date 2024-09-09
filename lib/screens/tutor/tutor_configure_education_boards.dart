@@ -25,6 +25,7 @@ class _TutorConfigureEducationBoardsState
 
   bool isLoading = true;
   bool isChanged = false;
+  ScaffoldMessengerState? scaffoldMessengerState;
   List<String> educationBoards = [];
 
   void loadEducationBoards(BuildContext context) async {
@@ -141,6 +142,20 @@ class _TutorConfigureEducationBoardsState
     super.initState();
 
     loadEducationBoards(context);
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    scaffoldMessengerState = ScaffoldMessenger.of(context);
+  }
+
+  @override
+  void dispose() {
+    scaffoldMessengerState?.hideCurrentSnackBar();
+
+    super.dispose();
   }
 
   @override

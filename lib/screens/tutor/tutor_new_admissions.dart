@@ -24,6 +24,7 @@ class _TutorNewAdmissionsScreenState extends State<TutorNewAdmissionsScreen> {
       .orderBy('requestedAt');
 
   bool isLoading = true;
+  ScaffoldMessengerState? scaffoldMessengerState;
   List<Map<String, dynamic>> studentAdmissionRequests = [];
 
   void navigateToTutorNewAdmissionDetailsScreen(
@@ -82,6 +83,20 @@ class _TutorNewAdmissionsScreenState extends State<TutorNewAdmissionsScreen> {
     super.initState();
 
     loadStudentAdmissionRequests(context);
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    scaffoldMessengerState = ScaffoldMessenger.of(context);
+  }
+
+  @override
+  void dispose() {
+    scaffoldMessengerState?.hideCurrentSnackBar();
+
+    super.dispose();
   }
 
   @override

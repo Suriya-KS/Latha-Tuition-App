@@ -35,6 +35,7 @@ class _StudentRegistrationFormState
   String? educationBoard;
   String? standard;
   String? parentalRole;
+  ScaffoldMessengerState? scaffoldMessengerState;
   List<String> educationBoardsAllowed = [];
   List<String> standardsAllowed = [];
   Map<String, bool> isUnique = {
@@ -233,6 +234,13 @@ class _StudentRegistrationFormState
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    scaffoldMessengerState = ScaffoldMessenger.of(context);
+  }
+
+  @override
   void dispose() {
     nameController.dispose();
     emailController.dispose();
@@ -247,6 +255,7 @@ class _StudentRegistrationFormState
     parentNameController.dispose();
     parentPhoneController.dispose();
     parentEmailController.dispose();
+    scaffoldMessengerState?.hideCurrentSnackBar();
 
     super.dispose();
   }

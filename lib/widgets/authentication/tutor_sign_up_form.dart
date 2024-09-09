@@ -27,6 +27,7 @@ class _TutorSignUpFormState extends ConsumerState<TutorSignUpForm> {
 
   bool passwordObscureText = true;
   bool confirmPasswordObscureText = true;
+  ScaffoldMessengerState? scaffoldMessengerState;
 
   late TextEditingController nameController;
   late TextEditingController emailController;
@@ -134,12 +135,20 @@ class _TutorSignUpFormState extends ConsumerState<TutorSignUpForm> {
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    scaffoldMessengerState = ScaffoldMessenger.of(context);
+  }
+
+  @override
   void dispose() {
     nameController.dispose();
     emailController.dispose();
     phoneController.dispose();
     passwordController.dispose();
     confirmPasswordController.dispose();
+    scaffoldMessengerState?.hideCurrentSnackBar();
 
     super.dispose();
   }

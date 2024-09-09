@@ -29,6 +29,8 @@ class _TutorScheduleSheetState extends ConsumerState<TutorScheduleSheet> {
   final firestore = FirebaseFirestore.instance;
   final formKey = GlobalKey<FormState>();
 
+  ScaffoldMessengerState? scaffoldMessengerState;
+
   late String title;
   late String batchName;
   late List<bool> isSelected;
@@ -127,11 +129,19 @@ class _TutorScheduleSheetState extends ConsumerState<TutorScheduleSheet> {
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    scaffoldMessengerState = ScaffoldMessenger.of(context);
+  }
+
+  @override
   void dispose() {
     testNameController.dispose();
     dateController.dispose();
     startTimeController.dispose();
     endTimeController.dispose();
+    scaffoldMessengerState?.hideCurrentSnackBar();
 
     super.dispose();
   }

@@ -29,6 +29,7 @@ class _StudentPaymentRequestsScreenState
 
   bool isLoading = true;
   int currentYear = DateTime.now().year;
+  ScaffoldMessengerState? scaffoldMessengerState;
   List<Map<String, dynamic>> studentPaymentHistory = [];
 
   Future<void> updateNotifyStudentToFalse(String studentID) async {
@@ -153,6 +154,20 @@ class _StudentPaymentRequestsScreenState
     super.initState();
 
     loadPaymentHistory(context);
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    scaffoldMessengerState = ScaffoldMessenger.of(context);
+  }
+
+  @override
+  void dispose() {
+    scaffoldMessengerState?.hideCurrentSnackBar();
+
+    super.dispose();
   }
 
   @override

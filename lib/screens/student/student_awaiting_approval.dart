@@ -31,10 +31,10 @@ class _StudentAwaitingApprovalScreenState
   bool errorOccurred = false;
   String title = 'Application Under Review';
   String image = awaitingApprovalImageDark;
-
   String studentName = '';
   String studentEmailAddress = '';
   String studentPhoneNumber = '';
+  ScaffoldMessengerState? scaffoldMessengerState;
 
   void showStudentFetchAdmissionStatusSheet() {
     final awaitingAdmissionMethods =
@@ -132,6 +132,20 @@ class _StudentAwaitingApprovalScreenState
     super.initState();
 
     checkAdmissionApprovalStatus(context);
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    scaffoldMessengerState = ScaffoldMessenger.of(context);
+  }
+
+  @override
+  void dispose() {
+    scaffoldMessengerState?.hideCurrentSnackBar();
+
+    super.dispose();
   }
 
   @override

@@ -28,6 +28,7 @@ class _StudentFetchAdmissionStatusSheetState
   final formKey = GlobalKey<FormState>();
 
   bool isLoading = false;
+  ScaffoldMessengerState? scaffoldMessengerState;
 
   late TextEditingController emailController;
 
@@ -131,8 +132,16 @@ class _StudentFetchAdmissionStatusSheetState
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    scaffoldMessengerState = ScaffoldMessenger.of(context);
+  }
+
+  @override
   void dispose() {
     emailController.dispose();
+    scaffoldMessengerState?.hideCurrentSnackBar();
 
     super.dispose();
   }

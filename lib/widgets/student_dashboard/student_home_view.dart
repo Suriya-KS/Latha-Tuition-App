@@ -30,6 +30,7 @@ class _StudentHomeViewState extends ConsumerState<StudentHomeView> {
   bool showPaymentBadgeMark = false;
   bool showFeedbackBadgeMark = false;
   String studentName = '';
+  ScaffoldMessengerState? scaffoldMessengerState;
 
   void loadStudentName(BuildContext context) async {
     setState(() {
@@ -297,6 +298,20 @@ class _StudentHomeViewState extends ConsumerState<StudentHomeView> {
 
     if (activeToggle == HomeViewToggles.classes) loadUpcomingClasses(context);
     if (activeToggle == HomeViewToggles.tests) loadScheduledTests(context);
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    scaffoldMessengerState = ScaffoldMessenger.of(context);
+  }
+
+  @override
+  void dispose() {
+    scaffoldMessengerState?.hideCurrentSnackBar();
+
+    super.dispose();
   }
 
   @override

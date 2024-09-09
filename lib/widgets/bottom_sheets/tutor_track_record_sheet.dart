@@ -39,6 +39,8 @@ class _TutorTrackRecordSheetState extends ConsumerState<TutorTrackRecordSheet> {
   final firestore = FirebaseFirestore.instance;
   final formKey = GlobalKey<FormState>();
 
+  ScaffoldMessengerState? scaffoldMessengerState;
+
   late String title;
   late Widget destinationScreen;
   late List<bool> isSelected;
@@ -204,12 +206,20 @@ class _TutorTrackRecordSheetState extends ConsumerState<TutorTrackRecordSheet> {
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    scaffoldMessengerState = ScaffoldMessenger.of(context);
+  }
+
+  @override
   void dispose() {
     testNameController.dispose();
     totalMarksController.dispose();
     dateController.dispose();
     startTimeController.dispose();
     endTimeController.dispose();
+    scaffoldMessengerState?.hideCurrentSnackBar();
 
     super.dispose();
   }

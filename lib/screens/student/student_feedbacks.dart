@@ -24,6 +24,7 @@ class _StudentFeedbacksScreenState
   final firestore = FirebaseFirestore.instance;
 
   bool isLoading = true;
+  ScaffoldMessengerState? scaffoldMessengerState;
   List<Map<String, dynamic>> feedbacks = [];
 
   Future<void> loadStudentFeedbacks(BuildContext context) async {
@@ -85,6 +86,20 @@ class _StudentFeedbacksScreenState
     super.initState();
 
     loadStudentFeedbacks(context);
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    scaffoldMessengerState = ScaffoldMessenger.of(context);
+  }
+
+  @override
+  void dispose() {
+    scaffoldMessengerState?.hideCurrentSnackBar();
+
+    super.dispose();
   }
 
   @override

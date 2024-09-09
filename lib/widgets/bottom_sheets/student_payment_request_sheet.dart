@@ -32,6 +32,7 @@ class _StudentPaymentRequestSheetState
   final formKey = GlobalKey<FormState>();
 
   bool isLoading = false;
+  ScaffoldMessengerState? scaffoldMessengerState;
 
   late TextEditingController feesAmountController;
   late TextEditingController paymentDateController;
@@ -101,9 +102,17 @@ class _StudentPaymentRequestSheetState
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    scaffoldMessengerState = ScaffoldMessenger.of(context);
+  }
+
+  @override
   void dispose() {
     feesAmountController.dispose();
     paymentDateController.dispose();
+    scaffoldMessengerState?.hideCurrentSnackBar();
 
     super.dispose();
   }

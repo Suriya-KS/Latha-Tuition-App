@@ -23,6 +23,7 @@ class _TutorPaymentApprovalScreenState
 
   bool isLoading = false;
   bool isProcessing = false;
+  ScaffoldMessengerState? scaffoldMessengerState;
   List<Map<String, dynamic>> studentsPaymentDetails = [];
 
   void loadStudentsPaymentRequests(BuildContext context) async {
@@ -179,6 +180,20 @@ class _TutorPaymentApprovalScreenState
     super.initState();
 
     loadStudentsPaymentRequests(context);
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    scaffoldMessengerState = ScaffoldMessenger.of(context);
+  }
+
+  @override
+  void dispose() {
+    scaffoldMessengerState?.hideCurrentSnackBar();
+
+    super.dispose();
   }
 
   @override

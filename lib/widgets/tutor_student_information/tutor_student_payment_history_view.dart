@@ -25,6 +25,7 @@ class _TutorStudentPaymentHistoryViewState
       FirebaseFirestore.instance.collection('payments');
 
   int currentYear = DateTime.now().year;
+  ScaffoldMessengerState? scaffoldMessengerState;
   List<Map<String, dynamic>> studentPaymentHistory = [];
 
   void loadStudentPaymentHistory(BuildContext context) async {
@@ -84,6 +85,20 @@ class _TutorStudentPaymentHistoryViewState
     super.initState();
 
     loadStudentPaymentHistory(context);
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    scaffoldMessengerState = ScaffoldMessenger.of(context);
+  }
+
+  @override
+  void dispose() {
+    scaffoldMessengerState?.hideCurrentSnackBar();
+
+    super.dispose();
   }
 
   @override

@@ -27,6 +27,7 @@ class _TutorStudentTestMarksViewState
 
   int currentMonth = DateTime.now().month;
   int currentYear = DateTime.now().year;
+  ScaffoldMessengerState? scaffoldMessengerState;
   List<Map<String, dynamic>> testMarks = [];
 
   void loadTestMarksSummary(BuildContext context) async {
@@ -118,6 +119,20 @@ class _TutorStudentTestMarksViewState
     super.initState();
 
     loadTestMarksSummary(context);
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    scaffoldMessengerState = ScaffoldMessenger.of(context);
+  }
+
+  @override
+  void dispose() {
+    scaffoldMessengerState?.hideCurrentSnackBar();
+
+    super.dispose();
   }
 
   @override

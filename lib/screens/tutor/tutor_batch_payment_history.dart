@@ -30,6 +30,7 @@ class _TutorBatchPaymentHistoryScreenState
   bool isLoading = true;
   int currentMonth = DateTime.now().month;
   int currentYear = DateTime.now().year;
+  ScaffoldMessengerState? scaffoldMessengerState;
   List<Map<String, dynamic>> batchStudents = [];
   List<Map<String, dynamic>> paymentHistory = [];
 
@@ -167,6 +168,20 @@ class _TutorBatchPaymentHistoryScreenState
     super.initState();
 
     loadBatchStudentsAndBatchPaymentHistory(context);
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    scaffoldMessengerState = ScaffoldMessenger.of(context);
+  }
+
+  @override
+  void dispose() {
+    scaffoldMessengerState?.hideCurrentSnackBar();
+
+    super.dispose();
   }
 
   @override

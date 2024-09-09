@@ -25,6 +25,7 @@ class _TutorConfigureBatchesScreenState
 
   bool isLoading = true;
   bool isChanged = false;
+  ScaffoldMessengerState? scaffoldMessengerState;
   List<String> batchNames = [];
 
   void loadBatches(BuildContext context) async {
@@ -135,6 +136,20 @@ class _TutorConfigureBatchesScreenState
     super.initState();
 
     loadBatches(context);
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    scaffoldMessengerState = ScaffoldMessenger.of(context);
+  }
+
+  @override
+  void dispose() {
+    scaffoldMessengerState?.hideCurrentSnackBar();
+
+    super.dispose();
   }
 
   @override
