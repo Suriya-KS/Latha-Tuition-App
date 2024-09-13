@@ -8,6 +8,7 @@ import 'package:latha_tuition_app/utilities/form_validation_functions.dart';
 import 'package:latha_tuition_app/utilities/snack_bar.dart';
 import 'package:latha_tuition_app/providers/loading_provider.dart';
 import 'package:latha_tuition_app/providers/authentication_provider.dart';
+import 'package:latha_tuition_app/screens/authentication/forgot_password.dart';
 import 'package:latha_tuition_app/screens/tutor/tutor_dashboard.dart';
 import 'package:latha_tuition_app/screens/student/student_dashboard.dart';
 import 'package:latha_tuition_app/widgets/buttons/primary_button.dart';
@@ -159,7 +160,21 @@ class _LoginFormState extends ConsumerState<LoginForm> {
             controller: passwordController,
             validator: validatePassword,
           ),
-          const SizedBox(height: 50),
+          const SizedBox(height: 10),
+          Align(
+            alignment: Alignment.centerRight,
+            child: TextButton(
+              onPressed: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (BuildContext context) =>
+                      const ForgotPasswordScreen(),
+                ),
+              ),
+              child: const Text('Forgot Password?'),
+            ),
+          ),
+          const SizedBox(height: 30),
           PrimaryButton(
             title: 'Login',
             onPressed: () => loginHandler(context),
