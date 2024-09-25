@@ -29,6 +29,7 @@ class _TutorEventsViewState extends ConsumerState<TutorEventsView> {
   final firestore = FirebaseFirestore.instance;
 
   bool isLoading = false;
+  ScaffoldMessengerState? scaffoldMessengerState;
   List<Map<String, dynamic>> items = [];
 
   late List<bool> isSelected;
@@ -228,6 +229,20 @@ class _TutorEventsViewState extends ConsumerState<TutorEventsView> {
 
       loadTestMarksSummary(context);
     }
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    scaffoldMessengerState = ScaffoldMessenger.of(context);
+  }
+
+  @override
+  void dispose() {
+    scaffoldMessengerState?.hideCurrentSnackBar();
+
+    super.dispose();
   }
 
   @override

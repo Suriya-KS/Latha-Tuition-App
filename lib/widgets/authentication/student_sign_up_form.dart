@@ -28,6 +28,7 @@ class _StudentSignUpFormState extends ConsumerState<StudentSignUpForm> {
 
   bool passwordObscureText = true;
   bool confirmPasswordObscureText = true;
+  ScaffoldMessengerState? scaffoldMessengerState;
 
   late String emailAddress;
   late TextEditingController emailController;
@@ -132,10 +133,18 @@ class _StudentSignUpFormState extends ConsumerState<StudentSignUpForm> {
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    scaffoldMessengerState = ScaffoldMessenger.of(context);
+  }
+
+  @override
   void dispose() {
     emailController.dispose();
     passwordController.dispose();
     confirmPasswordController.dispose();
+    scaffoldMessengerState?.hideCurrentSnackBar();
 
     super.dispose();
   }

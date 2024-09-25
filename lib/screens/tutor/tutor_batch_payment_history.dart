@@ -30,7 +30,52 @@ class _TutorBatchPaymentHistoryScreenState
   bool isLoading = true;
   int currentMonth = DateTime.now().month;
   int currentYear = DateTime.now().year;
+  ScaffoldMessengerState? scaffoldMessengerState;
+  List<Map<String, dynamic>> batchStudents = [];
   List<Map<String, dynamic>> paymentHistory = [];
+
+  void loadBatchStudentsAndBatchPaymentHistory(BuildContext context) async {
+    setState(() {
+      isLoading = true;
+    });
+
+    try {
+      final studentsQuerySnapshot = await firestore
+          .collection('students')
+          .where('batch', isEqualTo: widget.batchName)
+          .orderBy('name')
+          .get();
+
+      final studentPaymentDetails = studentsQuerySnapshot.docs
+          .map((studentsQueryDocumentSnapshot) => {
+                'id': studentsQueryDocumentSnapshot.id,
+                'name': studentsQueryDocumentSnapshot.data()['name'],
+                'feesAmount':
+                    studentsQueryDocumentSnapshot.data()['feesAmount'],
+              })
+          .toList();
+
+      setState(() {
+        isLoading = false;
+        batchStudents = studentPaymentDetails;
+      });
+
+      if (!context.mounted) return;
+
+      loadBatchPaymentHistory(context);
+    } catch (error) {
+      setState(() {
+        isLoading = false;
+      });
+
+      if (!context.mounted) return;
+
+      snackBar(
+        context,
+        content: const Text(defaultErrorMessage),
+      );
+    }
+  }
 
   void loadBatchPaymentHistory(BuildContext context) async {
     final currentMonthStart = DateTime(currentYear, currentMonth);
@@ -44,16 +89,18 @@ class _TutorBatchPaymentHistoryScreenState
           .orderBy('date')
           .get();
 
+      int paymentRejectedIndex = 0;
       List<Map<String, dynamic>> paymentDetails = [];
+      List<String> paymentHistoryStudentIDs = [];
 
       for (final paymentRequestQueryDocumentSnapshot
           in paymentRequestsQuerySnapshot.docs) {
         if (!paymentRequestQueryDocumentSnapshot.exists) continue;
 
-        final studentDocumentSnapshot = await firestore
-            .collection('students')
-            .doc(paymentRequestQueryDocumentSnapshot['studentID'])
-            .get();
+        final studentID = paymentRequestQueryDocumentSnapshot['studentID'];
+
+        final studentDocumentSnapshot =
+            await firestore.collection('students').doc(studentID).get();
 
         if (!studentDocumentSnapshot.exists) continue;
 
@@ -64,12 +111,27 @@ class _TutorBatchPaymentHistoryScreenState
         if (studentDetails['batch'] != widget.batchName) continue;
         if (studentPaymentDetails['status'] == 'pending approval') continue;
 
+        paymentHistoryStudentIDs.add(studentID);
+
         paymentDetails.add({
           'studentName': studentDetails['name'],
           'date': (studentPaymentDetails['date'] as Timestamp).toDate(),
           'amount': studentPaymentDetails['amount'],
           'status': studentPaymentDetails['status'],
         });
+      }
+
+      for (final student in batchStudents) {
+        if (paymentHistoryStudentIDs.contains(student['id'])) continue;
+
+        paymentDetails.insert(paymentRejectedIndex, {
+          'studentName': student['name'],
+          'date': DateTime.now(),
+          'amount': student['feesAmount'],
+          'status': 'rejected',
+        });
+
+        paymentRejectedIndex++;
       }
 
       setState(() {
@@ -105,7 +167,21 @@ class _TutorBatchPaymentHistoryScreenState
   void initState() {
     super.initState();
 
-    loadBatchPaymentHistory(context);
+    loadBatchStudentsAndBatchPaymentHistory(context);
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    scaffoldMessengerState = ScaffoldMessenger.of(context);
+  }
+
+  @override
+  void dispose() {
+    scaffoldMessengerState?.hideCurrentSnackBar();
+
+    super.dispose();
   }
 
   @override

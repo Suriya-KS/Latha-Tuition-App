@@ -39,30 +39,16 @@ class _TutorTrackRecordSheetState extends ConsumerState<TutorTrackRecordSheet> {
   final firestore = FirebaseFirestore.instance;
   final formKey = GlobalKey<FormState>();
 
+  ScaffoldMessengerState? scaffoldMessengerState;
+
   late String title;
   late Widget destinationScreen;
   late List<bool> isSelected;
-
   late TextEditingController testNameController;
   late TextEditingController totalMarksController;
   late TextEditingController dateController;
   late TextEditingController startTimeController;
   late TextEditingController endTimeController;
-
-  TimeOfDay stringToTimeOfDay(String timeString) {
-    List<String> parts = timeString.split(' ');
-    List<String> timeParts = parts[0].split(':');
-    int hour = int.parse(timeParts[0]);
-    int minute = int.parse(timeParts[1]);
-
-    if (parts[1].toLowerCase() == 'pm' && hour != 12) {
-      hour += 12;
-    } else if (parts[1].toLowerCase() == 'am' && hour == 12) {
-      hour = 0;
-    }
-
-    return TimeOfDay(hour: hour, minute: minute);
-  }
 
   void toggleTrackRecordHandler(int index) {
     ref.read(trackSheetProvider.notifier).changeActiveToggle(index);
@@ -220,12 +206,20 @@ class _TutorTrackRecordSheetState extends ConsumerState<TutorTrackRecordSheet> {
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    scaffoldMessengerState = ScaffoldMessenger.of(context);
+  }
+
+  @override
   void dispose() {
     testNameController.dispose();
     totalMarksController.dispose();
     dateController.dispose();
     startTimeController.dispose();
     endTimeController.dispose();
+    scaffoldMessengerState?.hideCurrentSnackBar();
 
     super.dispose();
   }

@@ -32,6 +32,7 @@ class _TutorNewAdmissionDetailsScreenState
 
   bool isLoading = true;
   String? selectedBatch;
+  ScaffoldMessengerState? scaffoldMessengerState;
   List<String> batchNames = [];
 
   late TextEditingController feesAmountController;
@@ -156,8 +157,16 @@ class _TutorNewAdmissionDetailsScreenState
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    scaffoldMessengerState = ScaffoldMessenger.of(context);
+  }
+
+  @override
   void dispose() {
     feesAmountController.dispose();
+    scaffoldMessengerState?.hideCurrentSnackBar();
 
     super.dispose();
   }

@@ -1,43 +1,29 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-enum PasswordRecoveryMethod {
-  email,
-  sms,
-}
-
-enum ForgotPasswordForm {
-  sendVerificationCode,
-  verifyCode,
+enum ForgotPasswordContent {
+  sendVerificationLink,
+  acknowledgement,
 }
 
 enum ForgotPassword {
-  recoveryMethod,
   inputText,
-  activeForm,
+  activeContent,
 }
 
 final initialState = {
-  ForgotPassword.recoveryMethod: null,
   ForgotPassword.inputText: '',
-  ForgotPassword.activeForm: ForgotPasswordForm.sendVerificationCode,
+  ForgotPassword.activeContent: ForgotPasswordContent.sendVerificationLink,
 };
 
 class ForgotPasswordNotifier
     extends StateNotifier<Map<ForgotPassword, dynamic>> {
   ForgotPasswordNotifier() : super(initialState);
 
-  void setRecoveryMethod(PasswordRecoveryMethod recoveryMethod) {
-    state = {
-      ...state,
-      ForgotPassword.recoveryMethod: recoveryMethod,
-    };
-  }
-
-  void switchToVerifyCodeForm(String enteredInputText) {
+  void switchToAcknowledgementContent(String enteredInputText) {
     state = {
       ...state,
       ForgotPassword.inputText: enteredInputText,
-      ForgotPassword.activeForm: ForgotPasswordForm.verifyCode,
+      ForgotPassword.activeContent: ForgotPasswordContent.acknowledgement,
     };
   }
 

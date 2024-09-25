@@ -23,6 +23,7 @@ class _TutorPaymentApprovalScreenState
 
   bool isLoading = false;
   bool isProcessing = false;
+  ScaffoldMessengerState? scaffoldMessengerState;
   List<Map<String, dynamic>> studentsPaymentDetails = [];
 
   void loadStudentsPaymentRequests(BuildContext context) async {
@@ -140,13 +141,20 @@ class _TutorPaymentApprovalScreenState
         isLoading = true;
       });
 
-      await firestore
-          .collection('payments')
-          .doc(studentPaymentDetails['id'])
-          .update({
-        'status': isApproved ? 'approved' : 'rejected',
-        'notifyStudent': true,
-      });
+      if (isApproved) {
+        await firestore
+            .collection('payments')
+            .doc(studentPaymentDetails['id'])
+            .update({
+          'status': 'approved',
+          'notifyStudent': true,
+        });
+      } else {
+        await firestore
+            .collection('payments')
+            .doc(studentPaymentDetails['id'])
+            .delete();
+      }
 
       setState(() {
         isLoading = false;
@@ -172,6 +180,20 @@ class _TutorPaymentApprovalScreenState
     super.initState();
 
     loadStudentsPaymentRequests(context);
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    scaffoldMessengerState = ScaffoldMessenger.of(context);
+  }
+
+  @override
+  void dispose() {
+    scaffoldMessengerState?.hideCurrentSnackBar();
+
+    super.dispose();
   }
 
   @override

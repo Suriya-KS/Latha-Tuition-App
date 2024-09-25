@@ -27,6 +27,7 @@ class _StudentAttendanceViewState extends ConsumerState<StudentAttendanceView> {
   bool isLoading = true;
   int currentMonth = DateTime.now().month;
   int currentYear = DateTime.now().year;
+  ScaffoldMessengerState? scaffoldMessengerState;
   List<Map<String, dynamic>> attendanceList = [];
 
   void loadAttendanceSummary(BuildContext context) async {
@@ -106,6 +107,20 @@ class _StudentAttendanceViewState extends ConsumerState<StudentAttendanceView> {
     super.initState();
 
     loadAttendanceSummary(context);
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    scaffoldMessengerState = ScaffoldMessenger.of(context);
+  }
+
+  @override
+  void dispose() {
+    scaffoldMessengerState?.hideCurrentSnackBar();
+
+    super.dispose();
   }
 
   @override

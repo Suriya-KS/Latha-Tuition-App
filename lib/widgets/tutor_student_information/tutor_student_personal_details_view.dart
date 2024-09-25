@@ -30,6 +30,7 @@ class _TutorStudentPersonalDetailsViewState
 
   bool isChanged = false;
   List<String> batchNames = [];
+  ScaffoldMessengerState? scaffoldMessengerState;
   Map<String, dynamic> studentDetails = {
     'name': '',
     'emailAddress': '',
@@ -121,8 +122,16 @@ class _TutorStudentPersonalDetailsViewState
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    scaffoldMessengerState = ScaffoldMessenger.of(context);
+  }
+
+  @override
   void dispose() {
     feesAmountController.dispose();
+    scaffoldMessengerState?.hideCurrentSnackBar();
 
     super.dispose();
   }

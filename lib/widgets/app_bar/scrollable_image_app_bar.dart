@@ -44,6 +44,7 @@ class ScrollableImageAppBar extends ConsumerWidget {
             fontWeight: FontWeight.w700,
           ),
         ),
+        centerTitle: false,
         background: Stack(
           children: [
             SvgPicture.asset(

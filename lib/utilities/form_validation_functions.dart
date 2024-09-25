@@ -309,10 +309,34 @@ String? validateAuthentication(FirebaseAuthException error) {
       errorMessage = 'Email address or password is incorrect';
       break;
     default:
-      errorMessage = 'Something went wrong, please try again later';
+      errorMessage = defaultErrorMessage;
   }
 
   if (errorMessage != '') return errorMessage;
+
+  return null;
+}
+
+Future<String?> validateForgotPasswordEmail(String? value) async {
+  final emailError = validateEmail(value);
+
+  if (emailError != null) return emailError;
+
+  final firestore = FirebaseFirestore.instance;
+
+  final studentQuerySnapshot = await firestore
+      .collection('students')
+      .where('emailAddress', isEqualTo: value)
+      .get();
+
+  final tutorQuerySnapshot = await firestore
+      .collection('tutors')
+      .where('emailAddress', isEqualTo: value)
+      .get();
+
+  if (studentQuerySnapshot.size <= 0 && tutorQuerySnapshot.size <= 0) {
+    return "Email address doesn't exists";
+  }
 
   return null;
 }

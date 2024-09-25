@@ -27,6 +27,7 @@ class _StudentTestViewState extends ConsumerState<StudentTestMarksView> {
   bool isLoading = true;
   int currentMonth = DateTime.now().month;
   int currentYear = DateTime.now().year;
+  ScaffoldMessengerState? scaffoldMessengerState;
   List<Map<String, dynamic>> testMarks = [];
 
   void loadTestMarksSummary(BuildContext context) async {
@@ -120,6 +121,20 @@ class _StudentTestViewState extends ConsumerState<StudentTestMarksView> {
     super.initState();
 
     loadTestMarksSummary(context);
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    scaffoldMessengerState = ScaffoldMessenger.of(context);
+  }
+
+  @override
+  void dispose() {
+    scaffoldMessengerState?.hideCurrentSnackBar();
+
+    super.dispose();
   }
 
   @override

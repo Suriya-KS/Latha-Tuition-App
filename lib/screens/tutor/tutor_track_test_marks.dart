@@ -36,6 +36,7 @@ class _TutorTrackTestMarksScreenState
 
   bool isLoading = false;
   bool isChanged = false;
+  ScaffoldMessengerState? scaffoldMessengerState;
   List<Map<String, dynamic>> testMarks = [];
   List<TextEditingController> marksControllers = [];
 
@@ -197,10 +198,19 @@ class _TutorTrackTestMarksScreenState
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    scaffoldMessengerState = ScaffoldMessenger.of(context);
+  }
+
+  @override
   void dispose() {
     for (final marksController in marksControllers) {
       marksController.dispose();
     }
+
+    scaffoldMessengerState?.hideCurrentSnackBar();
 
     super.dispose();
   }

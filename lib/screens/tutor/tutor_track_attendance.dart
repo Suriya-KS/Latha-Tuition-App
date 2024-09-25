@@ -34,6 +34,7 @@ class _TutorTrackAttendanceScreenState
 
   bool isLoading = false;
   bool isChanged = false;
+  ScaffoldMessengerState? scaffoldMessengerState;
   List<Map<String, dynamic>> attendanceList = [];
 
   void loadBatchStudents(
@@ -182,6 +183,20 @@ class _TutorTrackAttendanceScreenState
     super.initState();
 
     loadBatchStudents(context);
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    scaffoldMessengerState = ScaffoldMessenger.of(context);
+  }
+
+  @override
+  void dispose() {
+    scaffoldMessengerState?.hideCurrentSnackBar();
+
+    super.dispose();
   }
 
   @override

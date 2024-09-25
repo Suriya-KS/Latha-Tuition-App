@@ -27,6 +27,7 @@ class _TutorStudentAttendanceRecordsViewState
 
   int currentMonth = DateTime.now().month;
   int currentYear = DateTime.now().year;
+  ScaffoldMessengerState? scaffoldMessengerState;
   List<Map<String, dynamic>> attendanceList = [];
 
   void loadAttendanceSummary(BuildContext context) async {
@@ -104,6 +105,20 @@ class _TutorStudentAttendanceRecordsViewState
     super.initState();
 
     loadAttendanceSummary(context);
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    scaffoldMessengerState = ScaffoldMessenger.of(context);
+  }
+
+  @override
+  void dispose() {
+    scaffoldMessengerState?.hideCurrentSnackBar();
+
+    super.dispose();
   }
 
   @override
